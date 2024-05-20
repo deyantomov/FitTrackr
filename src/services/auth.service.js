@@ -11,11 +11,7 @@ import { setUserOnlineStatus } from "../api/api";
  * @param {string} password User's password
  * @returns {Promise<Realm.User | undefined>} A promise that resolves with the logged-in user
  */
-export const login = async (
-  app,
-  email,
-  password,
-) => {
+export const login = async (app, email, password) => {
   try {
     const credentials = Realm.Credentials.emailPassword(email, password);
     const user = await app.logIn(credentials);

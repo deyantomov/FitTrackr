@@ -4,6 +4,8 @@ import {
   updateProfileEndpoint,
   updateProfilePicEndpoint,
   getProfilePicEndpoint,
+  onlineUsersEndpoint,
+  createNewExerciseEndpoint,
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -27,6 +29,7 @@ export const createUser = async (user) => {
       handle: user.handle,
       firstName: user.firstName,
       lastName: user.lastName,
+      createdOn: new Date()
     }),
   });
 
@@ -142,6 +145,12 @@ export const updateUserProfile = async (
   return "Authentication failed!";
 };
 
+/**
+ * Fetches a user's profile picture
+ * 
+ * @param {Realm.App} app 
+ * @param {string} id 
+ */
 export const getProfilePic = async (app, id) => {
   const user = app.currentUser;
 
@@ -159,9 +168,16 @@ export const getProfilePic = async (app, id) => {
   }
 };
 
+/**
+ * Sets the user's online status to true/false
+ * 
+ * @param {User} user 
+ * @param {string} id 
+ * @param {boolean} isOnline 
+ */
 export const setUserOnlineStatus = async (user, id, isOnline) => {
   const response = await fetch(
-    `https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/online?id=${id}`,
+    `${onlineUsersEndpoint}id=${id}`,
     {
       method: "POST",
       headers: {
@@ -174,3 +190,41 @@ export const setUserOnlineStatus = async (user, id, isOnline) => {
 
   return response.json();
 };
+
+/**
+ * Creates a new exercise with the given info, and adds it to the db
+ * 
+ * @param {Realm.App} app 
+ * @param {object} exercise 
+ */
+export const createNewExercise = async (app, exercise) => {
+  if (Object.keys(exercise) === 0) {
+    throw new Error('Exercise object cannot be empty!');
+  }
+  
+  const currentUser = app.currentUser;
+
+  if (currentUser) {
+    const user = await getUserById(currentUser.id);
+    
+    const response = await fetch(`${createNewExerciseEndpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+      body: JSON.stringify({
+        owner: user['_id'],
+        title: exercise.title,
+        description: exercise.description,
+        level: exercise.level,
+        duration: exercise.duration,
+        rating: 0,
+        isPrivate: exercise.isPrivate,
+        createdOn: new Date()
+      })
+    });
+
+    return response.json();
+  }
+}
