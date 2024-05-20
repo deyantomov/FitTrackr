@@ -5,6 +5,7 @@ import Sidebar from "./hoc/Sidebar";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import SignUp from "./components/Signup/Signup";
+import Profile from "./components/Profile/Profile";
 import Authenticated from "./components/Authenticated/Authenticated";
 // import UpdateProfile from "./components/UpdateProfile";
 import atlasConfig from "../atlasConfig.json";
@@ -25,7 +26,7 @@ function App() {
 
   useEffect(() => {
     if (location.pathname === "/") {
-      navigate('/home');
+      navigate("/home");
     }
   }, [location, navigate]);
 
@@ -46,6 +47,14 @@ function App() {
       />
       <Route path="/login" element={<Login></Login>} />
       <Route path="/signup" element={<SignUp />} />
+      <Route
+        path="/profile/:id"
+        element={
+          <Sidebar>
+            <Profile />
+          </Sidebar>
+        }
+      />
       {/* <Route
         path="/update-profile"
         element={

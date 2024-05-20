@@ -163,7 +163,7 @@ export const getProfilePic = async (app, id) => {
       },
     });
 
-    const img = JSON.parse(await response.text())["img"];
+    const img = JSON.parse(await response.text());
     return img;
   }
 };

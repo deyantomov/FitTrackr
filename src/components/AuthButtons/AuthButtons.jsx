@@ -2,13 +2,13 @@ import { useApp } from "../../hooks/useApp";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUserById } from "../../api/api";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { logout } from "../../services/auth.service";
 
 export default function AuthButtons() {
   const app = useApp();
-  const location = useLocation(); //  state from successful registration
-  const [handle, setHandle] = useState("");
+  // const location = useLocation(); //  state from successful registration
+  // const [handle, setHandle] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {

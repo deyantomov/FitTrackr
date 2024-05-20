@@ -4,10 +4,12 @@ import AuthButtons from "../AuthButtons/AuthButtons";
 import { useApp } from "../../hooks/useApp";
 import { useEffect, useState } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
+import { Link } from "react-router-dom";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
   const [profilePic, setProfilePic] = useState("");
+  const [picOwner, setPicOwner] = useState("");
 
   useEffect(() => {
     const fetchPic = async () => {      
@@ -16,7 +18,8 @@ export default function Navbar({ toggleDrawer }) {
 
         if (user && user.profilePic) {
           const pic = await getProfilePic(app, user.profilePic);
-          setProfilePic(pic);
+          setProfilePic(pic.img);
+          setPicOwner(pic.owner);
         } 
       } else {
         setProfilePic('');
@@ -37,7 +40,9 @@ export default function Navbar({ toggleDrawer }) {
         <Bars3Icon className="w-full" />
       </label>
       <div className="rounded-full w-full flex flex-row justify-end align-end p-0">
-        <ProfilePic profilePic={profilePic} />
+        <Link to={`/profile/${picOwner}`}>
+          <ProfilePic profilePic={profilePic} dimensions="56px" />
+        </Link>
         <AuthButtons></AuthButtons>
       </div>
     </div>
