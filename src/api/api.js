@@ -142,13 +142,11 @@ export const updateUserProfile = async (
   return "Authentication failed!";
 };
 
-export const getProfilePic = async (
-  app
-) => {
+export const getProfilePic = async (app, id) => {
   const user = app.currentUser;
 
   if (user) {
-    const response = await fetch(`${getProfilePicEndpoint}?id=${user.id}`, {
+    const response = await fetch(`${getProfilePicEndpoint}?id=${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

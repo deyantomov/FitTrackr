@@ -16,7 +16,7 @@ export const AppProvider = ({ appId, children }) => {
     setApp(createApp(appId));
   }, [appId]);
 
-  const [currentUser, setCurrentUser] = useState<Realm.User | null>(app.currentUser);
+  const [currentUser, setCurrentUser] = useState(app.currentUser);
 
   const logIn = async (credentials) => {
     await app.logIn(credentials);
