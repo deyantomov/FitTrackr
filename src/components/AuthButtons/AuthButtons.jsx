@@ -36,7 +36,7 @@ export default function AuthButtons() {
   }
   
   return (
-    <div className="flex flex-row gap-3 me-5 p-0">
+    <div className="flex flex-row gap-3 p-0 align-center items-center">
       {isLoggedIn ? (
         <div className="flex flex-row gap-6 align-center items-center p-0">
           <button
