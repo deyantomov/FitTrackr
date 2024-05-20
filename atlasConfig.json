@@ -1,0 +1,9 @@
+{
+  "appId": "application-0-sffvmko",
+  "appUrl": "https://services.cloud.mongodb.com/groups/66476335bef1e23ee31df937/apps/664763b9679980070305d243",
+  "baseUrl": "https://services.cloud.mongodb.com",
+  "clientApiBaseUrl": "https://eu-central-1.aws.services.cloud.mongodb.com",
+  "dataApiBaseUrl": "https://eu-central-1.aws.data.mongodb-api.com",
+  "dataExplorerLink": "https://cloud.mongodb.com/links/66476335bef1e23ee31df937/explorer/M0ClusterDev/database/collection/find",
+  "dataSourceName": "mongodb-atlas"
+}
