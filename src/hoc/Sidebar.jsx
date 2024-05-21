@@ -1,7 +1,13 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import { Link } from "react-router-dom";
-import { HomeIcon, GlobeAltIcon, QuestionMarkCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  GlobeAltIcon,
+  QuestionMarkCircleIcon,
+  PlusIcon,
+  TrophyIcon,
+} from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 /**
  *
@@ -16,7 +22,11 @@ export default function Sidebar({ children }) {
 
   return (
     <div className="drawer h-full">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle h-full" />
+      <input
+        id="my-drawer-2"
+        type="checkbox"
+        className="drawer-toggle h-full"
+      />
       <div className="drawer-content flex flex-col items-start justify-center p-0">
         <Navbar toggleDrawer={toggleSidebar} />
         <div className="flex flex-col w-full h-full text-4xl">{children}</div>
@@ -41,15 +51,19 @@ export default function Sidebar({ children }) {
             icon={<GlobeAltIcon title="exercises" className="h-3/6" />}
           ></SidebarButton>
           <SidebarButton
+            text="Goals"
+            icon={<TrophyIcon title="goals" className="h-3/6" />}
+          ></SidebarButton>
+          <SidebarButton
             text="About us"
             icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
           ></SidebarButton>
           <hr className="border-t-2 border-warning my-4" />
           <Link to="/new-exercise">
-          <SidebarButton
-          text="Create Exercise"
-          icon={<PlusIcon title="create" className="h-3/6" />}
-          ></SidebarButton>
+            <SidebarButton
+              text="Create Exercise"
+              icon={<PlusIcon title="create" className="h-3/6" />}
+            ></SidebarButton>
           </Link>
         </div>
       </div>

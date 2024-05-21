@@ -5,6 +5,7 @@ import Sidebar from "./hoc/Sidebar";
 import Home from "./views/Home/Home";
 import Login from "./views/Login/Login";
 import SignUp from "./views/Signup/Signup";
+import Goals from "./views/Goals/Goals";
 import Profile from "./views/Profile/Profile";
 import Authenticated from "./components/Authenticated/Authenticated";
 // import UpdateProfile from "./components/UpdateProfile";
@@ -73,6 +74,15 @@ function App() {
         element={
           <Sidebar>
             <NewExerciseForm />
+          </Sidebar>
+        }
+      />
+      <Route
+        path="/goals"
+        index
+        element={
+          <Sidebar>
+            <Goals />
           </Sidebar>
         }
       />
