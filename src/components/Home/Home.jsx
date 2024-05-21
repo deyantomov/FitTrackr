@@ -36,9 +36,9 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row justify-center items-center gap-12 w-full my-6">
               <FeatureCard
                 img="exercises.jpg"
-                title="Track your daily activity and goals"
+                title="Track your daily activity"
                 text="Take control of your fitness journey by tracking your daily
-                  activities and goals. Watch your progress and achieve your
+                  exercises and activities. Watch your progress and achieve your
                   milestones with ease."
               />
               <FeatureCard
