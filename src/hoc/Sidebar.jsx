@@ -16,8 +16,8 @@ export default function Sidebar({ children }) {
   };
 
   return (
-    <div className="drawer">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+    <div className="drawer h-full">
+      <input id="my-drawer-2" type="checkbox" className="drawer-toggle h-full" />
       <div className="drawer-content flex flex-col items-start justify-center p-0">
         <Navbar toggleDrawer={toggleSidebar} />
         <div className="flex flex-col w-full h-full text-4xl">{children}</div>
