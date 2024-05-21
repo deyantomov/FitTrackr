@@ -10,7 +10,7 @@ import Authenticated from "./components/Authenticated/Authenticated";
 // import UpdateProfile from "./components/UpdateProfile";
 import atlasConfig from "../atlasConfig.json";
 import "./App.css";
-import NewExerciseForm from "./hoc/NewExercise/NewExercise";
+import NewExerciseForm from "./views/NewExercise/NewExercise";
 const { appId } = atlasConfig;
 
 export default function ProvidedApp() {
