@@ -12,7 +12,7 @@ export default function Navbar({ toggleDrawer }) {
   const [picOwner, setPicOwner] = useState("");
 
   useEffect(() => {
-    const fetchPic = async () => {      
+    const fetchPic = async () => {
       if (app.currentUser) {
         const user = await getUserById(app.currentUser.id);
 
@@ -20,15 +20,15 @@ export default function Navbar({ toggleDrawer }) {
           const pic = await getProfilePic(app, user.profilePic);
           setProfilePic(pic.img);
           setPicOwner(pic.owner);
-        } 
+        }
       } else {
-        setProfilePic('');
+        setProfilePic("");
       }
     };
-    
+
     fetchPic();
   }, [app.currentUser]);
-  
+
   return (
     <div className="flex flex-row w-full bg-base-800 p-4 justify-center items-center border-b-warning border-b-2">
       <label
@@ -45,6 +45,9 @@ export default function Navbar({ toggleDrawer }) {
         </Link>
         <Link to="/exercises">
           <h2 className="text-2xl">Exercises</h2>
+        </Link>
+        <Link to="/goals">
+          <h2 className="text-2xl">Goals</h2>
         </Link>
         <Link to="/about-us">
           <h2 className="text-2xl">About</h2>
