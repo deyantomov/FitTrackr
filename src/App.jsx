@@ -10,6 +10,7 @@ import Authenticated from "./components/Authenticated/Authenticated";
 // import UpdateProfile from "./components/UpdateProfile";
 import atlasConfig from "../atlasConfig.json";
 import "./App.css";
+import NewExerciseForm from "./hoc/NewExercise/NewExercise";
 const { appId } = atlasConfig;
 
 export default function ProvidedApp() {
@@ -65,6 +66,15 @@ function App() {
           </Authenticated>
         }
       /> */}
+      <Route
+        path="/new-exercise"
+        index
+        element={
+          <Sidebar>
+            <NewExerciseForm />
+          </Sidebar>
+        }
+      />
     </Routes>
   );
 }

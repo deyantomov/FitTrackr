@@ -8,7 +8,7 @@ import { logout } from "../../services/auth.service";
 export default function AuthButtons() {
   const app = useApp();
   // const location = useLocation(); //  state from successful registration
-  // const [handle, setHandle] = useState("");
+  const [handle, setHandle] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {

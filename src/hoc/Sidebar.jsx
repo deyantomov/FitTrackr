@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import { Link } from "react-router-dom";
-import { HomeIcon, GlobeAltIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, GlobeAltIcon, QuestionMarkCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
-
 /**
  *
  * @param {{children: JSX.Element | Array<JSX.Element>}} props
@@ -46,6 +45,12 @@ export default function Sidebar({ children }) {
             icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
           ></SidebarButton>
           <hr className="border-t-2 border-gray-400 my-4" />
+          <Link to="/new-exercise">
+          <SidebarButton
+          text="Create Exercise"
+          icon={<PlusIcon title="create" className="h-3/6" />}
+          ></SidebarButton>
+          </Link>
         </div>
       </div>
     </div>
