@@ -32,7 +32,7 @@ export default function Sidebar({ children }) {
           <Link to="/">
             <h2 className="text-4xl mt-3 ms-2 p-2">FitTrackr</h2>
           </Link>
-          <hr className="border-t-2 border-gray-400 my-4" />
+          <hr className="border-t-2 border-warning my-4" />
           <SidebarButton
             text="Home"
             icon={<HomeIcon title="home" className="h-3/6" />}
@@ -45,7 +45,7 @@ export default function Sidebar({ children }) {
             text="About us"
             icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
           ></SidebarButton>
-          <hr className="border-t-2 border-gray-400 my-4" />
+          <hr className="border-t-2 border-warning my-4" />
         </div>
       </div>
     </div>

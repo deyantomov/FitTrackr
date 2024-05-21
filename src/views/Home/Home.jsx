@@ -12,7 +12,7 @@ export default function Home() {
     <>
       {app.currentUser ? (
         <div className="flex flex-col align-center items-center w-full h-full mt-12">
-          <h2 className="text-5xl mb-4">Finish setting up your profile</h2>
+          <h2 className="text-3xl lg:text-4xl xl:text-5xl mb-4">Finish setting up your profile</h2>
           <div className="flex flex-col xl:flex-row gap-12 mt-12">
             <CompleteProfile uid={app.currentUser.id} />
             <ConnToFb uid={app.currentUser.id}/>

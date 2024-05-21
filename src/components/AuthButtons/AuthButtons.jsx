@@ -40,7 +40,7 @@ export default function AuthButtons() {
       {isLoggedIn ? (
         <div className="flex flex-row gap-6 align-center items-center p-0">
           <button
-            className="btn btn-outline btn-warning"
+            className="btn btn-warning"
             onClick={async () => await handleLogout()}
           >
             Log out
