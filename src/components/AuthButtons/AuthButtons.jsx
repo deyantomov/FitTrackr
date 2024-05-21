@@ -49,7 +49,7 @@ export default function AuthButtons() {
       ) : (
         <>
           <Link to="/login">
-            <button className="btn btn-warning">Sign in</button>
+            <button className="btn btn-warning text-gray-800">Sign in</button>
           </Link>
           <Link to="/signup">
             <button className="btn btn-outline btn-warning">Sign up</button>

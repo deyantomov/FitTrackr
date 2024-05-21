@@ -30,15 +30,26 @@ export default function Navbar({ toggleDrawer }) {
   }, [app.currentUser]);
   
   return (
-    <div className="flex flex-row w-full bg-gray-800 p-4 justify-center">
+    <div className="flex flex-row w-full bg-base-800 p-4 justify-center items-center">
       <label
         htmlFor="my-drawer-2"
-        className="btn btn-transparent drawer-button h-full"
+        className="btn btn-transparent border-1 border-base-900 drawer-button h-full"
         style={{ width: "64px" }}
         onClick={toggleDrawer}
       >
         <Bars3Icon className="w-full" />
       </label>
+      <div className="ms-12 lg:flex flex-row gap-8 hidden">
+        <Link to="/">
+          <h2 className="text-2xl">Home</h2>
+        </Link>
+        <Link to="/exercises">
+          <h2 className="text-2xl">Exercises</h2>
+        </Link>
+        <Link to="/about-us">
+          <h2 className="text-2xl">About</h2>
+        </Link>
+      </div>
       <div className="rounded-full w-full flex flex-row justify-end align-end p-0">
         <Link to={`/profile/${picOwner}`}>
           <ProfilePic profilePic={profilePic} dimensions="56px" />

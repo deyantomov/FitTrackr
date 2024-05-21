@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import Navbar from '../components/Navbar/Navbar';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import Navbar from "../components/Navbar/Navbar";
+import { Link } from "react-router-dom";
+import { HomeIcon, GlobeAltIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import SidebarButton from "./SidebarNavigation/SidebarButton";
 
 /**
- * 
- * @param {{children: JSX.Element | Array<JSX.Element>}} props 
+ *
+ * @param {{children: JSX.Element | Array<JSX.Element>}} props
  */
-export default function Sidebar({children}) {
+export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -14,21 +16,36 @@ export default function Sidebar({children}) {
   };
 
   return (
-    <div className="drawer w-full h-screen">
+    <div className="drawer">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col items-start justify-center p-0">
-      <Navbar toggleDrawer={toggleSidebar} />
-        <div className='flex flex-col w-full h-full text-4xl'>
-          {/* content here */}
-          {children}
-        </div>
-      </div> 
+        <Navbar toggleDrawer={toggleSidebar} />
+        <div className="flex flex-col w-full h-full text-4xl">{children}</div>
+      </div>
       <div className="drawer-side">
-        <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label> 
+        <label
+          htmlFor="my-drawer-2"
+          aria-label="close sidebar"
+          className="drawer-overlay"
+        ></label>
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
-          <Link to='/'>
-            <h2 className="text-3xl mt-3 mb-6">FitTrackr</h2>
+          <Link to="/">
+            <h2 className="text-4xl mt-3 ms-2 p-2">FitTrackr</h2>
           </Link>
+          <hr className="border-t-2 border-gray-400 my-4" />
+          <SidebarButton
+            text="Home"
+            icon={<HomeIcon title="home" className="h-3/6" />}
+          ></SidebarButton>
+          <SidebarButton
+            text="Explore exercises"
+            icon={<GlobeAltIcon title="exercises" className="h-3/6" />}
+          ></SidebarButton>
+          <SidebarButton
+            text="About us"
+            icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
+          ></SidebarButton>
+          <hr className="border-t-2 border-gray-400 my-4" />
         </div>
       </div>
     </div>

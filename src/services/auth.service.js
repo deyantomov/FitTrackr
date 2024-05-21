@@ -29,6 +29,7 @@ export const login = async (app, email, password) => {
  *
  * @async
  * @param {Realm.App} app Realm app instance
+ * @returns {Promise<void>}
  */
 export const logout = async (app) => {
   try {
@@ -58,6 +59,7 @@ export const logout = async (app) => {
  * @param {string} firstName User's first name
  * @param {string} lastName User's last name
  * @param {string} handle User's handle/username
+ * @returns {Promise<string | undefined>}
  */
 export const register = async (
   app,

@@ -15,7 +15,7 @@ import * as Realm from "realm-web";
  *
  * @async
  * @param {User} user - The user object (document) to create
- * @returns {Promise<Response>} The response from the fetch request
+ * @returns {Promise<Response>}
  */
 export const createUser = async (user) => {
   const response = await fetch(createUserEndpoint, {
@@ -40,7 +40,7 @@ export const createUser = async (user) => {
  * Retrieves all users from the database
  *
  * @async
- * @returns {Promise<any>} The response from the fetch request (all documents from the users collection)
+ * @returns {Promise<any>}
  */
 export const getAllUsers = async () => {
   const response = await fetch(usersEndpoint);
@@ -51,8 +51,8 @@ export const getAllUsers = async () => {
  * Retrieves a user by their handle
  *
  * @async
- * @param {string} handle - The handle of the user to retrieve
- * @returns {Promise<any>} The response from the fetch request (document from the users collection filtered by handle)
+ * @param {string} handle The handle of the user to retrieve
+ * @returns {Promise<any>}
  */
 export const getUserByHandle = async (handle) => {
   const response = await fetch(`${usersEndpoint}handle=${handle}`);
@@ -75,7 +75,7 @@ export const getUserByEmail = async (email) => {
  * Retrieves a user by their ID
  *
  * @async
- * @param {string} id - The ID of the user to retrieve (ObjectId string)
+ * @param {string} id The ID of the user to retrieve (ObjectId string)
  * @returns {Promise<any>}
  */
 export const getUserById = async (id) => {
