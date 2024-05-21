@@ -1,0 +1,33 @@
+import { getUserById } from "../api/api";
+import { useState, useEffect } from "react";
+import { useApp } from "../hooks/useApp";
+
+
+export function useCompleteProfile() {
+  const app = useApp();
+  const [progress, setProgress] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getUserById(app.currentUser.id);
+      setCurrentUser(user);
+    }
+
+    fetchUser();
+  }, [app.currentUser])
+
+  useEffect(() => {
+    const trackData = async () => {
+      currentUser?.age ? setProgress(prev => ({...prev, age: true})) : setProgress(prev => ({...prev, age: false}));
+      currentUser?.bio ? setProgress(prev => ({...prev, bio: true})) : setProgress(prev => ({...prev, bio: false}));
+      currentUser?.weight ? setProgress(prev => ({...prev, weight: true})) : setProgress(prev => ({...prev, weight: false}));
+      currentUser?.height ? setProgress(prev => ({...prev, height: true})) : setProgress(prev => ({...prev, height: false}));
+      currentUser?.profilePic ? setProgress(prev => ({...prev, profilePic: true})) : setProgress(prev => ({...prev, profilePic: false}));
+    }
+
+    trackData();
+  }, [currentUser]);
+  
+  return progress;
+}

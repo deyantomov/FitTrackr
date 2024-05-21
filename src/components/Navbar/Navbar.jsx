@@ -30,7 +30,7 @@ export default function Navbar({ toggleDrawer }) {
   }, [app.currentUser]);
   
   return (
-    <div className="flex flex-row w-full bg-base-800 p-4 justify-center items-center">
+    <div className="flex flex-row w-full bg-base-800 p-4 justify-center items-center border-b-warning border-b-2">
       <label
         htmlFor="my-drawer-2"
         className="btn btn-transparent border-1 border-base-900 drawer-button h-full"
