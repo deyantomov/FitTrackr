@@ -6,7 +6,8 @@ import {
   getProfilePicEndpoint,
   onlineUsersEndpoint,
   createNewExerciseEndpoint,
-  createNewGoalEndpoint
+  createNewGoalEndpoint,
+  updateStepsEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -285,6 +286,25 @@ export const createNewGoal = async (app, goal) => {
         weightGain: goal.weightGain,
         dateRange: goal.dateRange
       })
+    });
+
+    return response.json();
+  }
+}
+
+export const updateSteps = async (app, steps) => {
+  const user = app.currentUser;
+
+  if (user) {
+    const response = await fetch(`${updateStepsEndpoint}?uid=${app.currentUser.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body: JSON.stringify({
+        steps
+      }),
     });
 
     return response.json();

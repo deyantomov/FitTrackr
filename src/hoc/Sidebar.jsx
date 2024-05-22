@@ -7,6 +7,7 @@ import {
   QuestionMarkCircleIcon,
   PlusIcon,
   TrophyIcon,
+  PresentationChartLineIcon
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
@@ -42,8 +43,8 @@ export default function Sidebar({ children }) {
         ></label>
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
           <Link to="/">
-            <div className="flex flex-row justify-center align-center text-center items-center my-3 m-0 p-0">
-              <img src="logo.png" className="w-16 m-0 p-0" />
+            <div className="flex flex-row justify-start align-start text-center  my-3 m-0 p-0">
+              {/* <img src="logo.png" className="w-16 m-0 p-0" /> */}
               <h2 className="text-5xl font-light ms-2 p-2">FitTrackr</h2>
             </div>
           </Link>
@@ -73,6 +74,12 @@ export default function Sidebar({ children }) {
                 <SidebarButton
                   text="Create Exercise"
                   icon={<PlusIcon title="create" className="h-3/6" />}
+                ></SidebarButton>
+              </Link>
+              <Link to="/progress">
+                <SidebarButton
+                  text="Progress"
+                  icon={<PresentationChartLineIcon title="progress" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
               <Link to="/goals">

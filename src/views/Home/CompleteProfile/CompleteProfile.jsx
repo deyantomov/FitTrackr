@@ -32,7 +32,7 @@ export default function CompleteProfile({ uid }) {
         backgroundImage: "url(/public/complete-profile.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "450px",
+        minHeight: "550px",
       }}
     >
       <div

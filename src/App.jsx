@@ -7,6 +7,7 @@ import Login from "./views/Login/Login";
 import SignUp from "./views/Signup/Signup";
 import Goals from "./views/Goals/Goals";
 import Profile from "./views/Profile/Profile";
+import Progress from "./views/Progress/Progress";
 import Authenticated from "./components/Authenticated/Authenticated";
 // import UpdateProfile from "./components/UpdateProfile";
 import atlasConfig from "../atlasConfig.json";
@@ -74,7 +75,6 @@ function App() {
       />
       <Route
         path="/new-exercise"
-        index
         element={
           <Authenticated>
             <Sidebar>
@@ -83,16 +83,25 @@ function App() {
           </Authenticated>
         }
       />
+      <Route 
+        path="/progress"
+        element={
+          <Sidebar>
+            <Authenticated>
+              <Progress />
+            </Authenticated>
+          </Sidebar>
+        }
+      />
       <Route
         path="/goals"
-        index
         element={
           <Sidebar>
             <Goals />
           </Sidebar>
         }
       />
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<Sidebar><NotFound /></Sidebar>} />
     </Routes>
   );
 }

@@ -8,7 +8,7 @@ export default function AddFirstExercise({ uid }) {
         backgroundImage: "url(/public/add-first-exercise-2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "450px",
+        minHeight: "550px",
       }}
     >
       <div
