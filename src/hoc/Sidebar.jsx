@@ -1,19 +1,16 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import { Link } from "react-router-dom";
-import {
-  HomeIcon,
-  GlobeAltIcon,
-  QuestionMarkCircleIcon,
-  PlusIcon,
-  TrophyIcon,
-} from "@heroicons/react/24/outline";
+import { HomeIcon, GlobeAltIcon, QuestionMarkCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
+import { useApp } from "../hooks/useApp";
+
 /**
  *
  * @param {{children: JSX.Element | Array<JSX.Element>}} props
  */
 export default function Sidebar({ children }) {
+  const app = useApp();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -51,19 +48,15 @@ export default function Sidebar({ children }) {
             icon={<GlobeAltIcon title="exercises" className="h-3/6" />}
           ></SidebarButton>
           <SidebarButton
-            text="Goals"
-            icon={<TrophyIcon title="goals" className="h-3/6" />}
-          ></SidebarButton>
-          <SidebarButton
             text="About us"
             icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
           ></SidebarButton>
           <hr className="border-t-2 border-warning my-4" />
           <Link to="/new-exercise">
-            <SidebarButton
-              text="Create Exercise"
-              icon={<PlusIcon title="create" className="h-3/6" />}
-            ></SidebarButton>
+          <SidebarButton
+          text="Create Exercise"
+          icon={<PlusIcon title="create" className="h-3/6" />}
+          ></SidebarButton>
           </Link>
         </div>
       </div>

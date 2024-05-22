@@ -35,10 +35,10 @@ function App() {
 
   return (
     <Routes>
-      {/* <Route
+      <Route
         path="/"
-        element={<>{redirect('/home')}</>}
-      /> */}
+        element={<Sidebar><Home /></Sidebar>}
+      />
       <Route
         path="/home"
         index
@@ -48,8 +48,22 @@ function App() {
           </Sidebar>
         }
       />
-      <Route path="/login" element={<Login></Login>} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route
+        path="/login"
+        element={
+          <Sidebar>
+            <Login />
+          </Sidebar>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <Sidebar>
+            <SignUp />
+          </Sidebar>
+        }
+      />
       <Route
         path="/profile/:id"
         element={
@@ -58,23 +72,15 @@ function App() {
           </Sidebar>
         }
       />
-      {/* <Route
-        path="/update-profile"
-        element={
-          <Authenticated>
-            <Sidebar>
-              <UpdateProfile />
-            </Sidebar>
-          </Authenticated>
-        }
-      /> */}
       <Route
         path="/new-exercise"
         index
         element={
-          <Sidebar>
-            <NewExerciseForm />
-          </Sidebar>
+          <Authenticated>
+            <Sidebar>
+              <NewExerciseForm />
+            </Sidebar>
+          </Authenticated>
         }
       />
       <Route

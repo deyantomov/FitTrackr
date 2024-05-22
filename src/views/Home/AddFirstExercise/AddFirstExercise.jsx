@@ -18,7 +18,7 @@ export default function AddFirstExercise({ uid }) {
         <h2 className="text-4xl text-black mt-2 mb-4 rounded-lg text-center">
           Add your first exercise
         </h2>
-        <Link to={`/`}>
+        <Link to={`/new-exercise`}>
           <button className="btn btn-md btn-warning text-black mt-12">
             Add an exercise
           </button>

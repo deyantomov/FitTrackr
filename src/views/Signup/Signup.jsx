@@ -15,7 +15,15 @@ export default function SignUp() {
     lastName,
   }) => {
     try {
-      await register(app, email, password, firstName, lastName, handle, navigate);
+      await register(
+        app,
+        email,
+        password,
+        firstName,
+        lastName,
+        handle,
+        navigate
+      );
     } catch (erry) {
       console.error(err.message);
     }
@@ -24,8 +32,8 @@ export default function SignUp() {
   //  TODO: Fix design, make it more responsive (landscape:hidden or portrait:hidden to control visibility on different screen sizes)
   return (
     <div className="flex flex-row h-screen justify-center items-center">
-      <div className="card w-auto bg-gray-200 opacity-80 p-8 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
-        <h2 className="card-title text-4xl">Sign up with email</h2>
+      <div className="card w-auto bg-gray-200 opacity-80 p-10 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
+        <h2 className="card-title text-4xl md:text-5xl font-thin">Sign up with email</h2>
         <form
           className="signup-form mt-4"
           onSubmit={(e) => {
@@ -43,55 +51,70 @@ export default function SignUp() {
             }).catch((err) => {
               e.preventDefault();
               console.error(err.message);
-            })
+            });
           }}
         >
-          <div className="mt-8 flex flex-col gap-2 text-md items-center">
-            <label>
-              Email Address:
-              <input
-                id="signup-email"
-                name="email"
-                className="input w-full mt-1 bg-white text-black"
-              />
-            </label>
-            <label className="w-full">
-              Username:
-              <input
-                id="signup-handle"
-                name="handle"
-                type="text"
-                className="input w-full mt-1 bg-white"
-              />
-            </label>
-            <label className="w-full">
-              First Name:
-              <input
-                id="signup-first-name"
-                name="firstName"
-                type="text"
-                className="input w-full mt-1 bg-white"
-              />
-            </label>
-            <label className="w-full">
-              Last Name:
-              <input
-                id="signup-last-name"
-                name="lastName"
-                type="text"
-                className="input w-full mt-1 bg-white"
-              />
-            </label>
-            <label className="w-full">
-              Password:
-              <input
-                id="signup-password"
-                name="password"
-                type="password"
-                className="input w-full mt-1 bg-white"
-              />
-            </label>
+          <div className="mt-8 flex flex-col landscape:flex-row gap-2 text-lg items-center">
+            <div className="flex flex-col w-full">
+              <label className="">
+                Email:
+                <input
+                  id="signup-email"
+                  name="email"
+                  className="input w-full mt-1 bg-white text-black"
+                />
+              </label>
+              <label className="w-full">
+                Username:
+                <input
+                  id="signup-handle"
+                  name="handle"
+                  type="text"
+                  className="input w-full mt-1 bg-white"
+                />
+              </label>
+            </div>
+            <div className="flex flex-col w-full">
+              <label className="w-full">
+                First Name:
+                <input
+                  id="signup-first-name"
+                  name="firstName"
+                  type="text"
+                  className="input w-full mt-1 bg-white"
+                />
+              </label>
+              <label className="w-full">
+                Last Name:
+                <input
+                  id="signup-last-name"
+                  name="lastName"
+                  type="text"
+                  className="input w-full mt-1 bg-white"
+                />
+              </label>
+            </div>
           </div>
+          <div className="flex flex-col mt-2 text-lg">
+              <label className="w-full">
+                Password:
+                <input
+                  id="signup-password"
+                  name="password"
+                  type="password"
+                  className="input w-full mt-1 bg-white"
+                />
+              </label>
+              <label className="w-full">
+                Confirm password:
+                <input
+                  id="signup-password"
+                  name="password"
+                  type="password"
+                  className="input w-full mt-1 bg-white"
+                />
+              </label>
+            </div>
           <button
             id="submit-button"
             data-testid="submitbutton"

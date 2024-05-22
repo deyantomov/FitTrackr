@@ -91,7 +91,7 @@ export const getUserById = async (id) => {
  * @async
  * @param {Realm.App} app Realm app instance
  * @param {string} id User's uid
- * @param {TProgress} updatedFields Fields to update the user document with
+ * @param {object} updatedFields Fields to update the user document with
  * @param {string} email user's email (auth)
  * @param {string} password user's password (auth)
  * @returns {Promise<Response | string>}

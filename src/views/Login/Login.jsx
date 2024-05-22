@@ -19,8 +19,8 @@ export default function Login() {
 
   return (
     <div className="flex flex-row h-screen justify-center items-center">
-      <div className="card w-auto bg-gray-200 opacity-80 p-8 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
-        <h2 className="card-title text-4xl">Log in with email</h2>
+      <div className="card w-auto bg-gray-200 opacity-80 p-10 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
+        <h2 className="card-title text-4xl landscape:text-5xl font-thin">Sign in with email</h2>
         <form
           className="login-form mt-4"
           onSubmit={(e) => {
@@ -36,7 +36,7 @@ export default function Login() {
             navigate("/");
           }}
         >
-          <div className="mt-8 flex flex-col gap-2 text-md items-center">
+          <div className="mt-8 flex flex-col gap-2 text-md items-center text-lg">
             <label>
               Email Address:
               <input
@@ -55,7 +55,7 @@ export default function Login() {
               />
             </label>
             <button type="submit" className="btn btn-md btn-warning w-full mt-6">
-              Log in
+              Sign in
             </button>
           </div>
         </form>
