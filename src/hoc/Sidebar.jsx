@@ -42,7 +42,10 @@ export default function Sidebar({ children }) {
         ></label>
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
           <Link to="/">
-            <h2 className="text-4xl font-bold mt-3 ms-2 p-2">FitTrackr</h2>
+            <div className="flex flex-row justify-center align-center text-center items-center my-3 m-0 p-0">
+              <img src="logo.png" className="w-16 m-0 p-0" />
+              <h2 className="text-5xl font-light ms-2 p-2">FitTrackr</h2>
+            </div>
           </Link>
           <hr className="border-t-2 border-warning my-4" />
           <Link to="/home">

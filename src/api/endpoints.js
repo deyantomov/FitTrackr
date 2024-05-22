@@ -12,3 +12,5 @@ export const onlineUsersEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/online?";
 export const createNewExerciseEndpoint = 
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises";
+export const createNewGoalEndpoint =
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/goals"

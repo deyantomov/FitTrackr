@@ -4,11 +4,36 @@ import FeatureCard from "./FeatureCard/FeatureCard";
 import CompleteProfile from "./CompleteProfile/CompleteProfile";
 import ConnToFb from "./ConnToFb/ConnToFb";
 import AddFirstExercise from "./AddFirstExercise/AddFirstExercise";
-import { getAllExercises, getExercisesByUserId, getExercisesByDifficulty, sortExercisesByRating } from "../../api/api";
+import { createNewGoal } from "../../api/api";
 import { useEffect } from "react";
 
 export default function Home() {
   const app = useApp();
+
+  useEffect(() => {
+    const createGoal = async () => {
+      if (app.currentUser) {
+        const goal = {
+          owner: app.currentUser.id,
+          title: "Take 10000 steps",
+          type: "steps",
+          steps: 10000,
+          calories: null,
+          weightLoss: null,
+          weightGain: null,
+          dateRange: {
+            dateFrom: new Date(),
+            dateTo: new Date(new Date().setDate(new Date().getDate() + 1)), // 1 day from now
+          }
+        };
+        
+        const response = await createNewGoal(app, goal);
+        console.log(response);
+      }
+    }
+
+    createGoal();
+  }, [])
 
   return (
     <>

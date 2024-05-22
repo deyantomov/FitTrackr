@@ -6,6 +6,7 @@ import {
   getProfilePicEndpoint,
   onlineUsersEndpoint,
   createNewExerciseEndpoint,
+  createNewGoalEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -249,4 +250,43 @@ export const sortExercisesByRating = async (rating) => {
   //  Rating = "lowest" | "highest" 
   const response = await fetch(`${createNewExerciseEndpoint}?rating=${rating}`);
   return response.json();
+}
+
+
+/**
+ * Creates a new goal with the given info, and adds it to the db
+ * 
+ * @param {Realm.App} app 
+ * @param {object} goal
+ */
+export const createNewGoal = async (app, goal) => {
+  if (Object.keys(goal) === 0) {
+    throw new Error('Goal object cannot be empty!');
+  }
+
+  const currentUser = app.currentUser;
+
+  if (currentUser) {
+    const user = await getUserById(currentUser.id);
+
+    const response = await fetch(`${createNewGoalEndpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+      body: JSON.stringify({
+        owner: user.uid,
+        title: goal.title,
+        type: goal.type,  //  steps | calories | weightLoss | weightGain
+        steps: goal.steps,
+        calories: goal.calories,
+        weightLoss: goal.weightLoss,
+        weightGain: goal.weightGain,
+        dateRange: goal.dateRange
+      })
+    });
+
+    return response.json();
+  }
 }
