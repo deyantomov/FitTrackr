@@ -1,7 +1,13 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import { Link } from "react-router-dom";
-import { HomeIcon, GlobeAltIcon, QuestionMarkCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  GlobeAltIcon,
+  QuestionMarkCircleIcon,
+  PlusIcon,
+  TrophyIcon,
+} from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
 
@@ -36,28 +42,44 @@ export default function Sidebar({ children }) {
         ></label>
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
           <Link to="/">
-            <h2 className="text-4xl mt-3 ms-2 p-2">FitTrackr</h2>
+            <h2 className="text-4xl font-bold mt-3 ms-2 p-2">FitTrackr</h2>
           </Link>
           <hr className="border-t-2 border-warning my-4" />
-          <SidebarButton
-            text="Home"
-            icon={<HomeIcon title="home" className="h-3/6" />}
-          ></SidebarButton>
-          <SidebarButton
-            text="Explore exercises"
-            icon={<GlobeAltIcon title="exercises" className="h-3/6" />}
-          ></SidebarButton>
-          <SidebarButton
-            text="About us"
-            icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
-          ></SidebarButton>
-          <hr className="border-t-2 border-warning my-4" />
-          <Link to="/new-exercise">
-          <SidebarButton
-          text="Create Exercise"
-          icon={<PlusIcon title="create" className="h-3/6" />}
-          ></SidebarButton>
+          <Link to="/home">
+            <SidebarButton
+              text="Home"
+              icon={<HomeIcon title="home" className="h-3/6" />}
+            ></SidebarButton>
           </Link>
+          <Link to="/exercises">
+            <SidebarButton
+              text="Explore exercises"
+              icon={<GlobeAltIcon title="exercises" className="h-3/6" />}
+            ></SidebarButton>
+          </Link>
+          <Link to="/about">
+            <SidebarButton
+              text="About us"
+              icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
+            ></SidebarButton>
+          </Link>
+          <hr className="border-t-2 border-warning my-4" />
+          {app.currentUser && (
+            <>
+              <Link to="/new-exercise">
+                <SidebarButton
+                  text="Create Exercise"
+                  icon={<PlusIcon title="create" className="h-3/6" />}
+                ></SidebarButton>
+              </Link>
+              <Link to="/goals">
+                <SidebarButton
+                  text="Goals"
+                  icon={<TrophyIcon title="goals" className="h-3/6" />}
+                ></SidebarButton>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

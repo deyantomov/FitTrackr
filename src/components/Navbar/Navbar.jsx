@@ -46,9 +46,11 @@ export default function Navbar({ toggleDrawer }) {
         <Link to="/exercises">
           <h2 className="text-2xl">Exercises</h2>
         </Link>
-        <Link to="/goals">
-          <h2 className="text-2xl">Goals</h2>
-        </Link>
+        {app.currentUser && (
+          <Link to="/goals">
+            <h2 className="text-2xl">Goals</h2>
+          </Link>
+        )}
         <Link to="/about-us">
           <h2 className="text-2xl">About</h2>
         </Link>

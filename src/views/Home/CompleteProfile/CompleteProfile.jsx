@@ -40,9 +40,9 @@ export default function CompleteProfile({ uid }) {
         style={{ backgroundColor: "rgba(255, 255, 255, 0.55)" }}
       >
         <h2 className="text-4xl text-black mb-4">Complete your profile</h2>
-        {notCompleted.map((field) => {
+        {notCompleted.map((field, index) => {
           return (
-            <p className="text-red-600 text-sm my-1">
+            <p className="text-red-600 text-sm my-1" key={index}>
               {field[0].toUpperCase().concat(field.slice(1))} is not added
             </p>
           );

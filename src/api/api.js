@@ -214,10 +214,10 @@ export const createNewExercise = async (app, exercise) => {
         Authorization: `Bearer ${currentUser.accessToken}`,
       },
       body: JSON.stringify({
-        owner: user['_id'],
+        owner: user.uid,
         title: exercise.title,
         description: exercise.description,
-        level: exercise.level,
+        level: exercise.level.toLowerCase(),
         duration: exercise.duration,
         rating: 0,
         isPrivate: exercise.isPrivate,
@@ -227,4 +227,26 @@ export const createNewExercise = async (app, exercise) => {
 
     return response.json();
   }
+}
+
+export const getAllExercises = async () => {
+  const response = await fetch(createNewExerciseEndpoint);
+  return response.json();
+}
+
+export const getExercisesByUserId = async (uid) => {
+  const response = await fetch(`${createNewExerciseEndpoint}?uid=${uid}`);
+  return response.json();
+}
+
+export const getExercisesByDifficulty = async (difficulty) => {
+  //  Difficulty - "Beginner" | "Intermediate" | "Pro"
+  const response = await fetch(`${createNewExerciseEndpoint}?level=${difficulty}`);
+  return response.json();
+}
+
+export const sortExercisesByRating = async (rating) => {
+  //  Rating = "lowest" | "highest" 
+  const response = await fetch(`${createNewExerciseEndpoint}?rating=${rating}`);
+  return response.json();
 }

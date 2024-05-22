@@ -4,6 +4,8 @@ import FeatureCard from "./FeatureCard/FeatureCard";
 import CompleteProfile from "./CompleteProfile/CompleteProfile";
 import ConnToFb from "./ConnToFb/ConnToFb";
 import AddFirstExercise from "./AddFirstExercise/AddFirstExercise";
+import { getAllExercises, getExercisesByUserId, getExercisesByDifficulty, sortExercisesByRating } from "../../api/api";
+import { useEffect } from "react";
 
 export default function Home() {
   const app = useApp();
