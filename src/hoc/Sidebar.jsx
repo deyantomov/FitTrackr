@@ -7,9 +7,11 @@ import {
   QuestionMarkCircleIcon,
   PlusIcon,
   TrophyIcon,
+  PresentationChartLineIcon
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
+import { logout } from "../services/auth.service";
 
 /**
  *
@@ -18,10 +20,17 @@ import { useApp } from "../hooks/useApp";
 export default function Sidebar({ children }) {
   const app = useApp();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = async () => {
+    await logout(app);
+    setIsLoggedIn(false);
+  }
+
 
   return (
     <div className="drawer h-full">
@@ -42,7 +51,10 @@ export default function Sidebar({ children }) {
         ></label>
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
           <Link to="/">
-            <h2 className="text-4xl font-bold mt-3 ms-2 p-2">FitTrackr</h2>
+            <div className="flex flex-row justify-start align-start text-center  my-3 m-0 p-0">
+              {/* <img src="logo.png" className="w-16 m-0 p-0" /> */}
+              <h2 className="text-5xl font-light ms-2 p-2">FitTrackr</h2>
+            </div>
           </Link>
           <hr className="border-t-2 border-warning my-4" />
           <Link to="/home">
@@ -72,12 +84,24 @@ export default function Sidebar({ children }) {
                   icon={<PlusIcon title="create" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
+              <Link to="/progress">
+                <SidebarButton
+                  text="Progress"
+                  icon={<PresentationChartLineIcon title="progress" className="h-3/6" />}
+                ></SidebarButton>
+              </Link>
               <Link to="/goals">
                 <SidebarButton
                   text="Goals"
                   icon={<TrophyIcon title="goals" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
+              <button
+                className="btn btn-warning mt-auto"
+                onClick={async () => await handleLogout()}
+              >
+                Log out
+              </button>
             </>
           )}
         </div>

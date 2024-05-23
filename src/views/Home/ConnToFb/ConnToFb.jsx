@@ -8,7 +8,7 @@ export default function ConnToFb({ uid }) {
         backgroundImage: "url(/public/fitbit-2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "450px",
+        minHeight: "550px",
       }}
     >
       <div
