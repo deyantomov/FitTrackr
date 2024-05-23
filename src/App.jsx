@@ -37,7 +37,11 @@ function App() {
     <Routes>
       <Route
         path="/"
-        element={<Sidebar><Home /></Sidebar>}
+        element={
+          <Sidebar>
+            <Home />
+          </Sidebar>
+        }
       />
       <Route
         path="/home"
