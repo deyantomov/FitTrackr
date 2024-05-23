@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
+import { logout } from "../services/auth.service";
 
 /**
  *
@@ -19,10 +20,17 @@ import { useApp } from "../hooks/useApp";
 export default function Sidebar({ children }) {
   const app = useApp();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = async () => {
+    await logout(app);
+    setIsLoggedIn(false);
+  }
+
 
   return (
     <div className="drawer h-full">
@@ -88,6 +96,12 @@ export default function Sidebar({ children }) {
                   icon={<TrophyIcon title="goals" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
+              <button
+                className="btn btn-warning mt-auto"
+                onClick={async () => await handleLogout()}
+              >
+                Log out
+              </button>
             </>
           )}
         </div>
