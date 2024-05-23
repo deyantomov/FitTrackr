@@ -14,6 +14,7 @@ import atlasConfig from "../atlasConfig.json";
 import "./App.css";
 import NewExerciseForm from "./views/NewExercise/NewExercise";
 import NotFound from "./views/NotFound/NotFound";
+import Exercises from "./views/Exercises/Exercises";
 const { appId } = atlasConfig;
 
 export default function ProvidedApp() {
@@ -105,6 +106,16 @@ function App() {
           </Sidebar>
         }
       />
+      <Route
+    path="/exercises"
+    element={
+      <Sidebar>
+        <Authenticated>
+          <Exercises />
+        </Authenticated>
+      </Sidebar>
+    }
+  />
       <Route path="*" element={<Sidebar><NotFound /></Sidebar>} />
     </Routes>
   );
