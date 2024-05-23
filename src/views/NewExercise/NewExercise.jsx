@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { createNewExercise } from '../../api/api';
 import { useApp } from '../../hooks/useApp';
+import { LockClosedIcon, ClockIcon, ChartBarIcon, PencilIcon, DocumentTextIcon } from '@heroicons/react/16/solid';
 
 const NewExerciseForm = () => {
     const app = useApp();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [level, setLevel] = useState('');
+    const [level, setLevel] = useState('beginner');
     const [duration, setDuration] = useState(0);
     const [isPrivate, setIsPrivate] = useState(false);
     const [error, setError] = useState('');
@@ -76,8 +77,9 @@ const NewExerciseForm = () => {
         <div className="flex justify-center">
             <div className="form-control w-auto md:w-1/2 lg:w-1/3 mx-auto p-4 bg-base-200 rounded-box">
                 <form onSubmit={handleSubmit}>
-                    <span>Title</span>
-                    <label className="label mb-1 w-full">
+                    <span>Title:</span>
+                    <label className="label mb-4 w-full">
+                    <DocumentTextIcon className="h-5 w-5 mr-2" />
                         <input
                             type="text"
                             placeholder="Title"
@@ -86,28 +88,30 @@ const NewExerciseForm = () => {
                             className="input input-bordered w-full"
                         />
                     </label>
-                    <span>Description</span>
-                    <label className="label mb-1 w-full">
-                        <input
-                            type="text"
+                    <span>Description:</span>
+                    <label className="label mb-4 w-full">
+                    <PencilIcon className="h-5 w-5 mr-2" />
+                        <textarea
                             placeholder="Description"
                             value={description}
                             onChange={e => setDescription(e.target.value)}
-                            className="input input-bordered w-full"
+                            className="textarea textarea-bordered w-full"
                         />
                     </label>
-                    <span>Level</span>
-                    <label className="label mb-1 w-full">
-                        <input
-                            type="text"
-                            placeholder="Level"
-                            value={level}
-                            onChange={e => setLevel(e.target.value)}
-                            className="input input-bordered w-full"
-                        />
+                    <span>Level:</span>
+                    <label className="label mb-4 w-full">
+                    <ChartBarIcon className="h-5 w-5 mr-2" />
+                    <select value={level} onChange={(e) => setLevel(e.target.value)}
+                    className="select select-bordered w-full">
+                    <option value="beginner">Beginner</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="professional">Professional</option>
+                    
+                </select>
                     </label>
-                    <span>Duration</span>
-                    <label className="label mb-1 w-full">
+                    <span>Duration (in minutes):</span>
+                    <label className="label mb-4 w-full">
+                    <ClockIcon className="h-5 w-5 mr-2" />  
                         <input
                             type="number"
                             min="0"
@@ -117,8 +121,9 @@ const NewExerciseForm = () => {
                             className="input input-bordered w-full"
                         />
                     </label>
-                    <span>Make private</span>
-                    <label className="label mb-1 w-full">
+                    <span>Private:</span>
+                    <label className="label mb-4 w-full">
+                    <LockClosedIcon className="h-5 w-5 mr-2" />
                         <select
                             value={isPrivate ? 'Private' : 'Public'}
                             onChange={e => setIsPrivate(e.target.value === 'Private')}
@@ -128,7 +133,7 @@ const NewExerciseForm = () => {
                             <option value="Private">Private</option>
                         </select>
                     </label>
-                    <button type="submit" className="btn bg-yellow-500 px-8 py-4 w-full md:auto">Add Exercise</button>
+                    <button type="submit" className="btn bg-yellow-500 px-8 py-4 w-full md:auto rounded">Add Exercise</button>
                     {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                     {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
                 </form>
