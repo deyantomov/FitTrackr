@@ -1,6 +1,176 @@
+import React, { useEffect, useState } from "react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
 export default function GoalsCard() {
+  const [percentage, setPercentage] = useState(0);
+  const [steps, setSteps] = useState(2000);
+  const [targetSteps, setTargetSteps] = useState(8000);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (percentage < 100) {
+        setPercentage(percentage + 1);
+      }
+    }, 10);
+  }, [percentage]);
+
+  const progress = () => {
+    const result = (steps * 100) / targetSteps;
+    return result;
+  };
+
   return (
     <>
+      <div
+        className="card-container"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-evenly",
+          gap: "30px",
+        }}
+      >
+        <div className="card w-96 glass" style={{ color: "#2effd9" }}>
+          <div
+            className="card-stat"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "200px",
+                display: "flex",
+                justifyContent: "center",
+                color: "#2effd9",
+              }}
+            >
+              <div style={{ width: 120, margin: 10 }}>
+                <CircularProgressbar
+                  value={progress()}
+                  text={`${progress()}%`}
+                  styles={buildStyles({
+                    pathColor: `#f7c000`,
+                    textColor: "#f7c000",
+                  })}
+                />
+              </div>
+            </div>
+          </div>
+          <progress
+            style={{ width: "100%" }}
+            className="progress progress-warning w-56"
+            value="25"
+            max="100"
+          ></progress>
+
+          <div className="card-body">
+            <h2
+              className="card-title"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              Steps
+            </h2>
+            <p style={{ textAlign: "center" }}>2000 steps out of 8000 target</p>
+          </div>
+        </div>
+
+        <div className="card w-96 glass" style={{ color: "#2effd9" }}>
+          <div
+            className="card-stat"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "200px",
+                display: "flex",
+                justifyContent: "center",
+                color: "#2effd9",
+              }}
+            >
+              <div style={{ width: 120, margin: 10 }}>
+                <CircularProgressbar
+                  value={progress()}
+                  text={`${progress()}%`}
+                  styles={buildStyles({
+                    pathColor: `#f7c000`,
+                    textColor: "#f7c000",
+                  })}
+                />
+              </div>
+            </div>
+          </div>
+          <progress
+            style={{ width: "100%" }}
+            className="progress progress-warning w-56"
+            value="25"
+            max="100"
+          ></progress>
+
+          <div className="card-body">
+            <h2
+              className="card-title"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              Steps
+            </h2>
+            <p style={{ textAlign: "center" }}>2000 steps out of 8000 target</p>
+          </div>
+        </div>
+
+        <div className="card w-96 glass" style={{ color: "#2effd9" }}>
+          <div
+            className="card-stat"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "200px",
+                display: "flex",
+                justifyContent: "center",
+                color: "#2effd9",
+              }}
+            >
+              <div style={{ width: 120, margin: 10 }}>
+                <CircularProgressbar
+                  value={progress()}
+                  text={`${progress()}%`}
+                  styles={buildStyles({
+                    pathColor: `#f7c000`,
+                    textColor: "#f7c000",
+                  })}
+                />
+              </div>
+            </div>
+          </div>
+          <progress
+            style={{ width: "100%" }}
+            className="progress progress-warning w-56"
+            value="25"
+            max="100"
+          ></progress>
+
+          <div className="card-body">
+            <h2
+              className="card-title"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              Steps
+            </h2>
+            <p style={{ textAlign: "center" }}>2000 steps out of 8000 target</p>
+          </div>
+        </div>
+      </div>
+
+      {/* another layout
       <div
         className="stats stats-vertical lg:stats-horizontal shadow"
         style={{ border: "4px solid #ff2ec5" }}
@@ -8,31 +178,23 @@ export default function GoalsCard() {
         <div className="stat">
           <div className="stat-title">Steps</div>
           <div className="stat-value">2000</div>
-          {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
-        </div>
-
+         </div>
         <div className="stat">
           <div className="stat-title">Steps Target</div>
           <div className="stat-value">8000</div>
-          {/* <div className="stat-desc">↗︎ 400 (22%)</div> */}
-        </div>
-
+         </div>
         <div className="stat">
           <div className="stat-title">Progress</div>
-          <div className="stat-value">25%</div>
-          {/* <div className="stat-desc">↘︎ 90 (14%)</div> */}
-        </div>
-        <div
-          className="radial-progress"
-          style={{ "--value": 25 }}
-          role="progressbar"
-        >
-          25%
+         <div style={{ width: "150px", textAlign: "center" }}>
+            <div style={{ width: 120, margin: 10 }}>
+              <CircularProgressbar value={progress()} text={`${progress()}%`} />
+            </div>
+          </div>
         </div>
       </div>
-      <br />
+      <br /> */}
 
-      <div className="card w-96 bg-base-100 shadow-xl">
+      {/* <div className="card w-96 bg-base-100 shadow-xl">
         <progress
           style={{ width: "100%" }}
           className="progress progress-warning w-56"
@@ -46,7 +208,7 @@ export default function GoalsCard() {
           <br />
           <p>Keep going!</p>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
