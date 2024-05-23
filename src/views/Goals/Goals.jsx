@@ -4,7 +4,6 @@ export default function Goals() {
   return (
     <>
       <h1>Example view:</h1>
-
       <GoalsCard></GoalsCard>
     </>
   );

@@ -23,10 +23,12 @@ export default function GoalsCard() {
   return (
     <>
       <div
-        className="container"
+        className="card-container"
         style={{
           display: "flex",
-          justifyContent: "space-around",
+          flexWrap: "wrap",
+          justifyContent: "space-evenly",
+          gap: "30px",
         }}
       >
         <div className="card w-96 glass" style={{ color: "#2effd9" }}>
