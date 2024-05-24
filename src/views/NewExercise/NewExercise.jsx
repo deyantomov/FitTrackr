@@ -104,9 +104,8 @@ const NewExerciseForm = () => {
                     <select value={level} onChange={(e) => setLevel(e.target.value)}
                     className="select select-bordered w-full">
                     <option value="beginner">Beginner</option>
-                    <option value="advanced">Advanced</option>
-                    <option value="professional">Professional</option>
-                    
+                    <option value="intermediate">Intermediate</option>
+                    <option value="pro">Pro</option>
                 </select>
                     </label>
                     <span>Duration (in minutes):</span>

@@ -1,6 +1,6 @@
 import { getAllExercises } from "../../api/api";
 import { useEffect, useState } from "react";
-import { Card, Button } from "react-daisyui";
+import { Card, Button, Loading } from "react-daisyui";
 import { FireIcon, LockClosedIcon, ClockIcon, ChartBarIcon, PencilIcon, CalendarIcon, StarIcon, UserCircleIcon } from '@heroicons/react/16/solid';
 
 const Exercises = () => {
@@ -23,8 +23,11 @@ useEffect(() => {
     fetchExercises();
 }, []);
 
-if (loading) return <p>Loading exercises...</p>;
-if (error) return <p>Error loading exercises: {error}</p>;
+if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+    <Loading/>
+    </div>
+);
 
 return (
     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
