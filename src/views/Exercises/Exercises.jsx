@@ -2,11 +2,18 @@ import { getAllExercises } from "../../api/api";
 import { useEffect, useState } from "react";
 import { Card, Button, Loading } from "react-daisyui";
 import { FireIcon, LockClosedIcon, ClockIcon, ChartBarIcon, PencilIcon, CalendarIcon, StarIcon, UserCircleIcon } from '@heroicons/react/16/solid';
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 const Exercises = () => {
 const [exercises, setExercises] = useState([]);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
+const [searchQuery, setSearchQuery] = useState('');
+
+//TODO:Edit 
+const handleSearch = (query) => {
+    setSearchQuery(query);
+};
 
 useEffect(() => {
     const fetchExercises = async () => {
@@ -30,6 +37,10 @@ if (loading) return (
 );
 
 return (
+<div>
+<div className="w-1/2 mx-auto">
+<SearchBar onSearch={handleSearch} />
+</div>
     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
     {exercises.length > 0 ? (
         exercises.map((exercise) => (
@@ -86,6 +97,7 @@ return (
     ) : (
         <p>No exercises found.</p>
     )}
+    </div>
     </div>
 );
 };
