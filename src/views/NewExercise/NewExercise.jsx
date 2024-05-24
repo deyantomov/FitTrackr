@@ -18,11 +18,11 @@ const NewExerciseForm = () => {
         
         setError('');
         setSuccess('');
-
+    
         if (!validateForm()) {
             return;
         }
-
+    
         if (app.currentUser) {
             const exercise = {
                 title,
@@ -68,7 +68,7 @@ const NewExerciseForm = () => {
     const resetForm = () => {
         setTitle('');
         setDescription('');
-        setLevel('');
+        setLevel('beginner');
         setDuration(0);
         setIsPrivate(false);
     };
