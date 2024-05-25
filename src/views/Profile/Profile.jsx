@@ -7,12 +7,15 @@ import { Card, Badge, Input, Button, Modal } from "react-daisyui";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { imageToBase64 } from "../../common/utils";
+// import { get } from "../../services/localStorage.service";
 
 export default function Profile() {
   const app = useApp();
   const params = useParams();
   const [user, setUser] = useState({});
   const [userPic, setUserPic] = useState("");
+
+  const [currentUser, setCurrentUser] = useState({});
 
   const [newUserInfo, setNewUserInfo] = useState({});
   const [newProfilePic, setNewProfilePic] = useState("");
@@ -29,7 +32,14 @@ export default function Profile() {
       setUserPic(profilePic.img);
     };
 
+    const getCurrentUser = async () => {
+      setCurrentUser(await getUserById(app.currentUser.id));
+    }
+
     getProfile();
+    getCurrentUser();
+
+    console.log(currentUser); 
   }, []);
 
   const handleUpdate = async () => {
@@ -73,15 +83,13 @@ export default function Profile() {
       try {
         const newUserInfo = { profilePic: newProfilePic };
 
-        const result = await updateUserProfile(
+        await updateUserProfile(
           app,
           user.uid,
           newUserInfo,
           user.email,
           password
         );
-
-        console.log(result);
 
         setUserPic(newProfilePic);
         setIsOpen(false);
@@ -102,7 +110,7 @@ export default function Profile() {
                 dimensions="96px"
                 className="flex-shrink-0"
               />
-              {app.currentUser.id === user.uid && (
+              {currentUser.uid === user.uid && (
                 <div className="relative flex flex-row justify-center align-center items-center">
                   <div
                     className="absolute bottom-0 right-0 bg-blue-500 text-white text-sm rounded-full h-7 w-7 flex items-center justify-center"
@@ -122,25 +130,32 @@ export default function Profile() {
                   className="btn-warning btn-outline mt-5 w-full"
                   onClick={() => setIsOpen(true)}
                 >
-                  Update
+                  Upload
                 </Button>
               )}
               <Modal
                 open={isOpen}
+                className="p-4 mt-2"
               >
-                <h2>Enter Password</h2>
+                <h2 className="text-xl mb-4">Enter Password</h2>
                 <Input
                   type="password"
+                  size="sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <div className="flex flex-row w-full justify-center align-center items-center gap-6 mt-4">
                 <Button className="btn-success" onClick={handleUpdateProfilePic}>Submit</Button>
-                <Button className="btn-danger" onClick={() => setIsOpen(false)}>Close</Button>
+                <Button className="btn-error" onClick={() => {
+                  setIsOpen(false);
+                  setPassword('');
+                }}>Close</Button>
+                </div>
               </Modal>
             </div>
           </div>
           <div className="flex flex-col w-full h-auto gap-0">
-            <Card.Title className="text-gray-500 opacity-70 mt-2 mb-0 p-0">
+            <Card.Title className="text-gray-500 opacity-70 mt- mb-0 p-0">
               @{user.handle}
             </Card.Title>
             <Card.Body className="p-0 flex flex-row gap-1 w-16 text-black text-lg">
@@ -155,7 +170,7 @@ export default function Profile() {
           </div>
         </div>
         <hr className="border border-t-1 border-t-gray my-6" />
-        {app.currentUser.id === user.uid && (
+        {currentUser.uid === user.uid && (
           <div className="grid grid-rows-1 text-center align-center place-items-center justify-center text-black bg-gray-100 p-8 h-auto ">
             <h2 className="text-2xl mb-2">Update your profile</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 mt-2 text-start md:gap-2 w-full">
@@ -268,7 +283,7 @@ export default function Profile() {
               </label>
             </div>
             <Button className="btn-warning w-2/6 my-4" onClick={handleUpdate}>
-              Update
+              Update profile
             </Button>
           </div>
         )}

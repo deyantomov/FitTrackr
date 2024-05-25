@@ -33,8 +33,6 @@ export default function Login() {
               email: email.toString(),
               password: password.toString()
             });
-
-            navigate("/");
           }}
         >
           <div className="mt-8 flex flex-col gap-2 text-md items-center text-lg">

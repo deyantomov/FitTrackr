@@ -7,7 +7,7 @@ import Login from "./views/Login/Login";
 import SignUp from "./views/Signup/Signup";
 import Goals from "./views/Goals/Goals";
 import Profile from "./views/Profile/Profile";
-import Progress from "./views/Progress/Progress";
+// import Progress from "./views/Progress/Progress";
 import Authenticated from "./components/Authenticated/Authenticated";
 // import UpdateProfile from "./components/UpdateProfile";
 import atlasConfig from "../atlasConfig.json";
@@ -88,7 +88,7 @@ function App() {
           </Authenticated>
         }
       />
-      <Route 
+      {/* <Route 
         path="/progress"
         element={
           <Sidebar>
@@ -97,7 +97,7 @@ function App() {
             </Authenticated>
           </Sidebar>
         }
-      />
+      /> */}
       <Route
         path="/goals"
         element={
