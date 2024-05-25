@@ -1,12 +1,14 @@
 import { Card, Button, Modal, Input } from "react-daisyui";
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import { useApp } from "../../../hooks/useApp";
-import { updateSteps } from "../../../api/api";
+import { getUserById, updateSteps } from "../../../api/api";
 
 export default function StepsActivity() {
   const ref = useRef();
   const [inputValue, setInputValue] = useState("");
   const app = useApp();
+  const [steps, setSteps] = useState({});
+  const [triggerFetch, setTriggerFetch] = useState(false);
 
   const handleShow = useCallback(() => {
     ref.current?.showModal();
@@ -24,8 +26,26 @@ export default function StepsActivity() {
     const res = await updateSteps(app, Number(inputValue));
     
     setInputValue("");
-    console.log(res);
+    setTriggerFetch(!triggerFetch);
+    
+    return res;
   };
+
+  useEffect(() => {
+    const fetchSteps = async () => {
+      const currentUser = app.currentUser;
+
+      if (currentUser) {
+        const user = await getUserById(currentUser.id);
+        
+        if(user.steps) {
+          setSteps(user.steps);
+        }
+      }
+    }
+
+    fetchSteps();
+  }, [triggerFetch])
 
   return (
     <Card
@@ -46,9 +66,9 @@ export default function StepsActivity() {
           className="text-xl p-6 flex flex-col gap-0 rounded-md justify-start align-start items-start"
           style={{ backgroundColor: "rgb(250, 204, 21)" }}
         >
-          <p>Daily: 0</p>
-          <p>Weekly: 0</p>
-          <p>Monthly: 0</p>
+          <p>Daily: {steps.daily || 0}</p>
+          <p>Weekly: {steps.weekly || 0}</p>
+          <p>Monthly: {steps.monthly || 0}</p>
         </Card.Body>
         <Button
           className="border-0 mt-10 text-black rounded-lg"
@@ -63,7 +83,7 @@ export default function StepsActivity() {
             <Input
               type="number"
               bordered={false}
-              className="w-full bg-base-200"
+              className="w-full"
               value={inputValue}
               readOnly
             />
@@ -78,13 +98,12 @@ export default function StepsActivity() {
                 "7",
                 "8",
                 "9",
-                "C",
                 "0",
-                "00",
+                "C",
               ].map((value) => (
                 <Button
                   key={value}
-                  className={`numpad-btn ${value === "C" && "btn-warning"}`}
+                  className={`numpad-btn ${value === "C" && "btn-warning"} ${value === "C" && "col-span-2"}`}
                   onClick={() => handleNumpadClick(value)}
                 >
                   {value}

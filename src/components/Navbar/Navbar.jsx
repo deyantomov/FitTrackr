@@ -65,7 +65,7 @@ export default function Navbar({ toggleDrawer }) {
           <h2 className="text-2xl">About</h2>
         </Link>
       </div>
-      <div className="rounded-full w-full flex flex-row justify-end align-end p-0">
+      <div className="rounded-full w-full flex flex-row justify-end align-end p-0 gap-6">
         <Link to={`/profile/${picOwner}`}>
           <ProfilePic profilePic={profilePic} dimensions="56px" />
         </Link>

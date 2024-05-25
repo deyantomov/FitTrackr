@@ -4,46 +4,50 @@ import FeatureCard from "./FeatureCard/FeatureCard";
 import CompleteProfile from "./CompleteProfile/CompleteProfile";
 import ConnToFb from "./ConnToFb/ConnToFb";
 import AddFirstExercise from "./AddFirstExercise/AddFirstExercise";
-import { createNewGoal } from "../../api/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getUserById } from "../../api/api";
+import { useCompleteProfile } from "../../hooks/useCompleteProfile";
 
 export default function Home() {
   const app = useApp();
+  const [user, setUser] = useState({});
+  const [progress, setProgress] = useState(useCompleteProfile());
+  const [progressPercentage, setProgressPercentage] = useState(0);
 
-  // useEffect(() => {
-  //   const createGoal = async () => {
-  //     if (app.currentUser) {
-  //       const goal = {
-  //         owner: app.currentUser.id,
-  //         title: "Take 10000 steps",
-  //         type: "steps",
-  //         steps: 10000,
-  //         calories: null,
-  //         weightLoss: null,
-  //         weightGain: null,
-  //         dateRange: {
-  //           dateFrom: new Date(),
-  //           dateTo: new Date(new Date().setDate(new Date().getDate() + 1)), // 1 day from now
-  //         }
-  //       };
-        
-  //       const response = await createNewGoal(app, goal);
-  //       console.log(response);
-  //     }
-  //   }
+  useEffect(() => {
+    const getUser = async () => {
+      if (app.currentUser && app.currentUser.id) {
+        const user = await getUserById(app.currentUser.id);
 
-  //   createGoal();
-  // }, [])
+        if (user) {
+          setUser(user);
+        }
+      }
+    };
+
+    getUser();
+  }, [app.currentUser]);
+
+  useEffect(() => {
+    const totalFields = Object.keys(progress).length;
+    const completedFields = Object.values(progress).filter((field) => field)
+      .length;
+    setProgressPercentage((completedFields / totalFields) * 100);
+  })
 
   return (
     <>
       {app.currentUser ? (
         <div className="flex flex-col align-center items-center w-full h-full mt-6 p-6">
-          <h2 className="text-3xl lg:text-4xl xl:text-5xl mb-4">Finish setting up your profile</h2>
+          <h2 className="text-3xl lg:text-4xl xl:text-5xl mb-4">
+            Finish setting up your profile
+          </h2>
           <div className="flex flex-col xl:flex-row gap-12 mt-12">
-            <CompleteProfile uid={app.currentUser.id} />
-            <ConnToFb uid={app.currentUser.id}/>
-            <AddFirstExercise uid={app.currentUser.id} />
+            {progressPercentage < 100 && <CompleteProfile uid={app.currentUser.id} />}
+            <ConnToFb uid={app.currentUser.id} />
+            {user.exercises && user.exercises.own.length > 0 ? null : (
+              <AddFirstExercise uid={app.currentUser.id} />
+            )}
           </div>
         </div>
       ) : (
@@ -69,7 +73,9 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <h2 className="mt-8 lg:mt-12 mb-2 lg:mb-6 font-light text-6xl lg:text-7xl">Features</h2>
+            <h2 className="mt-8 lg:mt-12 mb-2 lg:mb-6 font-light text-6xl lg:text-7xl">
+              Features
+            </h2>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-36 w-full my-6">
               <FeatureCard
                 img="exercises.jpg"

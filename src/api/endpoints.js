@@ -13,6 +13,8 @@ export const onlineUsersEndpoint =
 export const createNewExerciseEndpoint = 
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises";
 export const createNewGoalEndpoint =
-  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/goals"
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/goals";
 export const updateStepsEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/update_steps";
+export const updateUserExercisesEndPoint =
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/exercises";
