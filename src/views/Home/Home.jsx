@@ -4,48 +4,76 @@ import FeatureCard from "./FeatureCard/FeatureCard";
 import CompleteProfile from "./CompleteProfile/CompleteProfile";
 import ConnToFb from "./ConnToFb/ConnToFb";
 import AddFirstExercise from "./AddFirstExercise/AddFirstExercise";
-import { createNewGoal } from "../../api/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getUserById } from "../../api/api";
+import { useCompleteProfile } from "../../hooks/useCompleteProfile";
+import Progress from "./Progress/Progress";
+import { Link } from "react-router-dom";
+import { Button } from "react-daisyui";
 
 export default function Home() {
   const app = useApp();
+  const [user, setUser] = useState({});
+  const [progress, setProgress] = useState(useCompleteProfile());
+  const [progressPercentage, setProgressPercentage] = useState(0);
 
-  // useEffect(() => {
-  //   const createGoal = async () => {
-  //     if (app.currentUser) {
-  //       const goal = {
-  //         owner: app.currentUser.id,
-  //         title: "Take 10000 steps",
-  //         type: "steps",
-  //         steps: 10000,
-  //         calories: null,
-  //         weightLoss: null,
-  //         weightGain: null,
-  //         dateRange: {
-  //           dateFrom: new Date(),
-  //           dateTo: new Date(new Date().setDate(new Date().getDate() + 1)), // 1 day from now
-  //         }
-  //       };
-        
-  //       const response = await createNewGoal(app, goal);
-  //       console.log(response);
-  //     }
-  //   }
+  useEffect(() => {
+    const getUser = async () => {
+      if (app.currentUser && app.currentUser.id) {
+        const user = await getUserById(app.currentUser.id);
 
-  //   createGoal();
-  // }, [])
+        if (user) {
+          setUser(user);
+        }
+      }
+    };
+
+    getUser();
+  }, [app.currentUser]);
+
+  useEffect(() => {
+    const totalFields = Object.keys(progress).length;
+    const completedFields = Object.values(progress).filter(
+      (field) => field
+    ).length;
+    setProgressPercentage(((completedFields / totalFields) * 100) || 0);
+    console.log();
+  });
 
   return (
     <>
       {app.currentUser ? (
-        <div className="flex flex-col align-center items-center w-full h-full mt-6 p-6">
-          <h2 className="text-3xl lg:text-4xl xl:text-5xl mb-4">Finish setting up your profile</h2>
-          <div className="flex flex-col xl:flex-row gap-12 mt-12">
-            <CompleteProfile uid={app.currentUser.id} />
-            <ConnToFb uid={app.currentUser.id}/>
-            <AddFirstExercise uid={app.currentUser.id} />
+        <>
+          <div className="flex flex-col align-center items-center w-full h-full mt-8 p-2">
+            <h2 className="text-4xl xl:text-5xl mb-8 mt-6 text-center">
+              Finish setting up your profile
+            </h2>
+            <div className="flex flex-col xl:flex-row gap-12 mt-12 mb-0">
+              {progressPercentage < 100 && (
+                <CompleteProfile uid={app.currentUser.id} />
+              )}
+              <ConnToFb uid={app.currentUser.id} />
+              {user.exercises && user.exercises.own.length > 0 ? null : (
+                <AddFirstExercise uid={app.currentUser.id} />
+              )}
+            </div>
           </div>
-        </div>
+          <div className="flex flex-col justify-center align-center items-center w-full m-0 p-0">
+            <hr className="border border-t-1 border-t-gray w-48 mb-12" />
+            <h2 className="text-4xl xl:text-5xl my-8 text-center">
+              Track your progress
+            </h2>
+            <Link to="/goals">
+              <Button
+                className="mt-4 border-0 text-black rounded-lg"
+                style={{ backgroundColor: "rgb(255, 255, 255)" }}
+              >
+                Set goals
+              </Button>
+            </Link>
+            <Progress></Progress>
+          </div>
+        </>
       ) : (
         <div className="flex flex-col justify-center items-center align-center w-full">
           <div className="flex flex-col items-center justify-center align-center w-full h-full overflow-auto">

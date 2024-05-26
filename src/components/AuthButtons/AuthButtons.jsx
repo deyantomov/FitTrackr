@@ -8,7 +8,7 @@ import { logout } from "../../services/auth.service";
 export default function AuthButtons() {
   const app = useApp();
   // const location = useLocation(); //  state from successful registration
-  const [handle, setHandle] = useState("");
+  // const [handle, setHandle] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -19,16 +19,16 @@ export default function AuthButtons() {
     }
   }, [app.currentUser])
 
-  useEffect(() => {
-    const fetchHandle = async () => {
-      if (isLoggedIn) {
-        const user = await getUserById(app.currentUser.id);
-        setHandle(user.handle);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchHandle = async () => {
+  //     if (isLoggedIn) {
+  //       const user = await getUserById(app.currentUser.id);
+  //       setHandle(user.handle);
+  //     }
+  //   };
   
-    fetchHandle();
-  }, [isLoggedIn, app.currentUser]);
+  //   fetchHandle();
+  // }, [isLoggedIn, app.currentUser]);
 
   const handleLogout = async () => {
     await logout(app);

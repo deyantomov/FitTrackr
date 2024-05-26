@@ -39,19 +39,26 @@ export default function SignUp() {
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            const { email, password, handle, firstName, lastName } =
+            const { email, password, confirmPassword, handle, firstName, lastName } =
               Object.fromEntries(formData.entries());
 
-            onFormSubmit({
-              email: email.toString(),
-              password: password.toString(),
-              handle: handle.toString(),
-              firstName: firstName.toString(),
-              lastName: lastName.toString(),
-            }).catch((err) => {
-              e.preventDefault();
-              console.error(err.message);
-            });
+            if (password === confirmPassword) {
+              onFormSubmit({
+                email: email.toString(),
+                password: password.toString(),
+                handle: handle.toString(),
+                firstName: firstName.toString(),
+                lastName: lastName.toString(),
+              }).catch((err) => {
+                e.preventDefault();
+                console.error(err.message);
+              });
+            } else {
+              //  TODO: Add toast
+              console.log('Passwords do not match!');
+            }
+
+            
           }}
         >
           <div className="mt-8 flex flex-col landscape:flex-row gap-2 text-lg items-center">
@@ -108,8 +115,8 @@ export default function SignUp() {
               <label className="w-full">
                 Confirm password:
                 <input
-                  id="signup-password"
-                  name="password"
+                  id="signup-confirm-password"
+                  name="confirmPassword"
                   type="password"
                   className="input w-full mt-1 bg-white"
                 />

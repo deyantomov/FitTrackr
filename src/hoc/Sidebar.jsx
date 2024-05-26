@@ -84,12 +84,12 @@ export default function Sidebar({ children }) {
                   icon={<PlusIcon title="create" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
-              <Link to="/progress">
+              {/* <Link to="/progress">
                 <SidebarButton
                   text="Progress"
                   icon={<PresentationChartLineIcon title="progress" className="h-3/6" />}
                 ></SidebarButton>
-              </Link>
+              </Link> */}
               <Link to="/goals">
                 <SidebarButton
                   text="Goals"
