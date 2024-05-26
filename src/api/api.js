@@ -126,8 +126,8 @@ export const updateUserProfile = async (
       });
 
       //  grab id to associate user with photo
-      console.log(updateImgId);
-      updateImgId = JSON.parse(await updateImgRes.json())["_id"];
+      // console.log(updateImgId);
+      updateImgId = (await updateImgRes.json())["_id"];
     }
 
     const response = await fetch(`${updateProfileEndpoint}?uid=${id}`, {
