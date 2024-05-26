@@ -16,8 +16,10 @@ export default function Navbar({ toggleDrawer }) {
       if (app.currentUser) {
         const user = await getUserById(app.currentUser.id);
 
+        console.log(user, user.profilePic);
         if (user && user.profilePic) {
           const pic = await getProfilePic(app, user.profilePic);
+          console.log(pic);
           setProfilePic(pic.img);
           setPicOwner(pic.owner);
         }

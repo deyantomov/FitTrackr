@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { getProfilePic, getUserById } from "../../api/api";
+import { getProfilePic, getUserById, updateUserProfile } from "../../api/api";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useApp } from "../../hooks/useApp";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { imageToBase64 } from "../../common/utils";
+import { Card, Button, Input, Badge, Modal } from "react-daisyui";
+import { PlusIcon } from "@heroicons/react/24/outline";
 // import { get } from "../../services/localStorage.service";
 
 export default function Profile() {

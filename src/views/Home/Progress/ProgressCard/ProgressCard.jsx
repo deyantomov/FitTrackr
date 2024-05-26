@@ -4,6 +4,7 @@ import { useApp } from "../../../../hooks/useApp";
 // import { getUserById, updateSteps } from "../../../../api/api";
 import useTrackProgress from "../../../../hooks/useTrackProgress";
 import { Link } from "react-router-dom";
+import { updateSteps } from "../../../../api/api";
 
 export default function ProgressCard({ trackParam, imgName, title }) {
   const app = useApp();
