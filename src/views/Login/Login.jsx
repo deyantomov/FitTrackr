@@ -1,7 +1,6 @@
 import { useApp } from "../../hooks/useApp";
 import { login } from "../../services/auth.service";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "react-daisyui";
 
 export default function Login() {
   const app = useApp();
@@ -55,9 +54,9 @@ export default function Login() {
                 className="input w-full mt-1 bg-white"
               />
             </label>
-            <Button type="submit" className="btn-md btn-warning w-full mt-6">
+            <button type="submit" className="btn btn-md btn-warning w-full mt-6">
               Sign in
-            </Button>
+            </button>
           </div>
         </form>
       </div>

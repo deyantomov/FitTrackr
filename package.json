@@ -11,7 +11,6 @@
     "@types/dotenv": "^8.2.0",
     "@types/prop-types": "^15.7.12",
     "@types/react-circular-progressbar": "^1.1.0",
-    "@types/react-toastify": "^4.1.0",
     "dotenv": "^16.4.5",
     "mongodb": "^6.6.2",
     "prop-types": "^15.8.1",
@@ -20,7 +19,6 @@
     "react-daisyui": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
-    "react-toastify": "^10.0.5",
     "realm-web": "^2.0.0",
     "web-vitals": "^3.1.1"
   },

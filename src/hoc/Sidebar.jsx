@@ -12,7 +12,6 @@ import {
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
 import { logout } from "../services/auth.service";
-import { Menu } from "react-daisyui";
 
 /**
  *
@@ -40,7 +39,7 @@ export default function Sidebar({ children }) {
         type="checkbox"
         className="drawer-toggle h-full"
       />
-      <div className="drawer-content flex-col items-start justify-center p-0 h-full">
+      <div className="drawer-content flex flex-col items-start justify-center p-0">
         <Navbar toggleDrawer={toggleSidebar} />
         <div className="flex flex-col w-full h-full text-4xl">{children}</div>
       </div>
@@ -50,7 +49,7 @@ export default function Sidebar({ children }) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <Menu className="p-4 w-80 min-h-screen bg-base-200 text-base-content">
+        <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
           <Link to="/">
             <div className="flex flex-row justify-start align-start text-center  my-3 m-0 p-0">
               {/* <img src="logo.png" className="w-16 m-0 p-0" /> */}
@@ -105,7 +104,7 @@ export default function Sidebar({ children }) {
               </button>
             </>
           )}
-        </Menu>
+        </div>
       </div>
     </div>
   );

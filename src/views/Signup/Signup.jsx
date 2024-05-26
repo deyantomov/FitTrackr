@@ -2,7 +2,6 @@
 import { useApp } from "../../hooks/useApp";
 import { register } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
-import { Card, Button } from "react-daisyui";
 
 export default function SignUp() {
   const app = useApp();
@@ -33,8 +32,8 @@ export default function SignUp() {
   //  TODO: Fix design, make it more responsive (landscape:hidden or portrait:hidden to control visibility on different screen sizes)
   return (
     <div className="flex flex-row h-screen justify-center items-center">
-      <Card className="w-auto bg-gray-200 opacity-80 p-10 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
-        <Card.Title className="text-4xl md:text-5xl font-thin">Sign up with email</Card.Title>
+      <div className="card w-auto bg-gray-200 opacity-80 p-10 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
+        <h2 className="card-title text-4xl md:text-5xl font-thin">Sign up with email</h2>
         <form
           className="signup-form mt-4"
           onSubmit={(e) => {
@@ -116,15 +115,15 @@ export default function SignUp() {
                 />
               </label>
             </div>
-          <Button
+          <button
             id="submit-button"
             data-testid="submitbutton"
-            className="btn-md btn-warning w-full mt-12"
+            className="btn btn-md btn-warning w-full mt-12"
           >
             Sign Up
-          </Button>
+          </button>
         </form>
-      </Card>
+      </div>
     </div>
   );
 }

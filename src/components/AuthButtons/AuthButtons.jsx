@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { getUserById } from "../../api/api";
 // import { useLocation } from "react-router-dom";
 import { logout } from "../../services/auth.service";
-import { Button } from "react-daisyui";
 
 export default function AuthButtons() {
   const app = useApp();
@@ -40,20 +39,20 @@ export default function AuthButtons() {
     <div className="flex flex-row gap-3 p-0 align-center items-center">
       {isLoggedIn ? (
         <div className="flex flex-row gap-6 align-center items-center p-0">
-          <Button
-            className="btn-warning"
+          <button
+            className="btn btn-warning"
             onClick={async () => await handleLogout()}
           >
             Log out
-          </Button>
+          </button>
         </div>
       ) : (
         <>
           <Link to="/login">
-            <Button className="btn-warning text-gray-800">Sign in</Button>
+            <button className="btn btn-warning text-gray-800">Sign in</button>
           </Link>
           <Link to="/signup">
-            <Button className="btn-outline btn-warning">Sign up</Button>
+            <button className="btn btn-outline btn-warning">Sign up</button>
           </Link>
         </>
       )}

@@ -32,7 +32,7 @@ const NewExerciseForm = () => {
                 isPrivate
             };
             try {
-                console.log(await createNewExercise(app, exercise));
+                await createNewExercise(app, exercise);
                 setSuccess('Exercise created successfully!');
                 resetForm();
             } catch (error) {

@@ -7,8 +7,7 @@ import {
   onlineUsersEndpoint,
   createNewExerciseEndpoint,
   createNewGoalEndpoint,
-  updateStepsEndpoint,
-  updateUserExercisesEndPoint,
+  updateStepsEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -32,7 +31,7 @@ export const createUser = async (user) => {
       handle: user.handle,
       firstName: user.firstName,
       lastName: user.lastName,
-      createdOn: new Date(),
+      createdOn: new Date()
     }),
   });
 
@@ -110,26 +109,23 @@ export const updateUserProfile = async (
 
   if (user) {
     const accessToken = user["_accessToken"]; // grab access token on successful auth
-    let updateImgId;
 
-    if (updatedFields.profilePic) {
-      //  update image
-      const updateImgRes = await fetch(`${updateProfilePicEndpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          owner: user.id,
-          img: updatedFields.profilePic,
-        }),
-      });
-      
-      updateImgId = (await updateImgRes.json())["_id"];
-      console.log(updateImgId);
-    }
-    
+    //  update image
+    const updateImgRes = await fetch(`${updateProfilePicEndpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        owner: user.id,
+        img: updatedFields.profilePic,
+      }),
+    });
+
+    //  grab id to associate user with photo
+    const updateImgId = JSON.parse(await updateImgRes.json())["_id"];
+
     const response = await fetch(`${updateProfileEndpoint}?uid=${id}`, {
       method: "POST",
       headers: {
@@ -137,8 +133,6 @@ export const updateUserProfile = async (
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        firstName: updatedFields.firstName,
-        lastName: updatedFields.lastName,
         age: updatedFields.age,
         bio: updatedFields.bio,
         weight: updatedFields.weight,
@@ -155,9 +149,9 @@ export const updateUserProfile = async (
 
 /**
  * Fetches a user's profile picture
- *
- * @param {Realm.App} app
- * @param {string} id
+ * 
+ * @param {Realm.App} app 
+ * @param {string} id 
  */
 export const getProfilePic = async (app, id) => {
   const user = app.currentUser;
@@ -178,40 +172,43 @@ export const getProfilePic = async (app, id) => {
 
 /**
  * Sets the user's online status to true/false
- *
- * @param {User} user
- * @param {string} id
- * @param {boolean} isOnline
+ * 
+ * @param {User} user 
+ * @param {string} id 
+ * @param {boolean} isOnline 
  */
 export const setUserOnlineStatus = async (user, id, isOnline) => {
-  const response = await fetch(`${onlineUsersEndpoint}id=${id}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${user.accessToken}`,
-    },
-    body: JSON.stringify({ isOnline }),
-  });
+  const response = await fetch(
+    `${onlineUsersEndpoint}id=${id}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body: JSON.stringify({ isOnline }),
+    }
+  );
 
   return response.json();
 };
 
 /**
  * Creates a new exercise with the given info, and adds it to the db
- *
- * @param {Realm.App} app
- * @param {object} exercise
+ * 
+ * @param {Realm.App} app 
+ * @param {object} exercise 
  */
 export const createNewExercise = async (app, exercise) => {
   if (Object.keys(exercise) === 0) {
-    throw new Error("Exercise object cannot be empty!");
+    throw new Error('Exercise object cannot be empty!');
   }
-
+  
   const currentUser = app.currentUser;
 
   if (currentUser) {
     const user = await getUserById(currentUser.id);
-
+    
     const response = await fetch(`${createNewExerciseEndpoint}`, {
       method: "POST",
       headers: {
@@ -226,63 +223,46 @@ export const createNewExercise = async (app, exercise) => {
         duration: exercise.duration,
         rating: 0,
         isPrivate: exercise.isPrivate,
-        createdOn: new Date(),
-      }),
+        createdOn: new Date()
+      })
     });
 
-    const id = (await response.json())["insertedId"];
-
-    const updateUserDocument = await fetch(
-      `${updateUserExercisesEndPoint}?uid=${user.uid}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${currentUser.accessToken}`,
-        },
-        body: JSON.stringify({
-          id,
-        }),
-      }
-    );
-
-    return updateUserDocument.json();
+    return response.json();
   }
-};
+}
 
 export const getAllExercises = async () => {
   const response = await fetch(createNewExerciseEndpoint);
   return response.json();
-};
+}
 
 export const getExercisesByUserId = async (uid) => {
   const response = await fetch(`${createNewExerciseEndpoint}?uid=${uid}`);
   return response.json();
-};
+}
 
 export const getExercisesByDifficulty = async (difficulty) => {
   //  Difficulty - "Beginner" | "Intermediate" | "Pro"
-  const response = await fetch(
-    `${createNewExerciseEndpoint}?level=${difficulty}`
-  );
+  const response = await fetch(`${createNewExerciseEndpoint}?level=${difficulty}`);
   return response.json();
-};
+}
 
 export const sortExercisesByRating = async (rating) => {
-  //  Rating = "lowest" | "highest"
+  //  Rating = "lowest" | "highest" 
   const response = await fetch(`${createNewExerciseEndpoint}?rating=${rating}`);
   return response.json();
-};
+}
+
 
 /**
  * Creates a new goal with the given info, and adds it to the db
- *
- * @param {Realm.App} app
+ * 
+ * @param {Realm.App} app 
  * @param {object} goal
  */
 export const createNewGoal = async (app, goal) => {
   if (Object.keys(goal) === 0) {
-    throw new Error("Goal object cannot be empty!");
+    throw new Error('Goal object cannot be empty!');
   }
 
   const currentUser = app.currentUser;
@@ -299,37 +279,34 @@ export const createNewGoal = async (app, goal) => {
       body: JSON.stringify({
         owner: user.uid,
         title: goal.title,
-        type: goal.type, //  steps | calories | weightLoss | weightGain
+        type: goal.type,  //  steps | calories | weightLoss | weightGain
         steps: goal.steps,
         calories: goal.calories,
         weightLoss: goal.weightLoss,
         weightGain: goal.weightGain,
-        dateRange: goal.dateRange,
-      }),
+        dateRange: goal.dateRange
+      })
     });
 
     return response.json();
   }
-};
+}
 
 export const updateSteps = async (app, steps) => {
   const user = app.currentUser;
 
   if (user) {
-    const response = await fetch(
-      `${updateStepsEndpoint}?uid=${app.currentUser.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
-        },
-        body: JSON.stringify({
-          steps,
-        }),
-      }
-    );
+    const response = await fetch(`${updateStepsEndpoint}?uid=${app.currentUser.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body: JSON.stringify({
+        steps
+      }),
+    });
 
     return response.json();
   }
-};
+}
