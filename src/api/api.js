@@ -8,6 +8,7 @@ import {
   createNewExerciseEndpoint,
   createNewGoalEndpoint,
   updateStepsEndpoint,
+  updateCaloriesEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -313,6 +314,28 @@ export const updateSteps = async (app, steps) => {
       }
     );
 
-    return response.json();
+    return response;
   }
 };
+
+export const updateCalories = async (app, calories) => {
+  const user = app.currentUser;
+
+  if (user) {
+    const response = await fetch(
+      `${updateCaloriesEndpoint}?uid=${app.currentUser.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        body: JSON.stringify({
+          calories,
+        }),
+      }
+    );
+
+    return response;
+  }
+}

@@ -9,7 +9,7 @@ import { getUserById } from "../../api/api";
 import { useCompleteProfile } from "../../hooks/useCompleteProfile";
 import Progress from "./Progress/Progress";
 import { Link } from "react-router-dom";
-import { Button, Loading } from "react-daisyui";
+import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
@@ -38,7 +38,9 @@ export default function Home() {
   }, [app.currentUser]);
 
   useEffect(() => {
+    setLoading(true);
     setProgress(progressHook);
+    setLoading(false);
   }, [progressHook]);
 
   useEffect(() => {

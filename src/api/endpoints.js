@@ -16,3 +16,5 @@ export const createNewGoalEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/goals"
 export const updateStepsEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/update_steps";
+export const updateCaloriesEndpoint =
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/update_calories";

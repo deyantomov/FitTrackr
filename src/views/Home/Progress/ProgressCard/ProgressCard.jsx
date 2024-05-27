@@ -4,7 +4,7 @@ import { useApp } from "../../../../hooks/useApp";
 // import { getUserById, updateSteps } from "../../../../api/api";
 import useTrackProgress from "../../../../hooks/useTrackProgress";
 import { Link } from "react-router-dom";
-import { updateSteps } from "../../../../api/api";
+import { updateCalories, updateSteps } from "../../../../api/api";
 
 export default function ProgressCard({ trackParam, imgName, title }) {
   const app = useApp();
@@ -31,11 +31,11 @@ export default function ProgressCard({ trackParam, imgName, title }) {
   const handleUpdate = async () => {
     switch (trackParam) {
       case "steps":
-        const res = await updateSteps(app, Number(inputValue));
+        const stepsRes = await updateSteps(app, Number(inputValue));
         setInputValue("");
         setTriggerFetch(!triggerFetch);
 
-        return res;
+        return stepsRes;
       case "distance":
         //  write backend function to update distance
         setInputValue("");
@@ -43,13 +43,12 @@ export default function ProgressCard({ trackParam, imgName, title }) {
 
       //  TODO: await info and update
       // return res;
-      case "energyBurned":
-        //  write backend function to update burned calories
+      case "calories":
+        const caloriesRes = await updateCalories(app, Number(inputValue));
         setInputValue("");
         setTriggerFetch(!triggerFetch);
 
-      //  TODO: await info and update
-      // return res;
+        return caloriesRes;
       default:
         throw new Error("Invalid parameter!");
     }
@@ -77,18 +76,31 @@ export default function ProgressCard({ trackParam, imgName, title }) {
         className="flex flex-col align-center items-center w-full min-h-full text-black font-thin p-6 rounded-md"
         style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}
       >
-        <Card.Title className="text-6xl mb-8  ">
-          {title}
-        </Card.Title>
+        <Card.Title className="text-6xl mb-8  ">{title}</Card.Title>
         <Card.Body
           className="text-xl p-6 flex flex-col gap-0 rounded-md justify-start align-start items-start"
           style={{ backgroundColor: "rgb(250, 204, 21)" }}
         >
           {Object.keys(progress).length > 0 ? (
             <>
-              <p>Daily: {progress.daily || 0}</p>
-              <p>Weekly: {progress.weekly || 0}</p>
-              <p>Monthly: {progress.monthly || 0}</p>
+              <p>
+                Daily: {progress.daily || 0}{" "}
+                {trackParam === "calories" && "kcal"}
+                {trackParam === "distance" && "km"}
+                {trackParam === "exercise" && "days"}
+              </p>
+              <p>
+                Weekly: {progress.weekly || 0}{" "}
+                {trackParam === "calories" && "kcal"}
+                {trackParam === "distance" && "km"}
+                {trackParam === "exercise" && "days"}
+              </p>
+              <p>
+                Monthly: {progress.monthly || 0}{" "}
+                {trackParam === "calories" && "kcal"}
+                {trackParam === "distance" && "km"}
+                {trackParam === "exercise" && "days"}
+              </p>
             </>
           ) : (
             <h2>No data available</h2>

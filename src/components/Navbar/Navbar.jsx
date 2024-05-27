@@ -5,11 +5,13 @@ import { useApp } from "../../hooks/useApp";
 import { useEffect, useState } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
+import { Loading } from "react-daisyui";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
   const [profilePic, setProfilePic] = useState("");
   const [picOwner, setPicOwner] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPic = async () => {
@@ -29,7 +31,15 @@ export default function Navbar({ toggleDrawer }) {
     };
 
     fetchPic();
+    setLoading(false);
   }, [app.currentUser]);
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-row w-full bg-base-800 p-4 justify-center items-center border-b-warning border-b-2">

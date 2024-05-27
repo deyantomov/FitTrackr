@@ -107,16 +107,21 @@ function App() {
         }
       />
       <Route
-    path="/exercises"
-    element={
-      <Sidebar>
-        <Authenticated>
-          <Exercises />
-        </Authenticated>
-      </Sidebar>
-    }
-  />
-      <Route path="*" element={<Sidebar><NotFound /></Sidebar>} />
+        path="/exercises"
+        element={
+          <Sidebar>
+            <Exercises />
+          </Sidebar>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Sidebar>
+            <NotFound />
+          </Sidebar>
+        }
+      />
     </Routes>
   );
 }

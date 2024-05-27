@@ -5,9 +5,8 @@ import { useState } from "react";
 import { useApp } from "../../hooks/useApp";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { imageToBase64 } from "../../common/utils";
-import { Card, Button, Input, Badge, Modal } from "react-daisyui";
+import { Card, Button, Input, Badge, Modal, Loading } from "react-daisyui";
 import { PlusIcon } from "@heroicons/react/24/outline";
-// import { get } from "../../services/localStorage.service";
 
 export default function Profile() {
   const app = useApp();
@@ -22,6 +21,8 @@ export default function Profile() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getProfile = async () => {
@@ -39,11 +40,12 @@ export default function Profile() {
     getProfile();
     getCurrentUser();
 
-    console.log(currentUser); 
+    setLoading(false);
   }, []);
 
   const handleUpdate = async () => {
     try {
+      setLoading(true);
       Object.keys(newUserInfo).forEach((key) => {
         if (!newUserInfo[key]) {
           delete newUserInfo[key];
@@ -59,11 +61,15 @@ export default function Profile() {
       );
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSelectProfilePic = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     const file = e.target.files[0];
 
     if (file) {
@@ -74,10 +80,14 @@ export default function Profile() {
         console.error(err);
       }
     }
+
+    setLoading(false);
   };
 
   const handleUpdateProfilePic = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     if (newProfilePic) {
       try {
@@ -97,14 +107,24 @@ export default function Profile() {
         console.error(err);
       }
     }
+
+    setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <Loading />
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-row w-full h-full justify-center align-center items-center p-2">
       <Card className="bg-white p-12 shadow-xl">
         <div className="flex flex-row gap-0 items-start w-full h-full align-center items-start">
           <div className="flex flex-col justify-center align-center items-center">
-            <div className="relative me-8">
+            <div className="relative">
               <ProfilePic
                 profilePic={userPic}
                 dimensions="96px"
@@ -173,7 +193,7 @@ export default function Profile() {
         {currentUser.uid === user.uid && (
           <div className="grid grid-rows-1 text-center align-center place-items-center justify-center text-black bg-gray-100 p-8 h-auto ">
             <h2 className="text-2xl mb-2">Update your profile</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 mt-2 text-start md:gap-2 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 mt-2 text-start md:gap-2 w-full">
               <label className="text-base mb-2">
                 First Name
                 <Input
@@ -198,10 +218,6 @@ export default function Profile() {
                   }
                   className="bg-white w-full"
                 ></Input>
-              </label>
-              <label className="text-base mb-2">
-                Email
-                <Input size={"sm"} className="bg-white w-full"></Input>
               </label>
             </div>
             <div className="grid grid-cols-1 w-full h-auto">
@@ -254,7 +270,7 @@ export default function Profile() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 md:mt-2 text-start gap-2 w-full">
               <label className="text-base mb-2">
-                New password
+                Type your password
                 <Input
                   size={"sm"}
                   type="password"
@@ -268,7 +284,7 @@ export default function Profile() {
                 ></Input>
               </label>
               <label className="text-base mb-2">
-                Confirm old password
+                Confirm your password
                 <Input
                   size={"sm"}
                   type="password"
