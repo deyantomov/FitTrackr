@@ -144,17 +144,16 @@ const NewExerciseForm = () => {
             />
           </label>
           <span>Private:</span>
-          <label className="label mb-4 w-full">
+          <label className="flex items-center space-x-2">
             <LockClosedIcon className="h-5 w-5 mr-2" />
-            <select
-              value={isPrivate ? "Private" : "Public"}
-              onChange={(e) => setIsPrivate(e.target.value === "Private")}
-              className="select select-bordered w-full"
-            >
-              <option value="Public">Public</option>
-              <option value="Private">Private</option>
-            </select>
-          </label>
+            <input
+            type="checkbox"
+            checked={isPrivate}
+            onChange={(e) => setIsPrivate(e.target.checked)}
+            className="checkbox checkbox-accent text-accent h-6 w-6"
+            />
+            <span className="text-sm text-gray-500">Tick the box to make private</span>
+            </label>
           <Input type="file" onChange={e => setImage(e.target.files[0])}></Input>
           <button
             type="submit"
