@@ -12,6 +12,7 @@ import {
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
 import { logout } from "../services/auth.service";
+import FooterNav from "../components/Footer/Footer";
 
 /**
  *
@@ -41,7 +42,10 @@ export default function Sidebar({ children }) {
       />
       <div className="drawer-content flex flex-col items-start justify-center p-0">
         <Navbar toggleDrawer={toggleSidebar} />
-        <div className="flex flex-col w-full h-full text-4xl">{children}</div>
+        <div className="flex flex-col w-full h-full text-4xl">
+          {children}
+          <FooterNav></FooterNav>  
+        </div>
       </div>
       <div className="drawer-side">
         <label
