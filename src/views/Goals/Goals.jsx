@@ -1,13 +1,10 @@
 import GoalsCard from "../../components/Goals/GoalsCard";
 import { Card, Button, Modal, Input } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
-import { getAllGoals } from "../../api/api";
+import { createNewGoal, getAllGoals } from "../../api/api";
 import { useEffect, useState } from "react";
 import {
-  ClockIcon,
-  ChartBarIcon,
   ChevronDoubleRightIcon,
-  DocumentTextIcon,
   ArrowTrendingUpIcon,
 } from "@heroicons/react/16/solid";
 
@@ -21,6 +18,47 @@ export default function Goals() {
   const [distance, setDistance] = useState(0);
   const [weeklyStreak, setWeeklyStreak] = useState(0);
   const [duration, setDuration] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (app.currentUser) {
+      const goal = {
+        title,
+        type,
+        steps,
+        calories,
+        distance,
+        weeklyStreak,
+        duration,
+      };
+      try {
+        await createNewGoal(app, goal);
+        setSuccess("Goal created successfully!");
+        resetForm();
+      } catch (error) {
+        setError("Failed to create goal. Please try again.");
+        console.error("Error creating new goal:", error);
+      }
+    } else {
+      setError("You must be logged in to create a goal.");
+    }
+  };
+
+  const resetForm = () => {
+    setTitle("");
+    setType("");
+    setSteps(0);
+    setCalories(0);
+    setDistance(0);
+    setWeeklyStreak(0);
+    setDuration(0);
+  };
 
   // useEffect(() => {
   //   const createGoal = async () => {
@@ -71,7 +109,7 @@ export default function Goals() {
             scrollbarWidth: "thin",
           }}
         >
-          <form>
+          <form onSubmit={handleSubmit}>
             <span>Goal title:</span>
             <label className="label mb-4 w-full">
               <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
@@ -79,7 +117,7 @@ export default function Goals() {
                 type="text"
                 placeholder="Goal title"
                 value={title}
-                // onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -88,7 +126,7 @@ export default function Goals() {
               <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <select
                 value={type}
-                // onChange={(e) => setLevel(e.target.value)}
+                onChange={(e) => setType(e.target.value)}
                 className="select select-bordered w-full"
               >
                 <option value="activity">Activity</option>
@@ -102,7 +140,7 @@ export default function Goals() {
                 type="number"
                 placeholder="Number of steps"
                 value={steps}
-                // onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setSteps(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -113,7 +151,7 @@ export default function Goals() {
                 type="number"
                 placeholder="Calories burned"
                 value={calories}
-                // onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setCalories(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -124,7 +162,7 @@ export default function Goals() {
                 type="number"
                 placeholder="Distance passed"
                 value={distance}
-                // onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setDistance(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -135,7 +173,7 @@ export default function Goals() {
                 type="number"
                 placeholder="Weekly streak"
                 value={weeklyStreak}
-                // onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setWeeklyStreak(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -146,7 +184,7 @@ export default function Goals() {
                 type="string"
                 placeholder="Duration"
                 value={duration}
-                // onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setDuration(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
@@ -156,6 +194,10 @@ export default function Goals() {
             >
               Set Goal
             </button>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {success && (
+              <p className="text-green-500 text-sm mt-2">{success}</p>
+            )}
             <form
               method="dialog"
               style={{ display: "flex", justifyContent: "center" }}
