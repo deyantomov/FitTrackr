@@ -46,7 +46,7 @@ return (
         exercises.map((exercise) => (
         <Card
             key={exercise._id}
-            className="w-96 bg-base-100 shadow-xl transform transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gray-500/50"
+            className="w-96 bg-base-100 shadow-xl transform transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gray-500/50 text-black"
         >
             <Card.Body
             className="text-lg mb-2 bg-cover bg-center"

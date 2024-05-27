@@ -219,6 +219,7 @@ export const createNewExercise = async (app, exercise) => {
       },
       body: JSON.stringify({
         owner: user.uid,
+        ownerHandle: user.handle, 
         title: exercise.title,
         description: exercise.description,
         img: exercise.img,

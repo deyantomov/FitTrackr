@@ -37,7 +37,6 @@ const NewExerciseForm = () => {
     if (img) {
       const b64 = await imageToBase64(img);
       if (b64) {
-        // setImage(b64);
         base64 = b64;
       }
     }
@@ -156,6 +155,7 @@ const NewExerciseForm = () => {
               <option value="Private">Private</option>
             </select>
           </label>
+          <Input type="file" onChange={e => setImage(e.target.files[0])}></Input>
           <button
             type="submit"
             className="btn bg-yellow-500 px-8 py-4 w-full md:auto rounded"
