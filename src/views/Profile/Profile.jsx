@@ -100,7 +100,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex flex-row w-full h-full justify-center align-center items-center">
+    <div className="flex flex-row w-full h-full justify-center align-center items-center p-2">
       <Card className="bg-white p-12 shadow-xl">
         <div className="flex flex-row gap-0 items-start w-full h-full align-center items-start">
           <div className="flex flex-col justify-center align-center items-center">
@@ -113,7 +113,7 @@ export default function Profile() {
               {currentUser.uid === user.uid && (
                 <div className="relative flex flex-row justify-center align-center items-center">
                   <div
-                    className="absolute bottom-0 right-0 bg-blue-500 text-white text-sm rounded-full h-7 w-7 flex items-center justify-center"
+                    className="absolute bottom-1 right-7 bg-blue-500 text-white text-sm rounded-full h-8 w-8 flex items-center justify-center"
                     style={{ transform: "translate(0%, 0%)" }}
                   >
                     <PlusIcon className="absolute max-w-4" />

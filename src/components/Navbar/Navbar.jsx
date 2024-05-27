@@ -48,7 +48,7 @@ export default function Navbar({ toggleDrawer }) {
         <Link to="/exercises">
           <h2 className="text-2xl">Exercises</h2>
         </Link>
-        {app.currentUser && (
+        {/* {app.currentUser && (
         <Link to="/new-exercise">
           <h2 className="text-2xl whitespace-nowrap">Create Exercise</h2>
           </Link>
@@ -57,7 +57,7 @@ export default function Navbar({ toggleDrawer }) {
           <Link to="/progress">
             <h2 className="text-2xl">Progress</h2>
           </Link>
-        )}
+        )} */}
         {app.currentUser && (
           <Link to="/goals">
             <h2 className="text-2xl">Goals</h2>

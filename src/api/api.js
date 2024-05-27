@@ -220,6 +220,7 @@ export const createNewExercise = async (app, exercise) => {
         owner: user.uid,
         title: exercise.title,
         description: exercise.description,
+        img: exercise.img,
         level: exercise.level.toLowerCase(),
         duration: exercise.duration,
         rating: 0,

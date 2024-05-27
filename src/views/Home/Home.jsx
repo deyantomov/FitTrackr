@@ -9,13 +9,16 @@ import { getUserById } from "../../api/api";
 import { useCompleteProfile } from "../../hooks/useCompleteProfile";
 import Progress from "./Progress/Progress";
 import { Link } from "react-router-dom";
-import { Button } from "react-daisyui";
+import { Button, Loading } from "react-daisyui";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
   const app = useApp();
+  const progressHook = useCompleteProfile();
   const [user, setUser] = useState({});
-  const [progress, setProgress] = useState(useCompleteProfile());
+  const [progress, setProgress] = useState(progressHook);
   const [progressPercentage, setProgressPercentage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
@@ -24,21 +27,43 @@ export default function Home() {
 
         if (user) {
           setUser(user);
+          setProgress(progressHook);
         }
       }
+
+      setLoading(false);
     };
 
     getUser();
   }, [app.currentUser]);
 
   useEffect(() => {
-    const totalFields = Object.keys(progress).length;
-    const completedFields = Object.values(progress).filter(
-      (field) => field
-    ).length;
-    setProgressPercentage(((completedFields / totalFields) * 100) || 0);
-    console.log();
-  });
+    setProgress(progressHook);
+  }, [progressHook]);
+
+  useEffect(() => {
+    try {
+      setLoading(true);
+
+      const totalFields = Object.keys(progress).length;
+      const completedFields = Object.values(progress).filter(
+        (field) => field
+      ).length;
+      setProgressPercentage((completedFields / totalFields) * 100 || 0);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [progress, progressHook]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -48,8 +73,8 @@ export default function Home() {
             <h2 className="text-4xl xl:text-5xl mb-8 mt-6 text-center">
               Finish setting up your profile
             </h2>
-            <div className="flex flex-col xl:flex-row gap-12 mt-12 mb-0">
-              {progressPercentage < 100 && (
+            <div className="flex flex-col xl:flex-row gap-12 mt-12 mb-4">
+              {progressPercentage !== 100 && (
                 <CompleteProfile uid={app.currentUser.id} />
               )}
               <ConnToFb uid={app.currentUser.id} />
@@ -59,19 +84,15 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col justify-center align-center items-center w-full m-0 p-0">
-            <hr className="border border-t-1 border-t-gray w-48 mb-12" />
-            <h2 className="text-4xl xl:text-5xl my-8 text-center">
+            <hr className="border border-t-1 border-t-gray w-48 my-12" />
+            <h2 className="text-4xl xl:text-5xl mt-8 mb-4 text-center">
               Track your progress
             </h2>
-            <Link to="/goals">
-              <Button
-                className="mt-4 border-0 text-black rounded-lg"
-                style={{ backgroundColor: "rgb(255, 255, 255)" }}
-              >
-                Set goals
-              </Button>
-            </Link>
             <Progress></Progress>
+            <Link to="/goals" className="mt-4 mb-8 ">
+              <ChevronRightIcon />
+              <p className="opacity-80 text-xl">Goals</p>
+            </Link>
           </div>
         </>
       ) : (
@@ -97,7 +118,9 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <h2 className="mt-8 lg:mt-12 mb-2 lg:mb-6 font-light text-6xl lg:text-7xl">Features</h2>
+            <h2 className="mt-8 lg:mt-12 mb-2 lg:mb-6 font-light text-6xl lg:text-7xl">
+              Features
+            </h2>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-36 w-full my-6">
               <FeatureCard
                 img="exercises.jpg"
