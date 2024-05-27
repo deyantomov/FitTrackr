@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 import {
   ClockIcon,
   ChartBarIcon,
-  PencilIcon,
+  ChevronDoubleRightIcon,
   DocumentTextIcon,
+  ArrowTrendingUpIcon,
 } from "@heroicons/react/16/solid";
 
 export default function Goals() {
@@ -73,7 +74,7 @@ export default function Goals() {
           <form>
             <span>Goal title:</span>
             <label className="label mb-4 w-full">
-              <DocumentTextIcon className="h-5 w-5 mr-2" />
+              <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <input
                 type="text"
                 placeholder="Goal title"
@@ -84,7 +85,7 @@ export default function Goals() {
             </label>
             <span>Goal type:</span>
             <label className="label mb-4 w-full">
-              <ChartBarIcon className="h-5 w-5 mr-2" />
+              <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <select
                 value={type}
                 // onChange={(e) => setLevel(e.target.value)}
@@ -96,7 +97,7 @@ export default function Goals() {
             </label>
             <span>Steps:</span>
             <label className="label mb-4 w-full">
-              <DocumentTextIcon className="h-5 w-5 mr-2" />
+              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
                 placeholder="Number of steps"
@@ -107,7 +108,7 @@ export default function Goals() {
             </label>
             <span>Calories:</span>
             <label className="label mb-4 w-full">
-              <DocumentTextIcon className="h-5 w-5 mr-2" />
+              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
                 placeholder="Calories burned"
@@ -118,7 +119,7 @@ export default function Goals() {
             </label>
             <span>Distance:</span>
             <label className="label mb-4 w-full">
-              <DocumentTextIcon className="h-5 w-5 mr-2" />
+              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
                 placeholder="Distance passed"
@@ -129,7 +130,7 @@ export default function Goals() {
             </label>
             <span>Weekly streak:</span>
             <label className="label mb-4 w-full">
-              <DocumentTextIcon className="h-5 w-5 mr-2" />
+              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
                 placeholder="Weekly streak"
@@ -140,7 +141,7 @@ export default function Goals() {
             </label>
             <span>Duration:</span>
             <label className="label mb-4 w-full">
-              <DocumentTextIcon className="h-5 w-5 mr-2" />
+              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
               <input
                 type="string"
                 placeholder="Duration"
@@ -149,6 +150,18 @@ export default function Goals() {
                 className="input input-bordered w-full"
               />
             </label>
+            <button
+              type="submit"
+              className="btn bg-yellow-500 px-8 py-4 w-full md:auto rounded"
+            >
+              Set Goal
+            </button>
+            <form
+              method="dialog"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <Button className="btn-error mt-3 w-24">Close</Button>
+            </form>
           </form>
         </div>
       </dialog>
