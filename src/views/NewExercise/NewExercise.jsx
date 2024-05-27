@@ -21,6 +21,7 @@ const NewExerciseForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [img, setImage] = useState(); //  use an Input of type "file" to get e.target.files[0]
+  const [imageURL, setImageURL] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -154,7 +155,23 @@ const NewExerciseForm = () => {
             />
             <span className="text-sm text-gray-500">Tick the box to make private</span>
             </label>
-          <Input type="file" onChange={e => setImage(e.target.files[0])}></Input>
+            <label className="btn bg-transparent px-4 py-2 mx-auto text-black-500 border border-yellow-500 hover:bg-yellow-500 hover:text-white">
+              <span>Upload Image</span>
+              <input
+              type="file"
+              className="hidden"
+              onChange={e => {
+                setImage(e.target.files[0]);
+                setImageURL(URL.createObjectURL(e.target.files[0]));
+              }}
+              />
+              </label>
+              {imageURL && (
+              <div className="flex items-center space-x-2">
+                <img src={imageURL} alt="Preview" className="mt-4 w-32 h-32 object-cover"/>
+                <span className="text-sm text-gray-500">← Current image uploaded</span>
+                </div>
+              )}
           <button
             type="submit"
             className="btn bg-yellow-500 px-8 py-4 w-full md:auto rounded"
