@@ -283,12 +283,12 @@ export const createNewGoal = async (app, goal) => {
       body: JSON.stringify({
         owner: user.uid,
         title: goal.title,
-        type: goal.type, //  steps | calories | weightLoss | weightGain
+        type: goal.type, //  activity | health
         steps: goal.steps,
         calories: goal.calories,
-        weightLoss: goal.weightLoss,
-        weightGain: goal.weightGain,
-        dateRange: goal.dateRange,
+        distance: goal.distance,
+        weeklyStreak: goal.weeklyStreak,
+        duration: goal.duration,
       }),
     });
 
