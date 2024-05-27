@@ -1,6 +1,6 @@
 import GoalsCard from "../../components/Goals/GoalsCard";
 import { useApp } from "../../hooks/useApp";
-import { createNewGoal } from "../../api/api";
+import { createNewGoal, getAllGoals } from "../../api/api";
 import { useEffect } from "react";
 
 export default function Goals() {
@@ -25,6 +25,16 @@ export default function Goals() {
 
   //   createGoal();
   // }, [])
+
+  useEffect(() => {
+    const getGoals = async () => {
+      console.log('h');
+      const userGoals = await getAllGoals(app);
+      console.log(userGoals);
+    };
+
+    getGoals();
+  }, [app.currentUser])
   
   return (
     <div className="h-full">

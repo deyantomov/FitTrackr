@@ -283,6 +283,7 @@ export const createNewGoal = async (app, goal) => {
       },
       body: JSON.stringify({
         owner: user.uid,
+        ownerHandle: user.handle,
         title: goal.title,
         type: goal.type, //  activity | health
         steps: goal.steps,
@@ -296,6 +297,21 @@ export const createNewGoal = async (app, goal) => {
     return response.json();
   }
 };
+
+export const getAllGoals = async (app) => {
+  if (app.currentUser) {
+    const user = await getUserById(app.currentUser.id);
+    const response = await fetch(`${createNewGoalEndpoint}?uid=${user.uid}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${app.currentUser.accessToken}`
+      }
+    });
+
+    return response.json();
+  }
+}
 
 export const updateSteps = async (app, steps) => {
   const user = app.currentUser;
