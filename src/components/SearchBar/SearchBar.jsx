@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-const SearchBar = () => {
+const SearchBar = ({onSearch}) => {
 const [searchTerm, setSearchTerm] = useState('');
 
-//TODO:Edit
-const handleSearch = () => {
-    onSearch(searchTerm);
+const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    onSearch(event.target.value);
 };
 
 return (
@@ -15,7 +15,7 @@ return (
         type="text"
         className="input input-bordered w-full"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleSearch}
         placeholder="Search..."
         />
         <button onClick={handleSearch} className="btn btn-warning">
@@ -28,7 +28,7 @@ return (
         </div>
     </div>
     </div>
-  );
+);
 };
 
 export default SearchBar;
