@@ -13,10 +13,10 @@ import {
 export default function ProgressCard({ trackParam, imgName, title }) {
   const app = useApp();
   const ref = useRef();
-  const progressHook = useTrackProgress(app, trackParam);
-  const [inputValue, setInputValue] = useState("");
-  const [progress, setProgress] = useState(progressHook);
   const [triggerFetch, setTriggerFetch] = useState(false);
+  const progressHook = useTrackProgress(app, trackParam, triggerFetch);
+  const [progress, setProgress] = useState(progressHook);
+  const [inputValue, setInputValue] = useState("");
 
   const handleShow = useCallback(() => {
     ref.current?.showModal();
@@ -30,7 +30,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
     }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async () => {        
     switch (trackParam) {
       case "steps":
         const stepsRes = await updateSteps(app, Number(inputValue));
@@ -53,15 +53,13 @@ export default function ProgressCard({ trackParam, imgName, title }) {
       default:
         throw new Error("Invalid parameter!");
     }
+
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setProgress(progressHook);
-    };
-
-    fetchData();
-  }, [triggerFetch, progressHook, trackParam]);
+    setProgress(progressHook);
+    setInputValue("")
+  }, [progressHook, triggerFetch]);
 
   return (
     <Card
@@ -120,11 +118,11 @@ export default function ProgressCard({ trackParam, imgName, title }) {
             Log
           </Button>
         )}
-        <Modal ref={ref} className="p-12">
+        <Modal ref={ref} className="p-12 bg-white">
           <Modal.Header className="text-5xl md:text-6xl lg:text-7xl mb-8">
             Log
           </Modal.Header>
-          <Modal.Body className="w-full flex flex-col">
+          <Modal.Body className="w-full flex flex-col text-white bg-gray-800 rounded-lg">
             <Input
               type="number"
               bordered={false}
@@ -149,7 +147,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
             </div>
           </Modal.Body>
           <Modal.Actions className="flex flex-row justify-center align-center items-center gap-8">
-            <Button className="btn-success mt-6 w-24" onClick={handleUpdate}>
+            <Button className="btn-success mt-6 w-24" onClick={async () => await handleUpdate()}>
               Update
             </Button>
             <form method="dialog">

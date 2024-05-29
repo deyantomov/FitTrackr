@@ -1,17 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { getUserById } from "../api/api";
 
-export default function useTrackProgress(app, trackParam) {
+export default function useTrackProgress(app, trackParam, triggerFetch) {
   const [progress, setProgress] = useState({});
   const trackParamRef = useRef(trackParam);
+  const isCancelledRef = useRef(false);
 
   useEffect(() => {
-    trackParamRef.current = trackParam;
-  }, [trackParam]);
-
-  useEffect(() => {
-    let isCancelled = false;
-
     const fetchProgress = async () => {
       const currentUser = app.currentUser;
 
@@ -29,47 +24,59 @@ export default function useTrackProgress(app, trackParam) {
     };
 
     fetchProgress();
+  }, [triggerFetch])
 
-    const listenForChanges = async () => {  
-      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-      const collection = mongoClient.db("sample_data").collection("users");
-      const changeStream = collection.watch();
+  useEffect(() => {
+    trackParamRef.current = trackParam;
+  }, [trackParam]);
 
-      const cleanup = () => {
-        changeStream.close();
-      };
-      
-      // Listen for changes
-      for await (const change of changeStream) {
-        if (isCancelled) {
-          return; // Stop listening for changes if the effect has been cleaned up
+  useEffect(() => {
+    if (progress) {
+      isCancelledRef.current = false;
+      const getTrackParam = () => trackParamRef.current;
+      console.log(getTrackParam());
+  
+      const listenForChanges = async () => {  
+        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+        const collection = mongoClient.db("sample_data").collection("users");
+        const changeStream = collection.watch();
+  
+        const cleanup = () => {
+          changeStream.close();
+        };
+        
+        // Listen for changes
+        for await (const change of changeStream) {
+          if (isCancelledRef.current) {
+            return; // Stop listening for changes if the effect has been cleaned up
+          }
+  
+          if (change.operationType === 'update' || change.operationType === 'replace') {
+  
+            const updatedFields = change.updateDescription.updatedFields;
+            const [obj, field] = Object.keys(updatedFields)[0].split(".");
+            const value = Object.values(updatedFields)[0];
+  
+            setProgress((prev) => {
+              if (obj === getTrackParam()) {
+                return { ...prev, [field]: value }
+              }
+  
+              return prev;
+            })
+          }
         }
-
-        if (change.operationType === 'update' || change.operationType === 'replace') {
-
-          const updatedFields = change.updateDescription.updatedFields;
-          const [obj, field] = Object.keys(updatedFields)[0].split(".");
-          const value = Object.values(updatedFields)[0];
-
-          setProgress((prev) => {
-            if (obj === trackParamRef.current) {
-              return { ...prev, [field]: value }
-            }
-
-            return prev;
-          })
-        }
+        return cleanup;
       }
-      return cleanup;
+  
+      listenForChanges().catch(err => console.log(err));
+  
+      return () => {
+        isCancelledRef.current = true; // Set the flag to true when the effect is cleaned up
+      };
     }
 
-    listenForChanges().catch(err => console.log(err));
-
-    return () => {
-      isCancelled = true; // Set the flag to true when the effect is cleaned up
-    };
-
-  }, [])
+  }, [progress])
 
   return progress;
 }
