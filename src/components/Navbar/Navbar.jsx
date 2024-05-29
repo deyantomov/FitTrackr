@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
 import { Loading } from "react-daisyui";
+import { BSON } from "realm-web";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
@@ -21,7 +22,7 @@ export default function Navbar({ toggleDrawer }) {
         console.log(user, user.profilePic);
         if (user && user.profilePic) {
           const pic = await getProfilePic(app, user.profilePic);
-          console.log(pic);
+
           setProfilePic(pic.img);
           setPicOwner(pic.owner);
         }
@@ -33,6 +34,32 @@ export default function Navbar({ toggleDrawer }) {
     fetchPic();
     setLoading(false);
   }, [app.currentUser]);
+
+  //  Real-time listener for profile pics
+  useEffect(() => {
+    const listenForChanges = async () => {
+      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+      const collection = mongoClient.db("sample_data").collection("profile_pics");
+      const changeStream = collection.watch();
+
+      const cleanup = () => {
+        changeStream.close();
+      };
+      
+      // Listen for changes
+      for await (const change of changeStream) {
+        if (change.operationType === 'update' || change.operationType === 'replace') {
+          setProfilePic(change.fullDocument.img);
+        }
+      }
+
+      return cleanup;
+    }
+
+    listenForChanges().catch(console.error);
+
+  }, [app]);
+
 
   if (loading) {
     return (
