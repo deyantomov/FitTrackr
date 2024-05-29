@@ -29,10 +29,14 @@ const handleSearch = (term) => {
     setSearchTerm(term);
 };
 
-const filteredExercises = exercises.filter((exercise) =>
-    (exercise.title && exercise.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (exercise.description && exercise.description.toLowerCase().includes(searchTerm.toLowerCase()))
-);
+let filteredExercises;
+
+if (exercises.length) {
+    filteredExercises = exercises.filter((exercise) =>
+        (exercise.title && exercise.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (exercise.description && exercise.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+}
 
 if (loading) return (
     <div className="flex justify-center items-center h-screen">
@@ -46,7 +50,7 @@ return (
         <SearchBar onSearch={handleSearch} />
     </div>
     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredExercises.length > 0 ? (
+        {filteredExercises && filteredExercises.length > 0 ? (
         filteredExercises.map((exercise) => (
             <Card
             key={exercise._id}
