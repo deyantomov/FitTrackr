@@ -11,6 +11,7 @@ import {
   updateCaloriesEndpoint,
   updateDistanceEndpoint,
   updateWeeklyStreakEndpoint,
+  getExerciseImageEndpoint,
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -404,4 +405,9 @@ export const updateDistance = async (app, distance) => {
 
     return [distanceResponse, weeklyStreakResponse];
   }
+}
+
+export const getExerciseImage = async (id) => {
+  const response = await fetch(`${getExerciseImageEndpoint}?id=${id}`);
+  return response.json();
 }
