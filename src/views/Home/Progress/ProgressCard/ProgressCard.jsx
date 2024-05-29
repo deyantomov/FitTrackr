@@ -4,7 +4,11 @@ import { useApp } from "../../../../hooks/useApp";
 // import { getUserById, updateSteps } from "../../../../api/api";
 import useTrackProgress from "../../../../hooks/useTrackProgress";
 import { Link } from "react-router-dom";
-import { updateCalories, updateSteps } from "../../../../api/api";
+import {
+  updateCalories,
+  updateDistance,
+  updateSteps,
+} from "../../../../api/api";
 
 export default function ProgressCard({ trackParam, imgName, title }) {
   const app = useApp();
@@ -26,8 +30,6 @@ export default function ProgressCard({ trackParam, imgName, title }) {
     }
   };
 
-  //  TODO: write backend function to track exercise streak
-
   const handleUpdate = async () => {
     switch (trackParam) {
       case "steps":
@@ -37,12 +39,11 @@ export default function ProgressCard({ trackParam, imgName, title }) {
 
         return stepsRes;
       case "distance":
-        //  write backend function to update distance
+        const distanceRes = await updateDistance(app, Number(inputValue));
         setInputValue("");
         setTriggerFetch(!triggerFetch);
 
-      //  TODO: await info and update
-      // return res;
+        return distanceRes;
       case "calories":
         const caloriesRes = await updateCalories(app, Number(inputValue));
         setInputValue("");
@@ -83,30 +84,34 @@ export default function ProgressCard({ trackParam, imgName, title }) {
         >
           {Object.keys(progress).length > 0 ? (
             <>
-              <p>
-                Daily: {progress.daily || 0}{" "}
-                {trackParam === "calories" && "kcal"}
-                {trackParam === "distance" && "km"}
-                {trackParam === "exercise" && "days"}
-              </p>
+              {trackParam !== "exercise" && (
+                <p>
+                  Daily: {progress.daily || 0}{" "}
+                  {trackParam === "calories" && "kcal"}
+                  {trackParam === "distance" && "m"}
+                  {trackParam === "exercise" && "days"}
+                </p>
+              )}
               <p>
                 Weekly: {progress.weekly || 0}{" "}
                 {trackParam === "calories" && "kcal"}
-                {trackParam === "distance" && "km"}
+                {trackParam === "distance" && "m"}
                 {trackParam === "exercise" && "days"}
               </p>
-              <p>
-                Monthly: {progress.monthly || 0}{" "}
-                {trackParam === "calories" && "kcal"}
-                {trackParam === "distance" && "km"}
-                {trackParam === "exercise" && "days"}
-              </p>
+              {trackParam !== "exercise" && (
+                <p>
+                  Monthly: {progress.monthly || 0}{" "}
+                  {trackParam === "calories" && "kcal"}
+                  {trackParam === "distance" && "m"}
+                  {trackParam === "exercise" && "days"}
+                </p>
+              )}
             </>
           ) : (
             <h2>No data available</h2>
           )}
         </Card.Body>
-        {trackParam !== "exerciseDays" && (
+        {trackParam !== "exercise" && (
           <Button
             className="border-0 mt-4 text-black rounded-lg"
             style={{ backgroundColor: "rgb(250, 204, 21)" }}

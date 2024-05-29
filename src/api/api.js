@@ -8,7 +8,9 @@ import {
   createNewExerciseEndpoint,
   createNewGoalEndpoint,
   updateStepsEndpoint,
-  updateCaloriesEndpoint
+  updateCaloriesEndpoint,
+  updateDistanceEndpoint,
+  updateWeeklyStreakEndpoint,
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -219,7 +221,7 @@ export const createNewExercise = async (app, exercise) => {
       },
       body: JSON.stringify({
         owner: user.uid,
-        ownerHandle: user.handle, 
+        ownerHandle: user.handle,
         title: exercise.title,
         description: exercise.description,
         img: exercise.img,
@@ -305,11 +307,30 @@ export const getAllGoals = async (app) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${app.currentUser.accessToken}`
-      }
+        Authorization: `Bearer ${app.currentUser.accessToken}`,
+      },
     });
 
     return response.json();
+  }
+};
+
+export const updateWeeklyStreak = async (app) => {
+  const user = app.currentUser;
+
+  if (user) {
+    const response = await fetch(
+      `${updateWeeklyStreakEndpoint}?uid=${app.currentUser.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+      }
+    );
+
+    return response;
   }
 }
 
@@ -317,7 +338,7 @@ export const updateSteps = async (app, steps) => {
   const user = app.currentUser;
 
   if (user) {
-    const response = await fetch(
+    const stepsResponse = await fetch(
       `${updateStepsEndpoint}?uid=${app.currentUser.id}`,
       {
         method: "POST",
@@ -331,7 +352,9 @@ export const updateSteps = async (app, steps) => {
       }
     );
 
-    return response;
+    const weeklyStreakResponse = await updateWeeklyStreak(app);
+
+    return [stepsResponse, weeklyStreakResponse];
   }
 };
 
@@ -339,7 +362,7 @@ export const updateCalories = async (app, calories) => {
   const user = app.currentUser;
 
   if (user) {
-    const response = await fetch(
+    const caloriesResponse = await fetch(
       `${updateCaloriesEndpoint}?uid=${app.currentUser.id}`,
       {
         method: "POST",
@@ -353,6 +376,32 @@ export const updateCalories = async (app, calories) => {
       }
     );
 
-    return response;
+    const weeklyStreakResponse = await updateWeeklyStreak(app);
+
+    return [caloriesResponse, weeklyStreakResponse];
+  }
+};
+
+export const updateDistance = async (app, distance) => {
+  const user = app.currentUser;
+
+  if (user) {
+    const distanceResponse = await fetch(
+      `${updateDistanceEndpoint}?uid=${app.currentUser.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        body: JSON.stringify({
+          distance,
+        }),
+      }
+    );
+
+    const weeklyStreakResponse = await updateWeeklyStreak(app);
+
+    return [distanceResponse, weeklyStreakResponse];
   }
 }

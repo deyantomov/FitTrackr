@@ -11,6 +11,11 @@ export default function useTrackProgress(app, trackParam) {
       if (currentUser) {
         const user = await getUserById(currentUser.id);
 
+        if (user[trackParam] && trackParam === "exercise") {
+          setProgress({weekly: user[trackParam].length});
+          return;
+        }
+
         if (user[trackParam]) {
           setProgress(user[trackParam]);
         }
