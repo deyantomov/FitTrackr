@@ -24,3 +24,5 @@ export const updateWeeklyStreakEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/update_weekly_streak";
 export const getExerciseImageEndpoint = 
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises/image";
+export const likeExerciseEndpoint = 
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises/like";

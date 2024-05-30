@@ -12,6 +12,7 @@ import {
   updateDistanceEndpoint,
   updateWeeklyStreakEndpoint,
   getExerciseImageEndpoint,
+  likeExerciseEndpoint,
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -416,4 +417,22 @@ export const updateDistance = async (app, distance) => {
 export const getExerciseImage = async (id) => {
   const response = await fetch(`${getExerciseImageEndpoint}?id=${id}`);
   return response.json();
+}
+
+export const likeExercise = async (app, exerciseId) => {
+  const user = app.currentUser;
+
+  if (user) {
+    const response = await fetch(`${likeExerciseEndpoint}?id=${exerciseId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body: app.currentUser.id
+      
+    });
+
+    return response.json();
+  }
 }

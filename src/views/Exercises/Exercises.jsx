@@ -12,12 +12,15 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/16/solid";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import { likeExercise } from "../../api/api";
+import { useApp } from "../../hooks/useApp";
 
 const Exercises = () => {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const app = useApp();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -50,6 +53,52 @@ const Exercises = () => {
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
+
+  const handleLikeExercise = async (id) => {
+    try {
+      const result = await likeExercise(app, id);
+
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  //  Create a realtime listener for the exercises collection (to track likes in real-time)
+  useEffect(() => {
+    const listenForChanges = async () => {
+      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+      const collection = mongoClient.db("sample_data").collection("exercises");
+      const changeStream = collection.watch();
+
+      const cleanup = () => {
+        changeStream.close();
+      };
+
+      // Listen for changes
+      for await (const change of changeStream) {
+        const data = await getAllExercises();
+
+        const updatedExercises = await Promise.all(
+          data.map(async (exercise) => {
+            if (exercise.img) {
+              const imgData = await getExerciseImage(exercise.img);
+              return { ...exercise, img: imgData["img"] };
+            } else {
+              return exercise;
+            }
+          })
+        );
+
+        setExercises(updatedExercises);
+      }
+
+      //  clean up;
+      return cleanup;
+    }
+
+    listenForChanges().catch(console.error);
+  }, [])
 
   let filteredExercises;
   if (exercises.length) {
@@ -131,10 +180,15 @@ const Exercises = () => {
                     </p>
                   </div>
                 </div>
-                <Card.Actions className="justify-end">
-                  <Button className="btn btn-md btn-warning rounded">
-                    Start Workout
-                  </Button>
+                <Card.Actions>
+                  <div className="flex w-full justify-center align-center gap-8 mt-6">
+                    <Button className="btn-md btn-warning rounded" onClick={() => handleLikeExercise(exercise["_id"])}>
+                      Likes: {exercise.likedBy ? exercise.likedBy.length : 0}
+                    </Button>
+                    <Button className="btn-md btn-warning rounded">
+                      Start Workout
+                    </Button>
+                  </div>
                 </Card.Actions>
               </Card.Body>
             </Card>
