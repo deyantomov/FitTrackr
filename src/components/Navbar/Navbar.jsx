@@ -26,7 +26,6 @@ export default function Navbar({ toggleDrawer }) {
 
         if (user) {
           setUid(user.uid);
-          console.log(user.uid);
           setHandle(user.handle);
 
           if (user.profilePic) {
@@ -45,6 +44,8 @@ export default function Navbar({ toggleDrawer }) {
 
   //  Real-time listener for profile pics
   useEffect(() => {
+    let isMounted = true;
+
     const listenForChanges = async () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
       const collection = mongoClient
@@ -57,13 +58,19 @@ export default function Navbar({ toggleDrawer }) {
       };
 
       // Listen for changes
-      for await (const change of changeStream) {
-        console.log(change);
-        if (
-          change.operationType === "update" ||
-          change.operationType === "replace"
-        ) {
-          setProfilePic(change.fullDocument.img);
+      for await (const change of changeStream) {        
+        if (app.currentUser) {
+          const user = await getUserById(app.currentUser.id);
+  
+          if (user) {
+            setUid(user.uid);
+            setHandle(user.handle);
+  
+            if (user.profilePic) {
+              const pic = await getProfilePic(app, user.profilePic);
+              setProfilePic(pic.img);
+            }
+          }
         }
       }
 
@@ -72,7 +79,11 @@ export default function Navbar({ toggleDrawer }) {
     };
 
     listenForChanges().catch(console.error);
-  }, [app]);
+
+    return () => {
+      isMounted = false; // set the flag to false when the component unmounts
+    };
+  }, []);
 
   if (loading) {
     return (
