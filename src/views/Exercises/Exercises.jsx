@@ -70,11 +70,11 @@ const Exercises = () => {
     );
 
   return (
-    <div>
+    <div className="w-full h-full p-6">
       <div className="w-1/2 mx-auto">
         <SearchBar onSearch={handleSearch} />
       </div>
-      <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Card
@@ -140,7 +140,9 @@ const Exercises = () => {
             </Card>
           ))
         ) : (
-          <p>No exercises found.</p>
+          <div className="flex w-full h-full justify-center align-center items-center col-span-full">
+            <p>No exercises found.</p>
+          </div>
         )}
       </div>
     </div>

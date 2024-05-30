@@ -22,11 +22,11 @@ return (
         Search
         </button>
     </div>
-    <div className="mockup-browser border border-base-300">
+    {/* <div className="mockup-browser border border-base-300">
         <div className="mockup-browser-toolbar">
         <div className="input border border-base-300">https://FitTrackr.com</div>
         </div>
-    </div>
+    </div> */}
     </div>
 );
 };

@@ -20,7 +20,7 @@ export function useCompleteProfile() {
   useEffect(() => {
     const trackData = async () => {
       currentUser?.age ? setProgress(prev => ({...prev, age: true})) : setProgress(prev => ({...prev, age: false}));
-      currentUser?.bio ? setProgress(prev => ({...prev, bio: true})) : setProgress(prev => ({...prev, bio: false}));
+      currentUser?.phoneNumber ? setProgress(prev => ({...prev, phoneNumber: true})) : setProgress(prev => ({...prev, phoneNumber: false}));
       currentUser?.weight ? setProgress(prev => ({...prev, weight: true})) : setProgress(prev => ({...prev, weight: false}));
       currentUser?.height ? setProgress(prev => ({...prev, height: true})) : setProgress(prev => ({...prev, height: false}));
       currentUser?.profilePic ? setProgress(prev => ({...prev, profilePic: true})) : setProgress(prev => ({...prev, profilePic: false}));

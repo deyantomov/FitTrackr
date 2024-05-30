@@ -62,6 +62,12 @@ export default function Profile() {
     } catch (err) {
       console.error(err);
     } finally {
+      const profile = await getUserById(params.id);
+      setUser(profile);
+
+      const profilePic = await getProfilePic(app, profile.profilePic);
+      setUserPic(profilePic.img);
+
       setLoading(false);
     }
   };
@@ -155,13 +161,14 @@ export default function Profile() {
               )}
               <Modal
                 open={isOpen}
-                className="p-4 mt-2"
+                className="p-4 mt-2 bg-white text-black"
               >
                 <h2 className="text-xl mb-4">Enter Password</h2>
                 <Input
                   type="password"
                   size="sm"
                   value={password}
+                  className="bg-white border border-2 border-black"
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="flex flex-row w-full justify-center align-center items-center gap-6 mt-4">
@@ -182,7 +189,7 @@ export default function Profile() {
               <p>{user.firstName && user.firstName}</p>
               <p>{user.lastName && user.lastName}</p>
             </Card.Body>
-            <div className="w-16 text-sm text-center mt-1">
+            <div className="w-32 text-sm text-center mt-1">
               <Badge className="badge-info rounded-full text-white">
                 {user.phoneNumber && user.phoneNumber}
               </Badge>
@@ -225,9 +232,9 @@ export default function Profile() {
                 Phone Number
                 <Input
                   size={"sm"}
-                  type="number"
+                  type="text"
                   onChange={(e) =>
-                    setNewUserInfo({ ...newUserInfo, bio: e.target.value })
+                    setNewUserInfo({ ...newUserInfo, phoneNumber: e.target.value })
                   }
                   className="bg-white w-full"
                 ></Input>

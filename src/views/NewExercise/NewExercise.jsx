@@ -95,7 +95,7 @@ const NewExerciseForm = () => {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center align-center items-center p-6">
       <div className="form-control w-auto md:w-1/2 lg:w-1/3 mx-auto p-4 bg-base-200 rounded-box">
         <form onSubmit={handleSubmit}>
           <span>Title:</span>

@@ -45,6 +45,7 @@ export default function Navbar({ toggleDrawer }) {
       
       // Listen for changes
       for await (const change of changeStream) {
+        console.log(change);
         if (change.operationType === 'update' || change.operationType === 'replace') {
           setProfilePic(change.fullDocument.img);
         }

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function FooterNav() {
   return (
     <>
-      <Footer className="px-12 py-6 mt-8 text-neutral-content border-t border-t-2 border-t-warning relative text-base-600">
+      <Footer className="px-12 py-6 text-neutral-content border-t border-t-2 border-t-warning relative text-base-600">
         <div className="flex justify-center items-center gap-36 text-lg px-32">
           <div className="my-2">
             <Link to="/home">

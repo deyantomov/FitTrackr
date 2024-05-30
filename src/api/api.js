@@ -134,7 +134,7 @@ export const updateUserProfile = async (
       updateImgId = (await updateImgRes.json())["_id"];
     }
 
-    if (updatedFields.phoneNumber.toString().length !== 10) {
+    if (updatedFields.phoneNumber && updatedFields.phoneNumber.toString().length !== 10) {
       throw new Error("Phone number must be 10 digits");
     }
 

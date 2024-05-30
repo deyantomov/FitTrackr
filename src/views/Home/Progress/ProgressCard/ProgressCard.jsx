@@ -116,15 +116,15 @@ export default function ProgressCard({ trackParam, imgName, title }) {
             Log
           </Button>
         )}
-        <Modal ref={ref} className="p-12 bg-white">
+        <Modal ref={ref} className="p-12 bg-white text-black">
           <Modal.Header className="text-5xl md:text-6xl lg:text-7xl mb-8">
             Log
           </Modal.Header>
-          <Modal.Body className="w-full flex flex-col text-white bg-gray-800 rounded-lg">
+          <Modal.Body className="w-full flex flex-col rounded-lg">
             <Input
               type="number"
               bordered={false}
-              className="w-full"
+              className="w-full bg-white border border-3 border-black"
               value={inputValue}
               readOnly
             />
@@ -133,7 +133,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
                 (value) => (
                   <Button
                     key={value}
-                    className={`numpad-btn ${value === "C" && "btn-warning"} ${
+                    className={`numpad-btn bg-white text-black ${value === "C" && "btn-warning"} ${
                       value === "C" && "col-span-2"
                     }`}
                     onClick={() => handleNumpadClick(value)}
