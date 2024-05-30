@@ -139,7 +139,7 @@ const Exercises = () => {
                 }}
               >
                 <div className="flex flex-col w-full h-full justify-center p-4 rounded-md bg-white bg-opacity-55">
-                  <Card.Title className="flex items-center justify-center border p-2 bg-yellow-500 rounded bg-opacity-55">
+                  <Card.Title className="flex items-center justify-center border p-2 bg-yellow-500 rounded bg-opacity-55 mb-4">
                     <FireIcon className="h-5 w-5 mr-2 text-orange-500" />
                     <strong className="text-center text-2xl">
                       {exercise.title}
@@ -171,7 +171,7 @@ const Exercises = () => {
                     </p>
                     <p className="flex items-center">
                       <UserCircleIcon className="h-5 w-5 mr-2" />
-                      <strong className="mr-2">Owner:</strong> {exercise.owner}
+                      <strong className="mr-2">Owner:</strong> {exercise.ownerHandle}
                     </p>
                     <p className="flex items-center">
                       <LockClosedIcon className="h-5 w-5 mr-2" />

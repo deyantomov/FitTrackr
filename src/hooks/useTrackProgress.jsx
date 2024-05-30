@@ -12,8 +12,29 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
 
       if (currentUser) {
         const user = await getUserById(currentUser.id);
+
         if (user[trackParam] && trackParam === "exercise") {
-          setProgress({ weekly: user[trackParam].length });
+          const sortedDates = user[trackParam].sort((a, b) => new Date(b) - new Date(a));
+        
+          let streak = 0;
+        
+          // If there's only one date, set the streak to 1
+          if (sortedDates.length === 1) {
+            streak = 1;
+          } else {
+            for (let i = 0; i < sortedDates.length - 1; i++) {
+              // Calculate the difference in days between the current date and the next date
+              const difference = Math.round((new Date(sortedDates[i]) - new Date(sortedDates[i + 1])) / (1000 * 60 * 60 * 24));
+        
+              if (difference > 1) {
+                break;
+              }
+        
+              streak++;
+            }
+          }
+        
+          setProgress({ weekly: streak });
           return;
         }
 

@@ -5,12 +5,19 @@ import { useApp } from "../../hooks/useApp";
 import { useEffect, useState } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
+import { Dropdown } from "react-daisyui";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
   const [profilePic, setProfilePic] = useState("");
   const [picOwner, setPicOwner] = useState("");
+  const [handle, setHandle] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    console.log(isOpen);
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchPic = async () => {
@@ -22,6 +29,7 @@ export default function Navbar({ toggleDrawer }) {
 
           setProfilePic(pic.img);
           setPicOwner(pic.owner);
+          setHandle(user.handle);
         }
       } else {
         setProfilePic("");
@@ -36,35 +44,37 @@ export default function Navbar({ toggleDrawer }) {
   useEffect(() => {
     const listenForChanges = async () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-      const collection = mongoClient.db("sample_data").collection("profile_pics");
+      const collection = mongoClient
+        .db("sample_data")
+        .collection("profile_pics");
       const changeStream = collection.watch();
 
       const cleanup = () => {
         changeStream.close();
       };
-      
+
       // Listen for changes
       for await (const change of changeStream) {
         console.log(change);
-        if (change.operationType === 'update' || change.operationType === 'replace') {
+        if (
+          change.operationType === "update" ||
+          change.operationType === "replace"
+        ) {
           setProfilePic(change.fullDocument.img);
         }
       }
 
       //  clean up;
       return cleanup;
-    }
+    };
 
     listenForChanges().catch(console.error);
-
   }, [app]);
-
 
   if (loading) {
     return (
-      <div className="w-full h-full flex justify-center items-center">
-      </div>
-    )
+      <div className="w-full h-full flex justify-center items-center"></div>
+    );
   }
 
   return (
@@ -84,16 +94,6 @@ export default function Navbar({ toggleDrawer }) {
         <Link to="/exercises">
           <h2 className="text-2xl">Exercises</h2>
         </Link>
-        {/* {app.currentUser && (
-        <Link to="/new-exercise">
-          <h2 className="text-2xl whitespace-nowrap">Create Exercise</h2>
-          </Link>
-        )}
-        {app.currentUser && (
-          <Link to="/progress">
-            <h2 className="text-2xl">Progress</h2>
-          </Link>
-        )} */}
         {app.currentUser && (
           <Link to="/goals">
             <h2 className="text-2xl">Goals</h2>
@@ -104,9 +104,33 @@ export default function Navbar({ toggleDrawer }) {
         </Link>
       </div>
       <div className="rounded-full w-full flex flex-row gap-8 justify-end align-end p-0">
-        <Link to={`/profile/${picOwner}`}>
-          <ProfilePic profilePic={profilePic} dimensions="56px" />
-        </Link>
+        <Dropdown className="m-0 p-0">
+          <Dropdown.Toggle
+            className="cursor-pointer m-0 p-0"
+            button={false}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <ProfilePic profilePic={profilePic} dimensions="56px" />
+          </Dropdown.Toggle>
+          {isOpen && (
+            <Dropdown.Menu className="w-52 mt-4 absolute right-2 shadow-xl">
+              <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
+                <h2 className="text-xl cursor-default">{handle}</h2>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link to={`/profile/${picOwner}`}>
+                  <p>My profile</p>
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link to={`/home`}>
+                  <p>Liked posts</p>
+                </Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          )}
+        </Dropdown>
+
         <AuthButtons></AuthButtons>
       </div>
     </div>
