@@ -1,0 +1,125 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  getAllUsers,
+  getAllExercises,
+  getProfilePic,
+  getExerciseImage,
+} from "../../api/api";
+import { Card } from "react-daisyui";
+import { useApp } from "../../hooks/useApp";
+import ProfilePic from "../../components/ProfilePic/ProfilePic";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+
+export default function SearchResults() {
+  const app = useApp();
+  const params = useParams();
+  const [users, setUsers] = useState([]);
+  const [exercises, setExercises] = useState([]);
+
+  useEffect(() => {
+    const q = params.query;
+
+    const fetchUserData = async () => {
+      const allUsers = await getAllUsers();
+      const matchingUsers = allUsers.filter((user) =>
+        user.handle.includes(q.toLowerCase())
+      );
+
+      const usersWithProfilePic = await Promise.all(
+        matchingUsers.map(async (user) => {
+          const profilePic = (await getProfilePic(app, user.profilePic))["img"];
+
+          return { ...user, profilePic };
+        })
+      );
+
+      if (usersWithProfilePic) {
+        setUsers(usersWithProfilePic);
+      }
+    };
+
+    const fetchExerciseData = async () => {
+      const allExercises = await getAllExercises();
+      const matchingExercises = allExercises.filter(
+        (exercise) =>
+          exercise.title.includes(q || q.toLowerCase()) ||
+          exercise.description.includes(q || q.toLowerCase())
+      );
+
+      const exercisesWithImage = await Promise.all(
+        matchingExercises.map(async (exercise) => {
+          const img = await getExerciseImage(exercise.img);
+
+          if (img) {
+            const pic = img["img"];
+            return { ...exercise, pic };
+          }
+
+          return exercise;
+        })
+      );
+
+      if (exercisesWithImage) {
+        setExercises(exercisesWithImage);
+      }
+    };
+
+    fetchUserData();
+    fetchExerciseData();
+  }, [params]);
+
+  return (
+    <div className="w-full h-full flex flex-col justify-center align-center items-center p-6">
+      <div className="w-full h-full flex flex-col align-center items-center">
+        <h2 className="mb-8 mt-4">Users:</h2>
+        {users &&
+          users.map((user, index) => {
+            return (
+              <Card className="bg-base-200 p-4 my-2 w-full" key={index}>
+                <div className="flex flex-row gap-4">
+                  <ProfilePic
+                    profilePic={user.profilePic}
+                    dimensions="96px"
+                    className="ms-4"
+                  />
+                  <Card.Title className="mb-4">{user.handle}</Card.Title>
+                </div>
+                <Card.Body className="text-lg m-0 p-0 mt-4 flex flex-row justify-center align-center items-center w-full">
+                  <Link to={`/profile/${user.uid}`} className="flex flex-row">
+                    <ChevronDownIcon style={{ width: "24px" }} />
+                    <span>View full profile</span>
+                  </Link>
+                </Card.Body>
+              </Card>
+            );
+          })}
+        <hr className="border-t-1 border-t-warning my-12 w-3/6" />
+        <h2 className="mb-8">Exercises:</h2>
+        {exercises &&
+          exercises.map((exercise, index) => {
+            console.log(exercise);
+            return (
+              <Card className="bg-base-200 p-4 my-2 w-full" key={index}>
+                <div className="flex flex-row gap-4">
+                  <ProfilePic
+                    profilePic={exercise.pic && exercise.pic}
+                    dimensions="96px"
+                    className="ms-4"
+                  />
+                  <Card.Title className="mb-4">{exercise.title}</Card.Title>
+                </div>
+                <Card.Body className="text-lg m-0 p-0 mt-4 flex flex-row justify-center align-center items-center w-full">
+                  <Link to={`/home`} className="flex flex-row">
+                    <ChevronDownIcon style={{ width: "24px" }} />
+                    <span>View full exercise</span>
+                  </Link>
+                </Card.Body>
+              </Card>
+            );
+          })}
+      </div>
+    </div>
+  );
+}

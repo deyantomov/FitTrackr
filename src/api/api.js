@@ -135,7 +135,10 @@ export const updateUserProfile = async (
       updateImgId = (await updateImgRes.json())["_id"];
     }
 
-    if (updatedFields.phoneNumber && updatedFields.phoneNumber.toString().length !== 10) {
+    if (
+      updatedFields.phoneNumber &&
+      updatedFields.phoneNumber.toString().length !== 10
+    ) {
       throw new Error("Phone number must be 10 digits");
     }
 
@@ -169,14 +172,14 @@ export const updateUserProfile = async (
  * @param {string} id
  */
 export const getProfilePic = async (app, id) => {
-  const user = app.currentUser;
+  // const user = app.currentUser;
 
-  if (user) {
+  if (true) {
     const response = await fetch(`${getProfilePicEndpoint}?id=${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.accessToken}`,
+        // Authorization: `Bearer ${user.accessToken}`,
       },
     });
 
@@ -340,7 +343,7 @@ export const updateWeeklyStreak = async (app) => {
 
     return response;
   }
-}
+};
 
 export const updateSteps = async (app, steps) => {
   const user = app.currentUser;
@@ -412,12 +415,14 @@ export const updateDistance = async (app, distance) => {
 
     return [distanceResponse, weeklyStreakResponse];
   }
-}
+};
 
 export const getExerciseImage = async (id) => {
-  const response = await fetch(`${getExerciseImageEndpoint}?id=${id}`);
-  return response.json();
-}
+  if (id) {
+    const response = await fetch(`${getExerciseImageEndpoint}?id=${id}`);
+    return response.json();
+  }
+};
 
 export const likeExercise = async (app, exerciseId) => {
   const user = app.currentUser;
@@ -429,10 +434,9 @@ export const likeExercise = async (app, exerciseId) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.accessToken}`,
       },
-      body: app.currentUser.id
-      
+      body: app.currentUser.id,
     });
 
     return response.json();
   }
-}
+};

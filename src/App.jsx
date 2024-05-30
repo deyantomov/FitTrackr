@@ -7,9 +7,8 @@ import Login from "./views/Login/Login";
 import SignUp from "./views/Signup/Signup";
 import Goals from "./views/Goals/Goals";
 import Profile from "./views/Profile/Profile";
-// import Progress from "./views/Progress/Progress";
 import Authenticated from "./components/Authenticated/Authenticated";
-// import UpdateProfile from "./components/UpdateProfile";
+import SearchResults from "./views/SearchResults/SearchResults";
 import atlasConfig from "../atlasConfig.json";
 import "./App.css";
 import NewExerciseForm from "./views/NewExercise/NewExercise";
@@ -111,6 +110,14 @@ function App() {
         element={
           <Sidebar>
             <Exercises />
+          </Sidebar>
+        }
+      />
+      <Route
+        path="/search/:query"
+        element={
+          <Sidebar>
+            <SearchResults />
           </Sidebar>
         }
       />
