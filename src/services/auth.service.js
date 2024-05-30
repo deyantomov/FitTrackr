@@ -82,6 +82,10 @@ export const register = async (
     const credentials = Realm.Credentials.emailPassword(email, password);
     const user = await app.logIn(credentials);
 
+    if (handle.length < 2 || handle.length > 20) {
+      throw new Error("Username must be 2-20 characters long!");
+    }
+
     if (user) {
       await createUser({
         uid: user.id,
@@ -90,7 +94,6 @@ export const register = async (
         firstName,
         lastName,
         role: 'user',
-        createdOn: new Date(),
       });
 
       setUserOnlineStatus(user, user.id, true);

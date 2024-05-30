@@ -134,6 +134,10 @@ export const updateUserProfile = async (
       updateImgId = (await updateImgRes.json())["_id"];
     }
 
+    if (updatedFields.phoneNumber.toString().length !== 10) {
+      throw new Error("Phone number must be 10 digits");
+    }
+
     const response = await fetch(`${updateProfileEndpoint}?uid=${id}`, {
       method: "POST",
       headers: {
@@ -141,8 +145,10 @@ export const updateUserProfile = async (
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
+        firstName: updatedFields.firstName,
+        lastName: updatedFields.lastName,
         age: updatedFields.age,
-        bio: updatedFields.bio,
+        phoneNumber: updatedFields.phoneNumber,
         weight: updatedFields.weight,
         height: updatedFields.height,
         profilePic: updateImgId,

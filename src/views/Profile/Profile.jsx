@@ -128,7 +128,7 @@ export default function Profile() {
               <ProfilePic
                 profilePic={userPic}
                 dimensions="96px"
-                className="flex-shrink-0"
+                className="flex-shrink-0 me-8"
               />
               {currentUser.uid === user.uid && (
                 <div className="relative flex flex-row justify-center align-center items-center">
@@ -179,18 +179,18 @@ export default function Profile() {
               @{user.handle}
             </Card.Title>
             <Card.Body className="p-0 flex flex-row gap-1 w-16 text-black text-lg">
-              <p>{user.firstName}</p>
-              <p>{user.lastName}</p>
+              <p>{user.firstName && user.firstName}</p>
+              <p>{user.lastName && user.lastName}</p>
             </Card.Body>
             <div className="w-16 text-sm text-center mt-1">
               <Badge className="badge-info rounded-full text-white">
-                {user.bio}
+                {user.phoneNumber && user.phoneNumber}
               </Badge>
             </div>
           </div>
         </div>
         <hr className="border border-t-1 border-t-gray my-6" />
-        {currentUser.uid === user.uid && (
+        {(currentUser && currentUser.uid === user.uid) && (
           <div className="grid grid-rows-1 text-center align-center place-items-center justify-center text-black bg-gray-100 p-8 h-auto ">
             <h2 className="text-2xl mb-2">Update your profile</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 mt-2 text-start md:gap-2 w-full">
@@ -222,10 +222,10 @@ export default function Profile() {
             </div>
             <div className="grid grid-cols-1 w-full h-auto">
               <label className="text-base md:mb-2 text-start m-0">
-                Bio
+                Phone Number
                 <Input
                   size={"sm"}
-                  type="text"
+                  type="number"
                   onChange={(e) =>
                     setNewUserInfo({ ...newUserInfo, bio: e.target.value })
                   }
