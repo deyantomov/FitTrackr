@@ -84,24 +84,22 @@ export default function ProgressCard({ trackParam, imgName, title }) {
             <>
               {trackParam !== "exercise" && (
                 <p>
-                  Daily: {progress.daily || 0}{" "}
+                  <b className="text-xl">Daily:</b> {progress.daily || 0}{" "}
                   {trackParam === "calories" && "kcal"}
                   {trackParam === "distance" && "m"}
-                  {trackParam === "exercise" && "days"}
                 </p>
               )}
               <p>
-                Weekly: {progress.weekly || 0}{" "}
+                <b className="text-xl">Weekly:</b> {progress.weekly || 0}{" "}
                 {trackParam === "calories" && "kcal"}
                 {trackParam === "distance" && "m"}
-                {trackParam === "exercise" && "days"}
+                {trackParam === "exercise" && (progress.weekly === 1 ? "day" : "days")}
               </p>
               {trackParam !== "exercise" && (
                 <p>
-                  Monthly: {progress.monthly || 0}{" "}
+                  <b className="text-xl">Monthly:</b> {progress.monthly || 0}{" "}
                   {trackParam === "calories" && "kcal"}
                   {trackParam === "distance" && "m"}
-                  {trackParam === "exercise" && "days"}
                 </p>
               )}
             </>

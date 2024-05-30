@@ -86,8 +86,8 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col justify-center align-center items-center w-full m-0 p-0">
-            <hr className="border border-t-1 border-t-gray w-48 my-12" />
-            <h2 className="text-4xl xl:text-5xl mt-8 mb-4 text-center">
+            <hr className="border-t-warning border-t-1 w-48 my-12" />
+            <h2 className="text-4xl xl:text-5xl mb-4 text-center">
               Track your progress
             </h2>
             <Progress></Progress>

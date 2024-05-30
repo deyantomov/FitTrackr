@@ -30,6 +30,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
     trackParamRef.current = trackParam;
   }, [trackParam]);
 
+  //  Real time listener tracking user progress
   useEffect(() => {
     if (progress) {
       isCancelledRef.current = false;

@@ -7,12 +7,13 @@ import {
   QuestionMarkCircleIcon,
   PlusIcon,
   TrophyIcon,
-  PresentationChartLineIcon
+  PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
 import { logout } from "../services/auth.service";
 import FooterNav from "../components/Footer/Footer";
+import SwitchTheme from "./SwitchTheme";
 
 /**
  *
@@ -30,8 +31,7 @@ export default function Sidebar({ children }) {
   const handleLogout = async () => {
     await logout(app);
     setIsLoggedIn(false);
-  }
-
+  };
 
   return (
     <div className="drawer h-full">
@@ -41,10 +41,11 @@ export default function Sidebar({ children }) {
         className="drawer-toggle h-full"
       />
       <div className="drawer-content flex flex-col items-start justify-center p-0">
+        {/* Content */}
         <Navbar toggleDrawer={toggleSidebar} />
         <div className="flex flex-col w-full h-full text-4xl">
           {children}
-          <FooterNav></FooterNav>  
+          <FooterNav></FooterNav>
         </div>
       </div>
       <div className="drawer-side">
@@ -54,12 +55,13 @@ export default function Sidebar({ children }) {
           className="drawer-overlay"
         ></label>
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
-          <Link to="/">
-            <div className="flex flex-row justify-start align-start text-center  my-3 m-0 p-0">
+          <div className="flex flex-row justify-start align-start items-center text-center gap-12 my-2 mx-0 p-2">
+            <Link to="/">
               {/* <img src="logo.png" className="w-16 m-0 p-0" /> */}
-              <h2 className="text-5xl font-light ms-2 p-2">FitTrackr</h2>
-            </div>
-          </Link>
+              <h2 className="text-5xl font-light ms-2">FitTrackr</h2>
+            </Link>
+            <SwitchTheme></SwitchTheme>
+          </div>
           <hr className="border-t-2 border-warning my-4" />
           <Link to="/home">
             <SidebarButton

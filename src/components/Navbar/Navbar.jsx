@@ -5,8 +5,6 @@ import { useApp } from "../../hooks/useApp";
 import { useEffect, useState } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
-import { Loading } from "react-daisyui";
-import { BSON } from "realm-web";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
@@ -52,6 +50,7 @@ export default function Navbar({ toggleDrawer }) {
         }
       }
 
+      //  clean up;
       return cleanup;
     }
 
@@ -103,7 +102,7 @@ export default function Navbar({ toggleDrawer }) {
           <h2 className="text-2xl">About</h2>
         </Link>
       </div>
-      <div className="rounded-full w-full flex flex-row justify-end align-end p-0">
+      <div className="rounded-full w-full flex flex-row gap-8 justify-end align-end p-0">
         <Link to={`/profile/${picOwner}`}>
           <ProfilePic profilePic={profilePic} dimensions="56px" />
         </Link>

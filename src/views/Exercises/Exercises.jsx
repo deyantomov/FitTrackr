@@ -24,6 +24,7 @@ const Exercises = () => {
       try {
         const data = await getAllExercises();
 
+        //  use one to one relationships to avoid exercise documents and application responses exceeding 16MB
         const updatedExercises = await Promise.all(
           data.map(async (exercise) => {
             if (exercise.img) {
@@ -51,7 +52,6 @@ const Exercises = () => {
   };
 
   let filteredExercises;
-
   if (exercises.length) {
     filteredExercises = exercises.filter(
       (exercise) =>
