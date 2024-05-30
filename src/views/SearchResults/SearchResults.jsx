@@ -6,7 +6,7 @@ import {
   getProfilePic,
   getExerciseImage,
 } from "../../api/api";
-import { Card } from "react-daisyui";
+import { Card, Loading } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -17,11 +17,14 @@ export default function SearchResults() {
   const params = useParams();
   const [users, setUsers] = useState([]);
   const [exercises, setExercises] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const q = params.query;
 
+    
     const fetchUserData = async () => {
+      setLoading(true);
       const allUsers = await getAllUsers();
       const matchingUsers = allUsers.filter((user) =>
         user.handle.includes(q.toLowerCase())
@@ -38,9 +41,13 @@ export default function SearchResults() {
       if (usersWithProfilePic) {
         setUsers(usersWithProfilePic);
       }
+
+      setLoading(false);
     };
 
     const fetchExerciseData = async () => {
+      setLoading(true);
+      
       const allExercises = await getAllExercises();
       const matchingExercises = allExercises.filter(
         (exercise) =>
@@ -64,11 +71,21 @@ export default function SearchResults() {
       if (exercisesWithImage) {
         setExercises(exercisesWithImage);
       }
+
+      setLoading(false);
     };
 
     fetchUserData();
     fetchExerciseData();
   }, [params]);
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center align-center items-center">
+        <Loading />
+      </div>
+    )
+  }
 
   return (
     <div className="w-full h-full flex flex-col justify-center align-center items-center p-6">
