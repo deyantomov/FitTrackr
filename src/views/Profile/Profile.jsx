@@ -52,6 +52,10 @@ export default function Profile() {
         }
       });
 
+      if (newUserInfo.newPassword !== newUserInfo.oldPassword) {
+        console.error("Passwords do not match!");
+      }
+
       await updateUserProfile(
         app,
         user.uid,
@@ -277,9 +281,10 @@ export default function Profile() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 md:mt-2 text-start gap-2 w-full">
               <label className="text-base mb-2">
-                Type your password
+                Type your password <span className="text-red-600">*</span>
                 <Input
                   size={"sm"}
+                  required={true}
                   type="password"
                   onChange={(e) =>
                     setNewUserInfo({
@@ -291,9 +296,10 @@ export default function Profile() {
                 ></Input>
               </label>
               <label className="text-base mb-2">
-                Confirm your password
+                Confirm your password <span className="text-red-600">*</span>
                 <Input
                   size={"sm"}
+                  required={true}
                   type="password"
                   onChange={(e) =>
                     setNewUserInfo({
@@ -305,6 +311,7 @@ export default function Profile() {
                 ></Input>
               </label>
             </div>
+            <h2 className="mt-6 mb-2 text-lg">Fields marked with <span className="text-red-600">*</span> are required</h2>
             <Button className="btn-warning w-2/6 my-4" onClick={handleUpdate}>
               Update profile
             </Button>

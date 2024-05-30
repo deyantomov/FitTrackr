@@ -2,7 +2,7 @@ import { Bars3Icon } from "@heroicons/react/16/solid";
 import ProfilePic from "../ProfilePic/ProfilePic";
 import AuthButtons from "../AuthButtons/AuthButtons";
 import { useApp } from "../../hooks/useApp";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
 import { Dropdown, Input } from "react-daisyui";
@@ -18,6 +18,7 @@ export default function Navbar({ toggleDrawer }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const handleUpdateSearchTerm = (e) => {
     setSearchTerm(e.target.value);
@@ -29,10 +30,6 @@ export default function Navbar({ toggleDrawer }) {
       setSearchTerm("");
     }
   };
-
-  useEffect(() => {
-    console.log(isOpen);
-  }, [isOpen]);
 
   useEffect(() => {
     const fetchPic = async () => {
@@ -100,6 +97,21 @@ export default function Navbar({ toggleDrawer }) {
     };
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+  
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="w-full h-full flex justify-center items-center"></div>
@@ -150,7 +162,7 @@ export default function Navbar({ toggleDrawer }) {
       </div>
       <div className="rounded-full w-full flex flex-row gap-8 justify-end align-end p-0">
         {app.currentUser && (
-          <Dropdown className="m-0 p-0">
+          <Dropdown className="m-0 p-0" ref={dropdownRef}>
             <Dropdown.Toggle
               className="cursor-pointer m-0 p-0"
               button={false}

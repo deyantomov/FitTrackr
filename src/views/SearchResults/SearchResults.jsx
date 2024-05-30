@@ -6,7 +6,7 @@ import {
   getProfilePic,
   getExerciseImage,
 } from "../../api/api";
-import { Card, Loading } from "react-daisyui";
+import { Card, Loading, Button } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -22,7 +22,6 @@ export default function SearchResults() {
   useEffect(() => {
     const q = params.query;
 
-    
     const fetchUserData = async () => {
       setLoading(true);
       const allUsers = await getAllUsers();
@@ -47,7 +46,7 @@ export default function SearchResults() {
 
     const fetchExerciseData = async () => {
       setLoading(true);
-      
+
       const allExercises = await getAllExercises();
       const matchingExercises = allExercises.filter(
         (exercise) =>
@@ -79,12 +78,17 @@ export default function SearchResults() {
     fetchExerciseData();
   }, [params]);
 
+  //  TODO: Implement friend requests
+  const handleSendFriendRequest = () => {
+
+  }
+
   if (loading) {
     return (
       <div className="w-full h-full flex justify-center align-center items-center">
         <Loading />
       </div>
-    )
+    );
   }
 
   return (
@@ -95,13 +99,25 @@ export default function SearchResults() {
           users.map((user, index) => {
             return (
               <Card className="bg-base-200 p-4 my-2 w-full" key={index}>
-                <div className="flex flex-row gap-4">
-                  <ProfilePic
-                    profilePic={user.profilePic}
-                    dimensions="96px"
-                    className="ms-4"
-                  />
-                  <Card.Title className="mb-4">{user.handle}</Card.Title>
+                <div className="flex flex-row gap-4 items-center">
+                  <div className="flex flex-row justify-start align-start gap-4 w-full">
+                    <ProfilePic
+                      profilePic={user.profilePic}
+                      dimensions="96px"
+                      className="ms-4"
+                    />
+                    <Card.Title className="mb-4">{user.handle}</Card.Title>
+                  </div>
+                  <div className="flex flex-row justify-end align-end items-center">
+                    {app.currentUser && app.currentUser.id !== user.uid && (
+                      <Button
+                        className="me-4 btn-warning"
+                        onClick={handleSendFriendRequest}
+                      >
+                        Add friend
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <Card.Body className="text-lg m-0 p-0 mt-4 flex flex-row justify-center align-center items-center w-full">
                   <Link to={`/profile/${user.uid}`} className="flex flex-row">
