@@ -10,7 +10,7 @@ import { Dropdown } from "react-daisyui";
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
   const [profilePic, setProfilePic] = useState("");
-  const [picOwner, setPicOwner] = useState("");
+  const [uid, setUid] = useState("");
   const [handle, setHandle] = useState("");
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -24,12 +24,15 @@ export default function Navbar({ toggleDrawer }) {
       if (app.currentUser) {
         const user = await getUserById(app.currentUser.id);
 
-        if (user && user.profilePic) {
-          const pic = await getProfilePic(app, user.profilePic);
-
-          setProfilePic(pic.img);
-          setPicOwner(pic.owner);
+        if (user) {
+          setUid(user.uid);
+          console.log(user.uid);
           setHandle(user.handle);
+
+          if (user.profilePic) {
+            const pic = await getProfilePic(app, user.profilePic);
+            setProfilePic(pic.img);
+          }
         }
       } else {
         setProfilePic("");
@@ -117,16 +120,16 @@ export default function Navbar({ toggleDrawer }) {
               <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                 <h2 className="text-xl cursor-default">{handle}</h2>
               </Dropdown.Item>
-              <Dropdown.Item>
-                <Link to={`/profile/${picOwner}`}>
+              <Link to={`/profile/${uid}`}>
+                <Dropdown.Item>
                   <p>My profile</p>
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link to={`/home`}>
+                </Dropdown.Item>
+              </Link>
+              <Link to={`/home`}>
+                <Dropdown.Item>
                   <p>Liked posts</p>
-                </Link>
-              </Dropdown.Item>
+                </Dropdown.Item>
+              </Link>
             </Dropdown.Menu>
           )}
         </Dropdown>
