@@ -72,33 +72,44 @@ const Exercises = () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
       const collection = mongoClient.db("sample_data").collection("exercises");
       const changeStream = collection.watch();
-
+    
       const cleanup = () => {
         changeStream.close();
       };
-
+    
       // Listen for changes
-      for await (const change of changeStream) {
-        const data = await getAllExercises();
+      try {
+        for await (const change of changeStream) {
+          try {
+            const data = await getAllExercises();
 
-        const updatedExercises = await Promise.all(
-          data.map(async (exercise) => {
-            if (exercise.img) {
-              const imgData = await getExerciseImage(exercise.img);
-              return { ...exercise, img: imgData["img"] };
-            } else {
-              return exercise;
-            }
-          })
-        );
+            const updatedExercises = await Promise.all(
+              data.map(async (exercise) => {
+                if (exercise.img) {
+                  const imgData = await getExerciseImage(exercise.img);
+                  return { ...exercise, img: imgData["img"] };
+                } else {
+                  return exercise;
+                }
+              })
+            );
+    
+            //  zero delay timeout to ensure previous operations are complete before setting the state
+            setTimeout(() => {}, 0);
 
-        setExercises(updatedExercises);
+            setExercises(updatedExercises);
+          } catch (err) {
+            console.error('Error processing change:', err);
+          }
+        }
+      } catch (err) {
+        console.error('Error listening for changes:', err);
       }
-
+    
       //  clean up;
       return cleanup;
     };
-
+    
     listenForChanges().catch(console.error);
   }, []);
 
