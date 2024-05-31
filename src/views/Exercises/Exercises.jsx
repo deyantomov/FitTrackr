@@ -56,9 +56,9 @@ const Exercises = () => {
     setSearchTerm(term);
   };
 
-  const handleLikeExercise = async (id) => {
+  const handleLikeExercise = async (id, owner) => {
     try {
-      const result = await likeExercise(app, id);
+      const result = await likeExercise(app, id, owner);
 
       return result;
     } catch (err) {
@@ -191,7 +191,7 @@ const Exercises = () => {
                   <div className="flex w-full justify-center align-center gap-8 mt-6">
                     <Button
                       className="btn-md btn-warning rounded"
-                      onClick={() => handleLikeExercise(exercise["_id"])}
+                      onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
                     >
                       Likes: {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>

@@ -13,6 +13,7 @@ import {
   updateWeeklyStreakEndpoint,
   getExerciseImageEndpoint,
   likeExerciseEndpoint,
+  notificationsEndpoint,
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -424,7 +425,7 @@ export const getExerciseImage = async (id) => {
   }
 };
 
-export const likeExercise = async (app, exerciseId) => {
+export const likeExercise = async (app, exerciseId, owner) => {
   const user = app.currentUser;
 
   if (user) {
@@ -437,6 +438,19 @@ export const likeExercise = async (app, exerciseId) => {
       body: app.currentUser.id,
     });
 
-    return response.json();
+    const notification = await fetch(`${notificationsEndpoint}?type=likedExercise`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body: JSON.stringify({
+        to: owner,
+        from: app.currentUser.id,
+        postId: exerciseId
+      })
+    })
+
+    return [response.json(), notification.json()];
   }
 };

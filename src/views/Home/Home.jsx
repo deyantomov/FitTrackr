@@ -80,7 +80,7 @@ export default function Home() {
                 <CompleteProfile uid={app.currentUser.id} />
               )}
               <ConnToFb uid={app.currentUser.id} />
-              {user.exercises && user.exercises.own.length > 0 ? null : (
+              {(user.exercises && user.exercises.own) && user.exercises.own.length > 0 ? null : (
                 <AddFirstExercise uid={app.currentUser.id} />
               )}
             </div>

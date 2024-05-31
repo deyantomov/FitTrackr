@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
 import { Dropdown, Input } from "react-daisyui";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar({ toggleDrawer }) {
@@ -154,9 +154,9 @@ export default function Navbar({ toggleDrawer }) {
           value={searchTerm}
           placeholder="Search users and exercises"
         />
-        <MagnifyingGlassCircleIcon
+        <MagnifyingGlassIcon
           className="hover:bg-base-200 cursor-pointer rounded-full ms-2 me-4 md:ms-4"
-          style={{ width: "64px" }}
+          style={{ width: "32px" }}
           onClick={handleSearch}
         />
       </div>
@@ -178,6 +178,11 @@ export default function Navbar({ toggleDrawer }) {
                 <Link to={`/profile/${uid}`}>
                   <Dropdown.Item>
                     <p>My profile</p>
+                  </Dropdown.Item>
+                </Link>
+                <Link to={`/notifications/${uid}`}>
+                  <Dropdown.Item>
+                    <p>Notifications</p>
                   </Dropdown.Item>
                 </Link>
                 <Link to={`/home`}>
