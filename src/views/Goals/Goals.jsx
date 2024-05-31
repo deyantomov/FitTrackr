@@ -255,7 +255,7 @@ export default function Goals() {
         ></GoalsCard>
         <GoalsCard
           metricTitle="WORKOUT DURATION"
-          currentProgress="18"
+          currentProgress="22"
           goalSet={userGoals.length > 0 ? userGoals[0].duration : 0}
           metricString="minutes"
         ></GoalsCard>

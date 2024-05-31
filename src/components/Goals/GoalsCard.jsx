@@ -9,21 +9,18 @@ export default function GoalsCard({
   metricString,
 }) {
   const [percentage, setPercentage] = useState(0);
-  const [steps, setSteps] = useState(currentProgress);
-  const [targetSteps, setTargetSteps] = useState(goalSet);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     setTimeout(() => {
       if (percentage < 100) {
         setPercentage(percentage + 1);
       }
+      const newProgress = (currentProgress * 100) / goalSet;
+      setProgress(newProgress);
+      console.log("progress", progress);
     }, 10);
-  }, [percentage]);
-
-  const progress = () => {
-    const result = (steps * 100) / targetSteps;
-    return result;
-  };
+  }, [percentage, currentProgress, goalSet]);
 
   return (
     <>
@@ -45,8 +42,8 @@ export default function GoalsCard({
           >
             <div style={{ width: 120, margin: 10 }}>
               <CircularProgressbar
-                value={progress().toFixed(2)}
-                text={`${progress().toFixed(2)}%`}
+                value={progress.toFixed(2)}
+                text={`${progress.toFixed(2)}%`}
                 styles={buildStyles({
                   pathColor: `#f7c000`,
                   textColor: "#f7c000",
