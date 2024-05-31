@@ -21,6 +21,7 @@ export default function Goals() {
   const [duration, setDuration] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [userGoals, setUserGoals] = useState([]);
 
   (async function getCurrentUser() {
     const currentUser = await getUserById(app.currentUser.id);
@@ -88,8 +89,7 @@ export default function Goals() {
 
   useEffect(() => {
     const getGoals = async () => {
-      const userGoals = await getAllGoals(app);
-      console.log(`usergoals:`, userGoals);
+      setUserGoals(await getAllGoals(app));
     };
 
     getGoals();
@@ -224,25 +224,25 @@ export default function Goals() {
         <GoalsCard
           metricTitle="STEPS"
           currentProgress="500"
-          goalSet="3000"
+          goalSet={userGoals.length > 0 ? userGoals[0].steps : 0}
           metricString="steps"
         ></GoalsCard>
         <GoalsCard
           metricTitle="DISTANCE"
           currentProgress="300"
-          goalSet="2500"
+          goalSet={userGoals.length > 0 ? userGoals[0].distance : 0}
           metricString="meters"
         ></GoalsCard>
         <GoalsCard
           metricTitle="CALORIES"
           currentProgress="500"
-          goalSet="1500"
+          goalSet={userGoals.length > 0 ? userGoals[0].calories : 0}
           metricString="calories"
         ></GoalsCard>
         <GoalsCard
           metricTitle="WORKOUT DURATION"
           currentProgress="18"
-          goalSet="60"
+          goalSet={userGoals.length > 0 ? userGoals[0].duration : 0}
           metricString="minutes"
         ></GoalsCard>
       </div>

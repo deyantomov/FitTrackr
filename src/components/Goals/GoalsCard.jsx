@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-export default function GoalsCard({ metricTitle, currentProgress, goalSet }) {
+export default function GoalsCard({
+  metricTitle,
+  currentProgress,
+  goalSet,
+  metricString,
+}) {
   const [percentage, setPercentage] = useState(0);
   const [steps, setSteps] = useState(currentProgress);
   const [targetSteps, setTargetSteps] = useState(goalSet);
@@ -65,7 +70,7 @@ export default function GoalsCard({ metricTitle, currentProgress, goalSet }) {
             {metricTitle.toUpperCase()}
           </h2>
           <p style={{ textAlign: "center" }}>
-            {currentProgress}/{goalSet} steps
+            {currentProgress}/{goalSet} {metricString}
           </p>
         </div>
       </div>
