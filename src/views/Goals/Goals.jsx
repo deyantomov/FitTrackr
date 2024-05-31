@@ -7,6 +7,7 @@ import {
   ChevronDoubleRightIcon,
   ArrowTrendingUpIcon,
 } from "@heroicons/react/16/solid";
+import { getUserById } from "../../api/api";
 
 export default function Goals() {
   const app = useApp();
@@ -20,6 +21,11 @@ export default function Goals() {
   const [duration, setDuration] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  (async function getCurrentUser() {
+    const currentUser = await getUserById(app.currentUser.id);
+    console.log(currentUser);
+  })();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,9 +88,8 @@ export default function Goals() {
 
   useEffect(() => {
     const getGoals = async () => {
-      console.log("h");
       const userGoals = await getAllGoals(app);
-      console.log(userGoals);
+      console.log(`usergoals:`, userGoals);
     };
 
     getGoals();
@@ -207,7 +212,40 @@ export default function Goals() {
           </form>
         </div>
       </dialog>
-      <GoalsCard></GoalsCard>
+      <div
+        className="card-container"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-evenly",
+          gap: "30px",
+        }}
+      >
+        <GoalsCard
+          metricTitle="STEPS"
+          currentProgress="500"
+          goalSet="3000"
+          metricString="steps"
+        ></GoalsCard>
+        <GoalsCard
+          metricTitle="DISTANCE"
+          currentProgress="300"
+          goalSet="2500"
+          metricString="meters"
+        ></GoalsCard>
+        <GoalsCard
+          metricTitle="CALORIES"
+          currentProgress="500"
+          goalSet="1500"
+          metricString="calories"
+        ></GoalsCard>
+        <GoalsCard
+          metricTitle="WORKOUT DURATION"
+          currentProgress="18"
+          goalSet="60"
+          metricString="minutes"
+        ></GoalsCard>
+      </div>
     </div>
   );
 }
