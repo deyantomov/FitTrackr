@@ -55,7 +55,7 @@ export default function GoalsCard({
         <progress
           style={{ width: "100%" }}
           className="progress progress-warning w-56"
-          value="25"
+          value={progress.toFixed(2)}
           max="100"
         ></progress>
 
