@@ -248,27 +248,27 @@ export const createNewExercise = async (app, exercise) => {
   }
 };
 
-export const getAllExercises = async () => {
-  const response = await fetch(createNewExerciseEndpoint);
+export const getAllExercises = async (page = 1) => {
+  const response = await fetch(`${createNewExerciseEndpoint}?page=${page}`);
   return response.json();
 };
 
-export const getExercisesByUserId = async (uid) => {
-  const response = await fetch(`${createNewExerciseEndpoint}?uid=${uid}`);
+export const getExercisesByUserId = async (uid, page = 1) => {
+  const response = await fetch(`${createNewExerciseEndpoint}?uid=${uid}&page=${page}`);
   return response.json();
 };
 
-export const getExercisesByDifficulty = async (difficulty) => {
+export const getExercisesByDifficulty = async (difficulty, page = 1) => {
   //  Difficulty - "Beginner" | "Intermediate" | "Pro"
   const response = await fetch(
-    `${createNewExerciseEndpoint}?level=${difficulty}`
+    `${createNewExerciseEndpoint}?level=${difficulty}&page=${page}`
   );
   return response.json();
 };
 
-export const sortExercisesByRating = async (rating) => {
+export const sortExercisesByRating = async (rating, page = 1) => {
   //  Rating = "lowest" | "highest"
-  const response = await fetch(`${createNewExerciseEndpoint}?rating=${rating}`);
+  const response = await fetch(`${createNewExerciseEndpoint}?rating=${rating}&page=${page}`);
   return response.json();
 };
 

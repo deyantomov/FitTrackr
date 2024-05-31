@@ -15,16 +15,19 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
 
         if (user[trackParam] && trackParam === "exercise") {
           const sortedDates = user[trackParam].sort((a, b) => new Date(b) - new Date(a));
-        
           let streak = 0;
         
-          // If there's only one date, set the streak to 1
+          //  if there's only one date, set the streak to 1
           if (sortedDates.length === 1) {
             streak = 1;
-          } else {
+          } else if (sortedDates.length !== 0) {
+            //  set the streak to 1 if the array is not empty
+            streak = 1;
+
+            //  increment the streak
             for (let i = 0; i < sortedDates.length - 1; i++) {
-              // Calculate the difference in days between the current date and the next date
-              const difference = Math.round((new Date(sortedDates[i]) - new Date(sortedDates[i + 1])) / (1000 * 60 * 60 * 24));
+              //  calculate the difference in days between the current date and the previous activity date
+              const difference = Math.round((new Date(sortedDates[i]) - new Date(sortedDates[i + 1])) / 86400000);
         
               if (difference > 1) {
                 break;
@@ -51,7 +54,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
     trackParamRef.current = trackParam;
   }, [trackParam]);
 
-  //  Real time listener tracking user progress
+  //  real time listener tracking user progress
   useEffect(() => {
     if (progress) {
       isCancelledRef.current = false;
@@ -67,10 +70,11 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
           changeStream.close();
         };
         
-        // Listen for changes
+        //  listen for changes
         for await (const change of changeStream) {
+          //  stop listening for changes if the effect has been cleaned up
           if (isCancelledRef.current) {
-            return; // Stop listening for changes if the effect has been cleaned up
+            return; 
           }
   
           if (change.operationType === 'update' || change.operationType === 'replace') {
@@ -93,8 +97,9 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
   
       listenForChanges().catch(err => console.log(err));
   
+      //  set the flag to true when the effect is cleaned up
       return () => {
-        isCancelledRef.current = true; // Set the flag to true when the effect is cleaned up
+        isCancelledRef.current = true; 
       };
     }
 

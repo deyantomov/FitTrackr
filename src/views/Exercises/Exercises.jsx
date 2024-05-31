@@ -11,21 +11,23 @@ import {
   StarIcon,
   UserCircleIcon,
 } from "@heroicons/react/16/solid";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { likeExercise } from "../../api/api";
 import { useApp } from "../../hooks/useApp";
 
 const Exercises = () => {
+  const app = useApp();
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const app = useApp();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const data = await getAllExercises();
+        const data = await getAllExercises(page);
 
         //  use one to one relationships to avoid exercise documents and application responses exceeding 16MB
         const updatedExercises = await Promise.all(
@@ -48,7 +50,7 @@ const Exercises = () => {
     };
 
     fetchExercises();
-  }, []);
+  }, [page]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -62,7 +64,7 @@ const Exercises = () => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   //  Create a realtime listener for the exercises collection (to track likes in real-time)
   useEffect(() => {
@@ -95,10 +97,10 @@ const Exercises = () => {
 
       //  clean up;
       return cleanup;
-    }
+    };
 
     listenForChanges().catch(console.error);
-  }, [])
+  }, []);
 
   let filteredExercises;
   if (exercises.length) {
@@ -119,11 +121,15 @@ const Exercises = () => {
     );
 
   return (
-    <div className="w-full h-full p-6">
+    <div className="w-full h-full p-12">
       <div className="w-1/2 mx-auto">
         <SearchBar onSearch={handleSearch} />
       </div>
-      <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
+      <div className="flex flex-row w-full justify-center align-center items-center gap-2 mt-8">
+        <p className="text-2xl">Next page</p>
+        <ChevronRightIcon style={{ width: "36px" }}></ChevronRightIcon>
+      </div>
+      <div className="grid grid-cols-1 gap-4 p-0 pb-12 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Card
@@ -171,7 +177,8 @@ const Exercises = () => {
                     </p>
                     <p className="flex items-center">
                       <UserCircleIcon className="h-5 w-5 mr-2" />
-                      <strong className="mr-2">Owner:</strong> {exercise.ownerHandle}
+                      <strong className="mr-2">Owner:</strong>{" "}
+                      {exercise.ownerHandle}
                     </p>
                     <p className="flex items-center">
                       <LockClosedIcon className="h-5 w-5 mr-2" />
@@ -182,7 +189,10 @@ const Exercises = () => {
                 </div>
                 <Card.Actions>
                   <div className="flex w-full justify-center align-center gap-8 mt-6">
-                    <Button className="btn-md btn-warning rounded" onClick={() => handleLikeExercise(exercise["_id"])}>
+                    <Button
+                      className="btn-md btn-warning rounded"
+                      onClick={() => handleLikeExercise(exercise["_id"])}
+                    >
                       Likes: {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>
                     <Button className="btn-md btn-warning rounded">
