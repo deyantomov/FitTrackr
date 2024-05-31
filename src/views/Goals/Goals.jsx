@@ -22,6 +22,7 @@ export default function Goals() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userGoals, setUserGoals] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
 
   (async function getCurrentUser() {
     const currentUser = await getUserById(app.currentUser.id);
@@ -93,7 +94,14 @@ export default function Goals() {
     };
 
     getGoals();
-  }, [app.currentUser]);
+  }, []);
+
+  useEffect(() => {
+    const getUser = async () => {
+      setCurrentUser(await getUserById(app.currentUser.id));
+    };
+    getUser();
+  }, []);
 
   return (
     <div className="h-full">
@@ -223,19 +231,25 @@ export default function Goals() {
       >
         <GoalsCard
           metricTitle="STEPS"
-          currentProgress="500"
+          currentProgress={
+            Object.keys(currentUser).length > 0 ? currentUser.steps.daily : 0
+          }
           goalSet={userGoals.length > 0 ? userGoals[0].steps : 0}
           metricString="steps"
         ></GoalsCard>
         <GoalsCard
           metricTitle="DISTANCE"
-          currentProgress="300"
+          currentProgress={
+            Object.keys(currentUser).length > 0 ? currentUser.distance.daily : 0
+          }
           goalSet={userGoals.length > 0 ? userGoals[0].distance : 0}
           metricString="meters"
         ></GoalsCard>
         <GoalsCard
           metricTitle="CALORIES"
-          currentProgress="500"
+          currentProgress={
+            Object.keys(currentUser).length > 0 ? currentUser.calories.daily : 0
+          }
           goalSet={userGoals.length > 0 ? userGoals[0].calories : 0}
           metricString="calories"
         ></GoalsCard>
