@@ -239,12 +239,14 @@ const Exercises = () => {
                     <Button className="btn-md btn-warning rounded">
                       Start Workout
                     </Button>
+                    {exercise.owner === app.currentUser.id && (
                     <Button 
                       className="btn-md btn-warning rounded"
                       onClick={() => handleRemoveExercise(exercise["_id"])}  
                     >
                       Remove Exercise
                     </Button>
+                    )}
                   </div>
                 </Card.Actions>
               </Card.Body>
