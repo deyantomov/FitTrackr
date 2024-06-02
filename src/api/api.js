@@ -14,7 +14,8 @@ import {
   getExerciseImageEndpoint,
   likeExerciseEndpoint,
   notificationsEndpoint,
-  updateExerciseEndpoint
+  updateExerciseEndpoint,
+  removeExerciseEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -259,8 +260,7 @@ export const updateExercise = async (app, exercise) => {
 
   if (currentUser) {
     const { uid, handle } = await getUserById(currentUser.id);
-    console.log(uid, handle);
-  
+
     const response = await fetch(`${updateExerciseEndpoint}?id=${exercise.id}`, {
       method: "POST",
       headers: {
@@ -279,6 +279,22 @@ export const updateExercise = async (app, exercise) => {
         isPrivate: exercise.isPrivate,
       }),
     });
+
+    return response.json();
+  }
+}
+
+export const removeExercise = async (app, exerciseId) => {
+  const currentUser = app.currentUser;
+
+  if (currentUser) {
+    const response = await fetch(`${removeExerciseEndpoint}?id=${exerciseId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      }
+    })
 
     return response.json();
   }

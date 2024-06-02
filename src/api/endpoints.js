@@ -30,3 +30,5 @@ export const notificationsEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/notifications";
 export const updateExerciseEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises/update";
+export const removeExerciseEndpoint =
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises/remove";

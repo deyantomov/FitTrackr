@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllExercises, getExerciseImage, updateExercise } from "../../api/api";
+import { getAllExercises, getExerciseImage, removeExercise, updateExercise } from "../../api/api";
 import { Card, Button, Loading } from "react-daisyui";
 import {
   FireIcon,
@@ -82,6 +82,16 @@ const Exercises = () => {
 
       console.log(result);
     } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const handleRemoveExercise = async (id) => {
+    try {
+      const result = await removeExercise(app, id);
+
+      console.log(result);
+    } catch(err) {
       console.error(err);
     }
   }
@@ -231,9 +241,9 @@ const Exercises = () => {
                     </Button>
                     <Button 
                       className="btn-md btn-warning rounded"
-                      onClick={() => handleUpdateExercise(exercise["_id"])}  
+                      onClick={() => handleRemoveExercise(exercise["_id"])}  
                     >
-                      Update Exercise
+                      Remove Exercise
                     </Button>
                   </div>
                 </Card.Actions>
