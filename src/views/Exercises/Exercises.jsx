@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllExercises, getExerciseImage } from "../../api/api";
+import { getAllExercises, getExerciseImage, updateExercise } from "../../api/api";
 import { Card, Button, Loading } from "react-daisyui";
 import {
   FireIcon,
@@ -60,11 +60,31 @@ const Exercises = () => {
     try {
       const result = await likeExercise(app, id, owner);
 
+
       return result;
     } catch (err) {
       console.error(err);
     }
   };
+
+  const handleUpdateExercise = async (id) => {
+    try {
+      const exercise = {
+        id,
+        title: "Test",
+        description: "Test update exercise",
+        level: "pro",
+        duration: 19,
+        isPrivate: false
+      }
+
+      const result = await updateExercise(app, exercise);
+
+      console.log(result);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   //  Create a realtime listener for the exercises collection (to track likes in real-time)
   useEffect(() => {
@@ -208,6 +228,12 @@ const Exercises = () => {
                     </Button>
                     <Button className="btn-md btn-warning rounded">
                       Start Workout
+                    </Button>
+                    <Button 
+                      className="btn-md btn-warning rounded"
+                      onClick={() => handleUpdateExercise(exercise["_id"])}  
+                    >
+                      Update Exercise
                     </Button>
                   </div>
                 </Card.Actions>

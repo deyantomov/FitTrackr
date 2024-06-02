@@ -14,6 +14,7 @@ import {
   getExerciseImageEndpoint,
   likeExerciseEndpoint,
   notificationsEndpoint,
+  updateExerciseEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -249,6 +250,40 @@ export const createNewExercise = async (app, exercise) => {
   }
 };
 
+export const updateExercise = async (app, exercise) => {
+  if (Object.keys(exercise) === 0) {
+    throw new Error("Exercise object cannot be empty!");
+  }
+
+  const currentUser = app.currentUser;
+
+  if (currentUser) {
+    const { uid, handle } = await getUserById(currentUser.id);
+    console.log(uid, handle);
+  
+    const response = await fetch(`${updateExerciseEndpoint}?id=${exercise.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+      body: JSON.stringify({
+        owner: uid,
+        ownerHandle: handle,
+        title: exercise.title,
+        description: exercise.description,
+        img: exercise.img,
+        level: exercise.level.toLowerCase(),
+        duration: exercise.duration,
+        rating: 0,
+        isPrivate: exercise.isPrivate,
+      }),
+    });
+
+    return response.json();
+  }
+}
+
 export const getAllExercises = async (page = 1) => {
   const response = await fetch(`${createNewExerciseEndpoint}?page=${page}`);
   return response.json();
@@ -298,13 +333,12 @@ export const createNewGoal = async (app, goal) => {
       body: JSON.stringify({
         owner: user.uid,
         ownerHandle: user.handle,
+        duration: goal.duration, // "daily" || "weekly" || "monthly"
         title: goal.title,
-        type: goal.type, //  activity | health
         steps: goal.steps,
         calories: goal.calories,
         distance: goal.distance,
         weeklyStreak: goal.weeklyStreak,
-        duration: goal.duration,
       }),
     });
 

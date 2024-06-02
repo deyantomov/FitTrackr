@@ -28,3 +28,5 @@ export const likeExerciseEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises/like";
 export const notificationsEndpoint = 
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/notifications";
+export const updateExerciseEndpoint =
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/exercises/update";

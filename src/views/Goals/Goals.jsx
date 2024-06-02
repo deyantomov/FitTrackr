@@ -230,6 +230,7 @@ export default function Goals() {
         }}
       >
         <GoalsCard
+          key={1}
           metricTitle="STEPS"
           currentProgress={
             Object.keys(currentUser).length > 0 ? currentUser.steps.daily : 0

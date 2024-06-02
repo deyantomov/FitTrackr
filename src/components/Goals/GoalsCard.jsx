@@ -16,7 +16,7 @@ export default function GoalsCard({
       if (percentage < 100) {
         setPercentage(percentage + 1);
       }
-      const newProgress = (currentProgress * 100) / goalSet;
+      const newProgress = ((currentProgress * 100) / goalSet) || 0;
       setProgress(newProgress);
       console.log("progress", progress);
     }, 10);
