@@ -170,6 +170,12 @@ const NewExerciseForm = () => {
               <div className="flex items-center space-x-2">
                 <img src={imageURL} alt="Preview" className="mt-4 w-32 h-32 object-cover"/>
                 <span className="text-sm text-gray-500">← Current image uploaded</span>
+                <button 
+                onClick={() => setImageURL(null)} 
+                className="px-2 py-1 text-xs bg-red-500 text-white rounded"
+                >
+                  Remove
+                  </button>
                 </div>
               )}
           <button
