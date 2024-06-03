@@ -71,12 +71,11 @@ export default function Goals() {
   // useEffect(() => {
   //   const createGoal = async () => {
   //     const goalObj = {
-  //       title: 'Test',
-  //       type: 'Activity',
-  //       steps: 10000,
-  //       calories: null,
+  //       title: 'Test3',
+  //       type: "calories",
+  //       steps: null,
+  //       calories: 10000,
   //       distance: null,
-  //       weeklyStreak: null,
   //       duration: 'Daily'
   //     }
 
@@ -86,7 +85,7 @@ export default function Goals() {
   //   }
 
   //   createGoal();
-  // }, [])
+  // }, []);
 
   useEffect(() => {
     const getGoals = async () => {

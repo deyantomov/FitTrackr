@@ -331,7 +331,7 @@ export const sortExercisesByRating = async (rating, page = 1) => {
  * @param {object} goal
  */
 export const createNewGoal = async (app, goal) => {
-  if (Object.keys(goal) === 0) {
+  if (Object.keys(goal).length === 0) {
     throw new Error("Goal object cannot be empty!");
   }
 
@@ -348,17 +348,20 @@ export const createNewGoal = async (app, goal) => {
       },
       body: JSON.stringify({
         owner: user.uid,
-        ownerHandle: user.handle,
-        duration: goal.duration, // "daily" || "weekly" || "monthly"
         title: goal.title,
-        steps: goal.steps,
-        calories: goal.calories,
-        distance: goal.distance,
-        weeklyStreak: goal.weeklyStreak,
+        type: goal.type, // "steps" || "calories" || "distance"
+        period: goal.duration, // "daily" || "weekly" || "monthly"
+        targetValue: goal[goal.type] // targetValue is dynamically set based on the type
       }),
     });
 
+    if (!response.ok) {
+      throw new Error("Failed to create goal");
+    }
+
     return response.json();
+  } else {
+    throw new Error("User is not authenticated!");
   }
 };
 
