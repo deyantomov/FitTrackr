@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Dropdown, Input } from "react-daisyui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { UserCircleIcon, BellIcon, HeartIcon } from "@heroicons/react/24/outline";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
@@ -171,23 +172,26 @@ export default function Navbar({ toggleDrawer }) {
               <ProfilePic profilePic={profilePic} dimensions="56px" />
             </Dropdown.Toggle>
             {isOpen && (
-              <Dropdown.Menu className="w-52 mt-4 absolute right-2 shadow-xl">
+              <Dropdown.Menu className="w-52 mt-4 absolute right-2 shadow-xl z-50">
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                   <h2 className="text-xl cursor-default">{handle}</h2>
                 </Dropdown.Item>
                 <Link to={`/profile/${uid}`}>
                   <Dropdown.Item>
+                  <UserCircleIcon className="h-5 w-5 mr-2" />
                     <p>My profile</p>
                   </Dropdown.Item>
                 </Link>
                 <Link to={`/notifications/${uid}`}>
                   <Dropdown.Item>
+                  <BellIcon className="h-5 w-5 mr-2" />
                     <p>Notifications</p>
                   </Dropdown.Item>
                 </Link>
                 <Link to={`/home`}>
                   <Dropdown.Item>
-                    <p>Liked posts</p>
+                  <HeartIcon className="h-5 w-5 mr-2" />
+                    <p>My Likes</p>
                   </Dropdown.Item>
                 </Link>
               </Dropdown.Menu>
