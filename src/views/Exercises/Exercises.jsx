@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAllExercises, getExerciseImage, removeExercise, updateExercise } from "../../api/api";
+import {
+  getAllExercises,
+  getExerciseImage,
+  removeExercise,
+  updateExercise,
+} from "../../api/api";
 import { Card, Button, Loading } from "react-daisyui";
 import {
   FireIcon,
@@ -23,15 +28,16 @@ const Exercises = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const data = await getAllExercises(page);
+        const response = await getAllExercises(page);
 
         //  use one to one relationships to avoid exercise documents and application responses exceeding 16MB
         const updatedExercises = await Promise.all(
-          data.map(async (exercise) => {
+          response.data.map(async (exercise) => {
             if (exercise.img) {
               const imgData = await getExerciseImage(exercise.img);
               return { ...exercise, img: imgData["img"] };
@@ -42,6 +48,7 @@ const Exercises = () => {
         );
 
         setExercises(updatedExercises);
+        setTotalPages(response.totalPages);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -52,6 +59,10 @@ const Exercises = () => {
     fetchExercises();
   }, [page]);
 
+  // useEffect(() => {
+  //   console.log(exercises);
+  // }, [exercises])
+
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
@@ -59,7 +70,6 @@ const Exercises = () => {
   const handleLikeExercise = async (id, owner) => {
     try {
       const result = await likeExercise(app, id, owner);
-
 
       return result;
     } catch (err) {
@@ -75,8 +85,8 @@ const Exercises = () => {
         description: "Test update exercise",
         level: "pro",
         duration: 19,
-        isPrivate: false
-      }
+        isPrivate: false,
+      };
 
       const result = await updateExercise(app, exercise);
 
@@ -84,17 +94,17 @@ const Exercises = () => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const handleRemoveExercise = async (id) => {
     try {
       const result = await removeExercise(app, id);
 
       console.log(result);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   //  Create a realtime listener for the exercises collection (to track likes in real-time)
   useEffect(() => {
@@ -102,11 +112,11 @@ const Exercises = () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
       const collection = mongoClient.db("sample_data").collection("exercises");
       const changeStream = collection.watch();
-    
+
       const cleanup = () => {
         changeStream.close();
       };
-    
+
       // Listen for changes
       try {
         for await (const change of changeStream) {
@@ -123,23 +133,23 @@ const Exercises = () => {
                 }
               })
             );
-    
+
             //  zero delay timeout to ensure previous operations are complete before setting the state
             setTimeout(() => {}, 0);
 
             setExercises(updatedExercises);
           } catch (err) {
-            console.error('Error processing change:', err);
+            console.error("Error processing change:", err);
           }
         }
       } catch (err) {
-        console.error('Error listening for changes:', err);
+        console.error("Error listening for changes:", err);
       }
-    
+
       //  clean up;
       return cleanup;
     };
-    
+
     listenForChanges().catch(console.error);
   }, []);
 
@@ -163,12 +173,8 @@ const Exercises = () => {
 
   return (
     <div className="w-full h-full p-12">
-      <div className="w-1/2 mx-auto">
+      <div className="w-1/2 mx-auto mb-6">
         <SearchBar onSearch={handleSearch} />
-      </div>
-      <div className="flex flex-row w-full justify-center align-center items-center gap-2 mt-8">
-        <p className="text-2xl">Next page</p>
-        <ChevronRightIcon style={{ width: "36px" }}></ChevronRightIcon>
       </div>
       <div className="grid grid-cols-1 gap-4 p-0 pb-12 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
         {filteredExercises && filteredExercises.length > 0 ? (
@@ -232,7 +238,9 @@ const Exercises = () => {
                   <div className="flex w-full justify-center align-center gap-8 mt-6">
                     <Button
                       className="btn-md btn-warning rounded"
-                      onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
+                      onClick={() =>
+                        handleLikeExercise(exercise["_id"], exercise.owner)
+                      }
                     >
                       Likes: {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>
@@ -240,12 +248,12 @@ const Exercises = () => {
                       Start Workout
                     </Button>
                     {exercise.owner === app.currentUser.id && (
-                    <Button 
-                      className="btn-md btn-warning rounded"
-                      onClick={() => handleRemoveExercise(exercise["_id"])}  
-                    >
-                      Remove Exercise
-                    </Button>
+                      <Button
+                        className="btn-md btn-warning rounded"
+                        onClick={() => handleRemoveExercise(exercise["_id"])}
+                      >
+                        Remove Exercise
+                      </Button>
                     )}
                   </div>
                 </Card.Actions>
@@ -257,6 +265,13 @@ const Exercises = () => {
             <p>No exercises found.</p>
           </div>
         )}
+        <div className="flex w-full justify-center align-center items-center col-span-full gap-4 mb-6">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <Button key={i} onClick={() => setPage(i + 1)}>
+              {i + 1}
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );
