@@ -48,7 +48,7 @@ export default function SearchResults() {
       setLoading(true);
 
       const allExercises = await getAllExercises();
-      const matchingExercises = allExercises.filter(
+      const matchingExercises = allExercises.data.filter(
         (exercise) =>
           exercise.title.includes(q || q.toLowerCase()) ||
           exercise.description.includes(q || q.toLowerCase())

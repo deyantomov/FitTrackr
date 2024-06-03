@@ -121,10 +121,10 @@ const Exercises = () => {
       try {
         for await (const change of changeStream) {
           try {
-            const data = await getAllExercises();
+            const response = await getAllExercises();
 
             const updatedExercises = await Promise.all(
-              data.map(async (exercise) => {
+              response.data.map(async (exercise) => {
                 if (exercise.img) {
                   const imgData = await getExerciseImage(exercise.img);
                   return { ...exercise, img: imgData["img"] };
@@ -267,7 +267,11 @@ const Exercises = () => {
         )}
         <div className="flex w-full justify-center align-center items-center col-span-full gap-4 mb-6">
           {Array.from({ length: totalPages }, (_, i) => (
-            <Button key={i} onClick={() => setPage(i + 1)}>
+            <Button 
+              key={i} 
+              onClick={() => setPage(i + 1)}
+              className={`btn-warning ${(page !== i + 1) && btn-outline}`}
+            >
               {i + 1}
             </Button>
           ))}
