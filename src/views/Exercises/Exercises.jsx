@@ -31,6 +31,7 @@ const Exercises = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [filter, setFilter] = useState("all-exercises");
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -155,16 +156,20 @@ const Exercises = () => {
     listenForChanges().catch(console.error);
   }, []);
 
-  let filteredExercises;
-  if (exercises.length) {
-    filteredExercises = exercises.filter(
-      (exercise) =>
-        (exercise.title &&
-          exercise.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (exercise.description &&
-          exercise.description.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  }
+  const filteredExercises = exercises.filter((exercise) => {
+    const matchesSearchTerm =
+      exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (filter === "all-exercises") {
+      return matchesSearchTerm;
+    } else if (filter === "my-exercises") {
+      return matchesSearchTerm && exercise.owner === app.currentUser.id;
+    } else if (filter === "liked-exercises") {
+      return matchesSearchTerm && exercise.likedBy && exercise.likedBy.includes(app.currentUser.id);
+    }
+    return false;
+  });
 
   if (loading)
     return (
@@ -175,6 +180,13 @@ const Exercises = () => {
 
   return (
     <div className="w-full h-full p-12">
+      <div className="w-1/2 mx-auto mb-6">
+        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="select select-bordered w-full">
+          <option value="all-exercises">All Exercises</option>
+          <option value="my-exercises">My Exercises</option>
+          <option value="liked-exercises">Liked Exercises</option>
+        </select>
+      </div>
       <div className="w-1/2 mx-auto mb-6">
         <SearchBar onSearch={handleSearch} />
       </div>
