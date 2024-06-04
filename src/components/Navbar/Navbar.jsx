@@ -162,7 +162,7 @@ export default function Navbar({ toggleDrawer }) {
     return () => {
       isMounted = false; // set the flag to false when the component unmounts
     };
-  }, []);
+  }, [app]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -266,7 +266,7 @@ export default function Navbar({ toggleDrawer }) {
                     <Badge className="px-2 rounded-full bg-red-400">{notificationCount}</Badge>
                   </Dropdown.Item>
                 </Link>
-                <Link to={`/home`}>
+                <Link to={"/home"}>
                   <Dropdown.Item>
                     <HeartIcon className="h-5 w-5 mr-2" />
                     <p>My Likes</p>
