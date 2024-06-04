@@ -38,3 +38,5 @@ export const acceptFriendRequestEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/accept_friend_request";
 export const removeGoalEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/goals/remove";
+export const markNotificationAsReadEndpoint = 
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/notifications/mark_as_read";

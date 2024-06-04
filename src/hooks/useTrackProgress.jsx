@@ -48,7 +48,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
     };
 
     fetchProgress();
-  }, [triggerFetch])
+  }, [app.currentUser, trackParam, triggerFetch]);
 
   useEffect(() => {
     trackParamRef.current = trackParam;
@@ -59,7 +59,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
     if (progress) {
       isCancelledRef.current = false;
       const getTrackParam = () => trackParamRef.current;
-      console.log(getTrackParam());
+      // console.log(getTrackParam());
   
       const listenForChanges = async () => {  
         const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
@@ -77,7 +77,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
             return; 
           }
   
-          if (change.operationType === 'update' || change.operationType === 'replace') {
+          if (change.operationType === "update" || change.operationType === "replace") {
   
             const updatedFields = change.updateDescription.updatedFields;
             const [obj, field] = Object.keys(updatedFields)[0].split(".");
@@ -85,15 +85,15 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
   
             setProgress((prev) => {
               if (obj === getTrackParam()) {
-                return { ...prev, [field]: value }
+                return { ...prev, [field]: value };
               }
   
               return prev;
-            })
+            });
           }
         }
         return cleanup;
-      }
+      };
   
       listenForChanges().catch(err => console.log(err));
   
@@ -103,7 +103,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
       };
     }
 
-  }, [progress])
+  }, [app.currentUser, progress]);
 
   return progress;
 }

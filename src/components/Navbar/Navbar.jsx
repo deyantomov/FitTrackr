@@ -48,7 +48,7 @@ export default function Navbar({ toggleDrawer }) {
           setHandle(user.handle);
 
           if (user.profilePic) {
-            const pic = await getProfilePic(app, user.profilePic);
+            const pic = await getProfilePic(user.profilePic);
             setProfilePic(pic.img);
           }
         }
@@ -109,7 +109,7 @@ export default function Navbar({ toggleDrawer }) {
       }
     };
 
-    initializeNotificationCount().catch(console.error);
+    initializeNotificationCount();
 
     const listenForNotificationChanges = async () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
@@ -157,8 +157,8 @@ export default function Navbar({ toggleDrawer }) {
       return cleanup;
     };
 
-    listenForPicChanges().catch(console.error);
-    listenForNotificationChanges().catch(console.error);
+    listenForPicChanges();
+    listenForNotificationChanges();
 
     return () => {
       isMounted = false; // set the flag to false when the component unmounts
@@ -180,9 +180,13 @@ export default function Navbar({ toggleDrawer }) {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(notificationCount);
-  }, [notificationCount]);
+  // useEffect(() => {
+  //   console.log(notificationCount);
+  // }, [notificationCount]);
+
+  // useEffect(() => {
+  //   console.log(profilePic);
+  // }, [profilePic]);
 
   if (loading) {
     return (
@@ -244,9 +248,11 @@ export default function Navbar({ toggleDrawer }) {
                 <div className="grid w-14 h-14 rounded-full bg-base-300 place-items-center">
                   <ProfilePic profilePic={profilePic} dimensions="56px" />
                 </div>
-                <Indicator className="absolute bottom-0 left-10 bg-red-400 p-2 py-0 rounded-full">
-                  <Indicator.Item>{notificationCount}</Indicator.Item>
-                </Indicator>
+                {notificationCount > 0 && (
+                  <Indicator className="absolute bottom-0 left-10 bg-red-400 p-2 py-0 rounded-full">
+                    <Indicator.Item>{notificationCount}</Indicator.Item>
+                  </Indicator>
+                )}
               </Dropdown.Toggle>
             </div>
             {isOpen && (
@@ -264,7 +270,11 @@ export default function Navbar({ toggleDrawer }) {
                   <Dropdown.Item>
                     <BellIcon className="h-5 w-5 mr-2" />
                     <p>Notifications</p>
-                    <Badge className="px-2 rounded-full bg-red-400">{notificationCount}</Badge>
+                    {notificationCount > 0 && (
+                      <Badge className="px-2 rounded-full bg-red-400">
+                        {notificationCount}
+                      </Badge>
+                    )}
                   </Dropdown.Item>
                 </Link>
                 <Link to={"/home"}>

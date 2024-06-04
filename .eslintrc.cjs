@@ -25,7 +25,7 @@ module.exports = {
     'block-spacing': 'error',
     'array-bracket-spacing': ['error', 'never'], 
     'object-curly-spacing': ['error', 'always'], 
-    'semi': ['error', 'always'], 
+    'semi': ['warn', 'always'], 
     'quotes': ['error', 'double'], 
     'react/prop-types': 'off', 
   },

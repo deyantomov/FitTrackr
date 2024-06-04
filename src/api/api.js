@@ -18,7 +18,8 @@ import {
   removeExerciseEndpoint,
   sendFriendRequestEndpoint,
   acceptFriendRequestEndpoint,
-  removeGoalEndpoint
+  removeGoalEndpoint,
+  markNotificationAsReadEndpoint,
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -174,24 +175,18 @@ export const updateUserProfile = async (
 /**
  * Fetches a user's profile picture
  *
- * @param {Realm.App} app
  * @param {string} id
  */
-export const getProfilePic = async (app, id) => {
-  // const user = app.currentUser;
+export const getProfilePic = async (id) => {
+  const response = await fetch(`${getProfilePicEndpoint}?id=${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  if (true) {
-    const response = await fetch(`${getProfilePicEndpoint}?id=${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization: `Bearer ${user.accessToken}`,
-      },
-    });
-
-    const img = JSON.parse(await response.text());
-    return img;
-  }
+  const img = JSON.parse(await response.text());
+  return img;
 };
 
 /**
@@ -264,28 +259,31 @@ export const updateExercise = async (app, exercise) => {
   if (currentUser) {
     const { uid, handle } = await getUserById(currentUser.id);
 
-    const response = await fetch(`${updateExerciseEndpoint}?id=${exercise.id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${currentUser.accessToken}`,
-      },
-      body: JSON.stringify({
-        owner: uid,
-        ownerHandle: handle,
-        title: exercise.title,
-        description: exercise.description,
-        img: exercise.img,
-        level: exercise.level.toLowerCase(),
-        duration: exercise.duration,
-        rating: 0,
-        isPrivate: exercise.isPrivate,
-      }),
-    });
+    const response = await fetch(
+      `${updateExerciseEndpoint}?id=${exercise.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.accessToken}`,
+        },
+        body: JSON.stringify({
+          owner: uid,
+          ownerHandle: handle,
+          title: exercise.title,
+          description: exercise.description,
+          img: exercise.img,
+          level: exercise.level.toLowerCase(),
+          duration: exercise.duration,
+          rating: 0,
+          isPrivate: exercise.isPrivate,
+        }),
+      }
+    );
 
     return response.json();
   }
-}
+};
 
 export const removeExercise = async (app, exerciseId) => {
   const currentUser = app.currentUser;
@@ -296,12 +294,12 @@ export const removeExercise = async (app, exerciseId) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentUser.accessToken}`,
-      }
-    })
+      },
+    });
 
     return response.json();
   }
-}
+};
 
 export const getAllExercises = async (page = 1) => {
   const response = await fetch(`${createNewExerciseEndpoint}?page=${page}`);
@@ -309,7 +307,9 @@ export const getAllExercises = async (page = 1) => {
 };
 
 export const getExercisesByUserId = async (uid, page = 1) => {
-  const response = await fetch(`${createNewExerciseEndpoint}?uid=${uid}&page=${page}`);
+  const response = await fetch(
+    `${createNewExerciseEndpoint}?uid=${uid}&page=${page}`
+  );
   return response.json();
 };
 
@@ -323,7 +323,9 @@ export const getExercisesByDifficulty = async (difficulty, page = 1) => {
 
 export const sortExercisesByRating = async (rating, page = 1) => {
   //  Rating = "lowest" | "highest"
-  const response = await fetch(`${createNewExerciseEndpoint}?rating=${rating}&page=${page}`);
+  const response = await fetch(
+    `${createNewExerciseEndpoint}?rating=${rating}&page=${page}`
+  );
   return response.json();
 };
 
@@ -354,7 +356,7 @@ export const createNewGoal = async (app, goal) => {
         title: goal.title,
         type: goal.type, // "steps" || "calories" || "distance"
         period: goal.duration, // "daily" || "weekly" || "monthly"
-        targetValue: goal[goal.type] // targetValue is dynamically set based on the type
+        targetValue: goal[goal.type], // targetValue is dynamically set based on the type
       }),
     });
 
@@ -494,18 +496,21 @@ export const likeExercise = async (app, exerciseId, owner) => {
       body: app.currentUser.id,
     });
 
-    const notification = await fetch(`${notificationsEndpoint}?type=likedExercise`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.accessToken}`,
-      },
-      body: JSON.stringify({
-        to: owner,
-        from: app.currentUser.id,
-        postId: exerciseId
-      })
-    })
+    const notification = await fetch(
+      `${notificationsEndpoint}?type=likedExercise`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        body: JSON.stringify({
+          to: owner,
+          from: app.currentUser.id,
+          postId: exerciseId,
+        }),
+      }
+    );
 
     return [response.json(), notification.json()];
   }
@@ -523,8 +528,8 @@ export const sendFriendRequest = async (app, to) => {
       },
       body: JSON.stringify({
         to,
-        from: currentUser.id
-      })
+        from: currentUser.id,
+      }),
     });
 
     return response.json();
@@ -543,8 +548,8 @@ export const acceptFriendRequest = async (app, from) => {
       },
       body: JSON.stringify({
         to: currentUser.id,
-        from
-      })
+        from,
+      }),
     });
 
     return response.json();
@@ -560,7 +565,23 @@ export const removeGoal = async (app, goalId) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentUser.accessToken}`,
-      }
+      },
+    });
+
+    return response.json();
+  }
+};
+
+export const markNotificationAsRead = async (app, exerciseId, from) => {
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${markNotificationAsReadEndpoint}?id=${exerciseId}&uid=${currentUser.id}&from=${from}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
     });
 
     return response.json();
