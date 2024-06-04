@@ -1,7 +1,7 @@
 import { useApp } from "../../hooks/useApp";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getExercisesByUserId, getUserById } from "../../api/api";
+import { getExercisesByUserId, getUserById, acceptFriendRequest } from "../../api/api";
 import { Card, Loading, Table } from "react-daisyui";
 import { HeartIcon } from "@heroicons/react/24/outline";
 
@@ -21,14 +21,26 @@ export default function Notifications() {
         if (user) {
           setNotifications(user.notifications);
 
-          const allHandles = await Promise.all(
+          const likesHandles = await Promise.all(
             user.notifications.likes.map((like) => handleGetUser(like.from))
           );
+
+          const friendRequestsHandles = await Promise.all(
+            user.notifications.friendRequests.map((request) =>
+              handleGetUser(request.from)
+            )
+          );
+
+          const allHandles = [...likesHandles, ...friendRequestsHandles];
+
           setHandles(
             allHandles.reduce(
               (obj, handle, i) => ({
                 ...obj,
-                [user.notifications.likes[i].from]: handle,
+                [i < likesHandles.length
+                  ? user.notifications.likes[i].from
+                  : user.notifications.friendRequests[i - likesHandles.length]
+                      .from]: handle,
               }),
               {}
             )
@@ -41,15 +53,14 @@ export default function Notifications() {
 
     fetchNotificationData();
   }, [app, id]);
-
-  // useEffect(() => {
-  //   console.log(handles);
-  // }, [handles])
-
   async function handleGetUser(uid) {
     const user = await getUserById(uid);
 
     return user.handle;
+  }
+
+  async function handleGetExercise(postId) {
+    const post = await getExercisesByUserId();
   }
 
   if (loading) {
@@ -58,10 +69,6 @@ export default function Notifications() {
         <Loading />
       </div>
     );
-  }
-
-  async function handleGetExercise(postId) {
-    const post = await getExercisesByUserId();
   }
 
   return (
@@ -96,8 +103,39 @@ export default function Notifications() {
           </Table.Body>
         </Table>
       </div>
-      <hr className="border-t-2 border-warning w-3/6 mt-12"/>
+      <hr className="border-t-2 border-warning w-3/6 mt-12" />
       <h2 className="text-5xl my-12">Friend requests</h2>
+      <div className="overflow-x-auto w-full flex justify-center align-center">
+        <Table className="text-2xl">
+          <Table.Head className="odd:bg-gray-200">
+            <span style={{ padding: "12px 24px" }}>User Handle</span>
+            <span style={{ padding: "12px 24px" }}>Date</span>
+            <span style={{ padding: "12px 24px" }}>Action</span>
+          </Table.Head>
+
+          <Table.Body>
+            {notifications &&
+              notifications.friendRequests &&
+              notifications.friendRequests.map((request, index) => (
+                <Table.Row key={index} className="even:bg-gray-200">
+                  <span style={{ padding: "12px 24px" }}>
+                    {handles[request.from]}
+                  </span>
+                  <span style={{ padding: "12px 24px" }}>
+                    {new Date(request.sentOn).toLocaleDateString("en-GB")}
+                  </span>
+                  <span style={{ padding: "12px 24px" }}>
+                    <button
+                      onClick={() => acceptFriendRequest(app, request.from)}
+                    >
+                      Accept
+                    </button>
+                  </span>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+      </div>
     </div>
   );
 }

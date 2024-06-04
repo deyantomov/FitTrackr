@@ -15,7 +15,9 @@ import {
   likeExerciseEndpoint,
   notificationsEndpoint,
   updateExerciseEndpoint,
-  removeExerciseEndpoint
+  removeExerciseEndpoint,
+  sendFriendRequestEndpoint,
+  acceptFriendRequestEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -505,5 +507,45 @@ export const likeExercise = async (app, exerciseId, owner) => {
     })
 
     return [response.json(), notification.json()];
+  }
+};
+
+export const sendFriendRequest = async (app, to) => {
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${sendFriendRequestEndpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+      body: JSON.stringify({
+        to,
+        from: currentUser.id
+      })
+    });
+
+    return response.json();
+  }
+};
+
+export const acceptFriendRequest = async (app, from) => {
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${acceptFriendRequestEndpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+      body: JSON.stringify({
+        to: currentUser.id,
+        from
+      })
+    });
+
+    return response.json();
   }
 };

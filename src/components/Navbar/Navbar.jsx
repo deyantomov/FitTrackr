@@ -5,10 +5,14 @@ import { useApp } from "../../hooks/useApp";
 import { useEffect, useState, useRef } from "react";
 import { getProfilePic, getUserById } from "../../api/api";
 import { Link } from "react-router-dom";
-import { Dropdown, Input } from "react-daisyui";
+import { Dropdown, Input, Indicator, Badge } from "react-daisyui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { UserCircleIcon, BellIcon, HeartIcon } from "@heroicons/react/24/outline";
+import {
+  UserCircleIcon,
+  BellIcon,
+  HeartIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
@@ -18,6 +22,7 @@ export default function Navbar({ toggleDrawer }) {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [notificationCount, setNotificationCount] = useState(0);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -55,23 +60,24 @@ export default function Navbar({ toggleDrawer }) {
     setLoading(false);
   }, [app.currentUser]);
 
-  //  Real-time listener for profile pics
+  //  Real-time listener for profile pics and notifications
   useEffect(() => {
     let isMounted = true;
 
-    const listenForChanges = async () => {
+    const listenForPicChanges = async () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-      const collection = mongoClient
+      const picCollection = mongoClient
         .db("sample_data")
         .collection("profile_pics");
-      const changeStream = collection.watch();
+
+      const changeStreamPics = picCollection.watch();
 
       const cleanup = () => {
-        changeStream.close();
+        changeStreamPics.close();
       };
 
       // Listen for changes
-      for await (const change of changeStream) {
+      for await (const change of changeStreamPics) {
         if (app.currentUser) {
           const user = await getUserById(app.currentUser.id);
 
@@ -91,7 +97,67 @@ export default function Navbar({ toggleDrawer }) {
       return cleanup;
     };
 
-    listenForChanges().catch(console.error);
+    const initializeNotificationCount = async () => {
+      const user = await getUserById(app.currentUser.id);
+      if (user) {
+        const notificationCount = Object.values(user.notifications).reduce(
+          (total, current) => total + current.length,
+          0
+        );
+        setNotificationCount(notificationCount);
+      }
+    };
+
+    initializeNotificationCount().catch(console.error);
+
+    const listenForNotificationChanges = async () => {
+      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+      const usersCollection = mongoClient.db("sample_data").collection("users");
+
+      const changeStreamUsers = usersCollection.watch([
+        {
+          $match: {
+            "fullDocument.userId": app.currentUser.id,
+          },
+        },
+      ]);
+
+      const cleanup = () => {
+        changeStreamUsers.close();
+      };
+
+      // Listen for changes
+      for await (const change of changeStreamUsers) {
+        if (app.currentUser) {
+          const user = await getUserById(app.currentUser.id);
+
+          if (user) {
+            setUid(user.uid);
+            setHandle(user.handle);
+
+            if (user.profilePic) {
+              const pic = await getProfilePic(app, user.profilePic);
+              setProfilePic(pic.img);
+            }
+
+            // Check if notifications field has changed
+            if ("notifications" in change.updateDescription.updatedFields) {
+              // Update notification count
+              const notificationCount = Object.values(
+                user.notifications
+              ).reduce((total, current) => total + current.length, 0);
+              setNotificationCount(notificationCount);
+            }
+          }
+        }
+      }
+
+      //  clean up;
+      return cleanup;
+    };
+
+    listenForPicChanges().catch(console.error);
+    listenForNotificationChanges().catch(console.error);
 
     return () => {
       isMounted = false; // set the flag to false when the component unmounts
@@ -104,7 +170,7 @@ export default function Navbar({ toggleDrawer }) {
         setIsOpen(false);
       }
     }
-  
+
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -112,6 +178,10 @@ export default function Navbar({ toggleDrawer }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    console.log(notificationCount);
+  }, [notificationCount]);
 
   if (loading) {
     return (
@@ -164,13 +234,20 @@ export default function Navbar({ toggleDrawer }) {
       <div className="rounded-full w-full flex flex-row gap-8 justify-end align-end p-0">
         {app.currentUser && (
           <Dropdown className="m-0 p-0" ref={dropdownRef}>
-            <Dropdown.Toggle
-              className="cursor-pointer m-0 p-0"
-              button={false}
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <ProfilePic profilePic={profilePic} dimensions="56px" />
-            </Dropdown.Toggle>
+            <div className="relative">
+              <Dropdown.Toggle
+                className="cursor-pointer m-0 p-0"
+                button={false}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <div className="grid w-14 h-14 rounded-full bg-base-300 place-items-center">
+                  <ProfilePic profilePic={profilePic} dimensions="56px" />
+                </div>
+                <Indicator className="absolute bottom-0 left-10 bg-red-400 p-2 py-0 rounded-full">
+                  <Indicator.Item>{notificationCount}</Indicator.Item>
+                </Indicator>
+              </Dropdown.Toggle>
+            </div>
             {isOpen && (
               <Dropdown.Menu className="w-52 mt-4 absolute right-2 shadow-xl z-50">
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
@@ -178,19 +255,20 @@ export default function Navbar({ toggleDrawer }) {
                 </Dropdown.Item>
                 <Link to={`/profile/${uid}`}>
                   <Dropdown.Item>
-                  <UserCircleIcon className="h-5 w-5 mr-2" />
+                    <UserCircleIcon className="h-5 w-5 mr-2" />
                     <p>My profile</p>
                   </Dropdown.Item>
                 </Link>
                 <Link to={`/notifications/${uid}`}>
                   <Dropdown.Item>
-                  <BellIcon className="h-5 w-5 mr-2" />
+                    <BellIcon className="h-5 w-5 mr-2" />
                     <p>Notifications</p>
+                    <Badge className="px-2 rounded-full bg-red-400">{notificationCount}</Badge>
                   </Dropdown.Item>
                 </Link>
                 <Link to={`/home`}>
                   <Dropdown.Item>
-                  <HeartIcon className="h-5 w-5 mr-2" />
+                    <HeartIcon className="h-5 w-5 mr-2" />
                     <p>My Likes</p>
                   </Dropdown.Item>
                 </Link>

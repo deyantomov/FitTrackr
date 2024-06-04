@@ -5,6 +5,8 @@ import {
   getAllExercises,
   getProfilePic,
   getExerciseImage,
+  sendFriendRequest,
+  getUserById
 } from "../../api/api";
 import { Card, Loading, Button } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
@@ -16,6 +18,7 @@ export default function SearchResults() {
   const app = useApp();
   const params = useParams();
   const [users, setUsers] = useState([]);
+  const [currentUserData, setCurrentUserData] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -78,10 +81,23 @@ export default function SearchResults() {
     fetchExerciseData();
   }, [params]);
 
-  //  TODO: Implement friend requests
-  const handleSendFriendRequest = () => {
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const user = await getUserById(app.currentUser.id);
+      setCurrentUserData(user);
+    };
 
-  }
+    fetchCurrentUser();
+  }, [app]);
+
+  const handleSendFriendRequest = async (to) => {
+    if (app.currentUser) {
+      const response = await sendFriendRequest(app, to);
+
+      console.log(response);
+      return response;
+    }
+  };
 
   if (loading) {
     return (
@@ -111,8 +127,39 @@ export default function SearchResults() {
                   <div className="flex flex-row justify-end align-end items-center">
                     {app.currentUser && app.currentUser.id !== user.uid && (
                       <Button
-                        className="me-4 btn-warning"
-                        onClick={handleSendFriendRequest}
+                        className={`me-4 btn-warning ${
+                          currentUserData &&
+                          (currentUserData.friendList.some(
+                            (friend) => friend.uid === user.uid
+                          ) ||
+                            currentUserData.notifications.friendRequests.some(
+                              (request) => request.from === user.uid
+                            ))
+                            ? "btn-disabled"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          if (
+                            currentUserData &&
+                            !currentUserData.friendList.some(
+                              (friend) => friend.uid === user.uid
+                            ) &&
+                            !currentUserData.notifications.friendRequests.some(
+                              (request) => request.from === user.uid
+                            )
+                          ) {
+                            handleSendFriendRequest(user.uid);
+                          }
+                        }}
+                        disabled={
+                          currentUserData &&
+                          (currentUserData.friendList.some(
+                            (friend) => friend.uid === user.uid
+                          ) ||
+                            currentUserData.notifications.friendRequests.some(
+                              (request) => request.from === user.uid
+                            ))
+                        }
                       >
                         Add friend
                       </Button>
