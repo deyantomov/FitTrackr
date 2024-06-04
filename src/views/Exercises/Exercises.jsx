@@ -62,10 +62,6 @@ const Exercises = () => {
     fetchExercises();
   }, [page]);
 
-  // useEffect(() => {
-  //   console.log(exercises);
-  // }, [exercises])
-
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
@@ -287,12 +283,12 @@ const Exercises = () => {
             <p>No exercises found.</p>
           </div>
         )}
-        <div className="flex w-full justify-center align-center items-center col-span-full gap-4 mb-6">
+        <div className="flex w-full justify-center align-center items-center col-span-full gap-4 mb-12">
           {Array.from({ length: totalPages }, (_, i) => (
             <Button 
               key={i} 
               onClick={() => setPage(i + 1)}
-              className={`btn-warning ${(page !== i + 1) && btn-outline}`}
+              className={`btn-warning ${(page !== i + 1) && "btn-outline"}`}
             >
               {i + 1}
             </Button>

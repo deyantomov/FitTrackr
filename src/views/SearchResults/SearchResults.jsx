@@ -6,7 +6,7 @@ import {
   getProfilePic,
   getExerciseImage,
   sendFriendRequest,
-  getUserById
+  getUserById,
 } from "../../api/api";
 import { Card, Loading, Button } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
@@ -34,7 +34,7 @@ export default function SearchResults() {
 
       const usersWithProfilePic = await Promise.all(
         matchingUsers.map(async (user) => {
-          const profilePic = (await getProfilePic(app, user.profilePic))["img"];
+          const profilePic = (await getProfilePic(user.profilePic))["img"];
 
           return { ...user, profilePic };
         })
@@ -83,8 +83,12 @@ export default function SearchResults() {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
+      setLoading(true);
+      
       const user = await getUserById(app.currentUser.id);
       setCurrentUserData(user);
+      
+      setLoading(false);
     };
 
     fetchCurrentUser();
@@ -92,9 +96,10 @@ export default function SearchResults() {
 
   const handleSendFriendRequest = async (to) => {
     if (app.currentUser) {
+      setLoading(true);
       const response = await sendFriendRequest(app, to);
 
-      console.log(response);
+      setLoading(false);
       return response;
     }
   };
@@ -179,7 +184,6 @@ export default function SearchResults() {
         <h2 className="mb-8">Exercises:</h2>
         {exercises &&
           exercises.map((exercise, index) => {
-            console.log(exercise);
             return (
               <Card className="bg-base-200 p-4 my-2 w-full" key={index}>
                 <div className="flex flex-row gap-4">
@@ -191,7 +195,7 @@ export default function SearchResults() {
                   <Card.Title className="mb-4">{exercise.title}</Card.Title>
                 </div>
                 <Card.Body className="text-lg m-0 p-0 mt-4 flex flex-row justify-center align-center items-center w-full">
-                  <Link to={`/home`} className="flex flex-row">
+                  <Link to={"/home"} className="flex flex-row">
                     <ChevronDownIcon style={{ width: "24px" }} />
                     <span>View full exercise</span>
                   </Link>

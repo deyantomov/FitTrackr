@@ -277,12 +277,6 @@ export default function Navbar({ toggleDrawer }) {
                     )}
                   </Dropdown.Item>
                 </Link>
-                <Link to={"/home"}>
-                  <Dropdown.Item>
-                    <HeartIcon className="h-5 w-5 mr-2" />
-                    <p>My Likes</p>
-                  </Dropdown.Item>
-                </Link>
                 <Link to="/friend-list">
                   <Dropdown.Item>
                     <UserGroupIcon className="h-5 w-5 mr-2" />

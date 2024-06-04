@@ -6,7 +6,7 @@ import { useApp } from "../../hooks/useApp";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { imageToBase64 } from "../../common/utils";
 import { Card, Button, Input, Badge, Modal, Loading } from "react-daisyui";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, PhoneIcon } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const app = useApp();
@@ -26,22 +26,24 @@ export default function Profile() {
 
   useEffect(() => {
     const getProfile = async () => {
+      setLoading(true);
+
       const profile = await getUserById(params.id);
       setUser(profile);
 
-      const profilePic = await getProfilePic(app, profile.profilePic);
+      const profilePic = await getProfilePic(profile.profilePic);
       setUserPic(profilePic.img);
     };
 
     const getCurrentUser = async () => {
       setCurrentUser(await getUserById(app.currentUser.id));
-    }
+    };
 
     getProfile();
     getCurrentUser();
 
     setLoading(false);
-  }, []);
+  }, [app.currentUser.id, params.id]);
 
   const handleUpdate = async () => {
     try {
@@ -126,7 +128,7 @@ export default function Profile() {
       <div className="w-full h-full flex justify-center items-center">
         <Loading />
       </div>
-    )
+    );
   }
 
   return (
@@ -163,10 +165,7 @@ export default function Profile() {
                   Upload
                 </Button>
               )}
-              <Modal
-                open={isOpen}
-                className="p-4 mt-2 bg-white text-black"
-              >
+              <Modal open={isOpen} className="p-4 mt-2 bg-white text-black">
                 <h2 className="text-xl mb-4">Enter Password</h2>
                 <Input
                   type="password"
@@ -176,11 +175,21 @@ export default function Profile() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="flex flex-row w-full justify-center align-center items-center gap-6 mt-4">
-                <Button className="btn-success" onClick={handleUpdateProfilePic}>Submit</Button>
-                <Button className="btn-error" onClick={() => {
-                  setIsOpen(false);
-                  setPassword('');
-                }}>Close</Button>
+                  <Button
+                    className="btn-success"
+                    onClick={handleUpdateProfilePic}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    className="btn-error"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setPassword("");
+                    }}
+                  >
+                    Close
+                  </Button>
                 </div>
               </Modal>
             </div>
@@ -193,15 +202,18 @@ export default function Profile() {
               <p>{user.firstName && user.firstName}</p>
               <p>{user.lastName && user.lastName}</p>
             </Card.Body>
-            <div className="w-32 text-sm text-center mt-1">
-              <Badge className="badge-info rounded-full text-white">
-                {user.phoneNumber && user.phoneNumber}
-              </Badge>
-            </div>
+            {user.phoneNumber && (
+              <div className="flex flex-row justify-center align-center items-center w-32 text-sm text-center mt-1">
+                <Badge className="bg-gray-100 rounded-full text-black w-96 p-1 flex flex-row justify-center align-center items-center text-sm text-center mt-1">
+                  <PhoneIcon className="w-4" />
+                  <span className="ms-2">{user.phoneNumber}</span>
+                </Badge>
+              </div>
+            )}
           </div>
         </div>
         <hr className="border border-t-1 border-t-gray my-6" />
-        {(currentUser && currentUser.uid === user.uid) && (
+        {currentUser && currentUser.uid === user.uid && (
           <div className="grid grid-rows-1 text-center align-center place-items-center justify-center text-black bg-gray-100 p-8 h-auto ">
             <h2 className="text-2xl mb-2">Update your profile</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 mt-2 text-start md:gap-2 w-full">
@@ -238,7 +250,10 @@ export default function Profile() {
                   size={"sm"}
                   type="text"
                   onChange={(e) =>
-                    setNewUserInfo({ ...newUserInfo, phoneNumber: e.target.value })
+                    setNewUserInfo({
+                      ...newUserInfo,
+                      phoneNumber: e.target.value,
+                    })
                   }
                   className="bg-white w-full"
                 ></Input>
@@ -311,7 +326,10 @@ export default function Profile() {
                 ></Input>
               </label>
             </div>
-            <h2 className="mt-6 mb-2 text-lg">Fields marked with <span className="text-red-600">*</span> are required</h2>
+            <h2 className="mt-6 mb-2 text-lg">
+              Fields marked with <span className="text-red-600">*</span> are
+              required
+            </h2>
             <Button className="btn-warning w-2/6 my-4" onClick={handleUpdate}>
               Update profile
             </Button>
