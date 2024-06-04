@@ -87,7 +87,7 @@ export default function Navbar({ toggleDrawer }) {
             setHandle(user.handle);
 
             if (user.profilePic) {
-              const pic = await getProfilePic(app, user.profilePic);
+              const pic = await getProfilePic(user.profilePic);
               setProfilePic(pic.img);
             }
           }
@@ -137,18 +137,15 @@ export default function Navbar({ toggleDrawer }) {
             setHandle(user.handle);
 
             if (user.profilePic) {
-              const pic = await getProfilePic(app, user.profilePic);
+              const pic = await getProfilePic(user.profilePic);
               setProfilePic(pic.img);
             }
 
-            // Check if notifications field has changed
-            if ("notifications" in change.updateDescription.updatedFields) {
-              // Update notification count
-              const notificationCount = Object.values(
-                user.notifications
-              ).reduce((total, current) => total + current.length, 0);
-              setNotificationCount(notificationCount);
-            }
+            const notificationCount = Object.values(user.notifications).reduce(
+              (total, current) => total + current.length,
+              0
+            );
+            setNotificationCount(notificationCount);
           }
         }
       }
