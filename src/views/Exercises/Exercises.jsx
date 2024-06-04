@@ -171,13 +171,14 @@ const Exercises = () => {
     return false;
   });
 
-  if (loading)
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loading />
       </div>
     );
-
+  }
+  
   return (
     <div className="w-full h-full p-12">
       <div className="w-1/2 mx-auto mb-6">
@@ -211,7 +212,7 @@ const Exercises = () => {
                     <strong className="text-center text-2xl">
                       {exercise.title}
                     </strong>
-                    {exercise.owner === app.currentUser.id && (
+                    {exercise.owner === (app.currentUser ? app.currentUser.id : null) && (
                       <span className="ml-4 flex">
                         <PencilIcon
                           className="h-6 w-6 text-blue-500 hover:text-blue-700 transform transition-all duration-200 ease-in-out hover:scale-125"
@@ -266,7 +267,7 @@ const Exercises = () => {
                       className="btn-md btn-warning rounded"
                       onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
                     >
-                      {exercise.likedBy && exercise.likedBy.includes(app.currentUser.id) ? (
+                      {exercise.likedBy && app.currentUser && exercise.likedBy.includes(app.currentUser.id) ? (
                         <HeartSolidIcon className="h-5 w-5 mr-2" />
                       ) : (
                         <HeartOutlineIcon className="h-5 w-5 mr-2" />
