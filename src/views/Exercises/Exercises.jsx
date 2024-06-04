@@ -16,7 +16,9 @@ import {
   StarIcon,
   UserCircleIcon,
 } from "@heroicons/react/16/solid";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartOutlineIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { likeExercise } from "../../api/api";
 import { useApp } from "../../hooks/useApp";
@@ -197,6 +199,18 @@ const Exercises = () => {
                     <strong className="text-center text-2xl">
                       {exercise.title}
                     </strong>
+                    {exercise.owner === app.currentUser.id && (
+                      <span className="ml-4 flex">
+                        <PencilIcon
+                          className="h-6 w-6 text-blue-500 hover:text-blue-700 transform transition-all duration-200 ease-in-out hover:scale-125"
+                          onClick={() => handleUpdateExercise(exercise["_id"])}
+                        />
+                        <TrashIcon
+                          className="h-6 w-6 text-red-500 hover:text-red-700 transform transition-all duration-200 ease-in-out hover:scale-125 ml-2"
+                          onClick={() => handleRemoveExercise(exercise["_id"])}
+                        />
+                      </span>
+                    )}
                   </Card.Title>
                   <div className="space-y-4">
                     <p className="flex items-center">
@@ -238,23 +252,18 @@ const Exercises = () => {
                   <div className="flex w-full justify-center align-center gap-8 mt-6">
                     <Button
                       className="btn-md btn-warning rounded"
-                      onClick={() =>
-                        handleLikeExercise(exercise["_id"], exercise.owner)
-                      }
+                      onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
                     >
-                      Likes: {exercise.likedBy ? exercise.likedBy.length : 0}
+                      {exercise.likedBy && exercise.likedBy.includes(app.currentUser.id) ? (
+                        <HeartSolidIcon className="h-5 w-5 mr-2" />
+                      ) : (
+                        <HeartOutlineIcon className="h-5 w-5 mr-2" />
+                      )}
+                      {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>
                     <Button className="btn-md btn-warning rounded">
                       Start Workout
                     </Button>
-                    {exercise.owner === app.currentUser.id && (
-                      <Button
-                        className="btn-md btn-warning rounded"
-                        onClick={() => handleRemoveExercise(exercise["_id"])}
-                      >
-                        Remove Exercise
-                      </Button>
-                    )}
                   </div>
                 </Card.Actions>
               </Card.Body>
