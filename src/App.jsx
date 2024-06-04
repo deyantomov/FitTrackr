@@ -15,6 +15,7 @@ import "./App.css";
 import NewExerciseForm from "./views/NewExercise/NewExercise";
 import NotFound from "./views/NotFound/NotFound";
 import Exercises from "./views/Exercises/Exercises";
+import FriendList from "./views/FriendList/FriendList";
 const { appId } = atlasConfig;
 
 export default function ProvidedApp() {
@@ -119,6 +120,14 @@ function App() {
         element={
           <Sidebar>
             <SearchResults />
+          </Sidebar>
+        }
+      />
+      <Route
+        path="friend-list"
+        element={
+          <Sidebar>
+            <FriendList />
           </Sidebar>
         }
       />

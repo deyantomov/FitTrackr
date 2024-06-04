@@ -8,6 +8,7 @@ import {
   PlusIcon,
   TrophyIcon,
   PresentationChartLineIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
@@ -100,6 +101,12 @@ export default function Sidebar({ children }) {
                 <SidebarButton
                   text="Goals"
                   icon={<TrophyIcon title="goals" className="h-3/6" />}
+                ></SidebarButton>
+              </Link>
+              <Link to="/friend-list">
+                <SidebarButton
+                  text="Friend List"
+                  icon={<UserGroupIcon title="friendlist" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
               <button

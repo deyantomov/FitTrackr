@@ -12,6 +12,7 @@ import {
   UserCircleIcon,
   BellIcon,
   HeartIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Navbar({ toggleDrawer }) {
@@ -270,6 +271,12 @@ export default function Navbar({ toggleDrawer }) {
                   <Dropdown.Item>
                     <HeartIcon className="h-5 w-5 mr-2" />
                     <p>My Likes</p>
+                  </Dropdown.Item>
+                </Link>
+                <Link to="/friend-list">
+                  <Dropdown.Item>
+                    <UserGroupIcon className="h-5 w-5 mr-2" />
+                    <p>Friend List</p>
                   </Dropdown.Item>
                 </Link>
               </Dropdown.Menu>
