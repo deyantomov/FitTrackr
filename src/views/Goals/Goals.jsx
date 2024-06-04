@@ -7,7 +7,7 @@ import {
   ChevronDoubleRightIcon,
   ArrowTrendingUpIcon,
 } from "@heroicons/react/16/solid";
-import { getUserById } from "../../api/api";
+import { getUserById, removeGoal } from "../../api/api";
 
 export default function Goals() {
   const app = useApp();
@@ -92,7 +92,13 @@ export default function Goals() {
       setUserGoals(await getAllGoals(app));
     };
 
+    // const deleteGoal = async () => {
+    //   const result = await removeGoal(app, '665c4e30f7dfa1ba59a7118a');
+    //   console.log(result);
+    // }
+
     getGoals();
+    // deleteGoal();
   }, []);
 
   useEffect(() => {

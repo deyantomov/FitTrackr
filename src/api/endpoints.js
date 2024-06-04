@@ -36,3 +36,5 @@ export const sendFriendRequestEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/send_friend_request";
 export const acceptFriendRequestEndpoint =
   "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/users/accept_friend_request";
+export const removeGoalEndpoint =
+  "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint/goals/remove";

@@ -17,7 +17,8 @@ import {
   updateExerciseEndpoint,
   removeExerciseEndpoint,
   sendFriendRequestEndpoint,
-  acceptFriendRequestEndpoint
+  acceptFriendRequestEndpoint,
+  removeGoalEndpoint
 } from "./endpoints";
 import { login } from "../services/auth.service";
 import * as Realm from "realm-web";
@@ -549,3 +550,19 @@ export const acceptFriendRequest = async (app, from) => {
     return response.json();
   }
 };
+
+export const removeGoal = async (app, goalId) => {
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${removeGoalEndpoint}?id=${goalId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      }
+    });
+
+    return response.json();
+  }
+}
