@@ -17,8 +17,8 @@ export default function Goals() {
   const [distance, setDistance] = useState(0);
   // const [type, setType] = useState({ steps, calories, distance });
   const [type, setType] = useState("");
-  // const [target, setTarget] = useState(0);
-  const [period, setPeriod] = useState("");
+  const [target, setTarget] = useState(0);
+  const [period, setPeriod] = useState("daily");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userGoals, setUserGoals] = useState([]);
@@ -67,7 +67,7 @@ export default function Goals() {
     setCalories(0);
     setDistance(0);
     // setWeeklyStreak(0);
-    setPeriod("");
+    setPeriod("daily");
   };
 
   useEffect(() => {
@@ -159,7 +159,7 @@ export default function Goals() {
               <select
                 value={type}
                 // onChange={(e) => setType(e.target.value)}
-                onChange={handleChange}
+                onChange={(e) => setType(e.target.value)}
                 className="select select-bordered w-full"
               >
                 <option value="steps">Steps</option>
@@ -173,14 +173,8 @@ export default function Goals() {
               <input
                 type="number"
                 placeholder="Goal target:"
-                value={
-                  type === "steps"
-                    ? steps
-                    : type === "calories"
-                    ? calories
-                    : distance
-                }
-                onChange={handleChange}
+                value={target}
+                onChange={(e) => setTarget(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
