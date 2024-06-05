@@ -83,20 +83,31 @@ export default function Navbar({ toggleDrawer }) {
         };
 
         // Listen for changes
-        for await (const change of changeStreamPics) {
-          if (app.currentUser) {
-            const user = await getUserById(app.currentUser.id);
-
-            if (user) {
-              setUid(user.uid);
-              setHandle(user.handle);
-
-              if (user.profilePic) {
-                const pic = await getProfilePic(user.profilePic);
-                setProfilePic(pic.img);
+        try {
+          for await (const change of changeStreamPics) {
+            switch (change.operationType) {
+            case "insert":
+              setProfilePic(change.fullDocument.img);
+              break;
+            case "update":
+            case "replace":
+              if (app.currentUser) {
+                const user = await getUserById(app.currentUser.id);
+                if (user && user.profilePic) {
+                  const pic = await getProfilePic(user.profilePic);
+                  setProfilePic(pic.img);
+                }
               }
+              break;
+            case "delete":
+              setProfilePic(null);
+              break;
+            default:
+              console.log("Unhandled change event:", change);
             }
           }
+        } catch (err) {
+          console.error("Error listening for changes:", err);
         }
 
         //  clean up;
@@ -122,38 +133,36 @@ export default function Navbar({ toggleDrawer }) {
           .db("sample_data")
           .collection("users");
 
-        const changeStreamUsers = usersCollection.watch([
-          {
-            $match: {
-              "fullDocument.userId": app.currentUser.id,
-            },
-          },
-        ]);
+        const changeStreamUsers = usersCollection.watch();
 
         const cleanup = () => {
           changeStreamUsers.close();
         };
 
         // Listen for changes
-        for await (const change of changeStreamUsers) {
-          if (app.currentUser) {
-            const user = await getUserById(app.currentUser.id);
+        try {
+          for await (const change of changeStreamUsers) {
+            switch (change.operationType) {
+            case "insert":
+            case "update":
+            case "replace":
+              if (app.currentUser) {
+                const user = await getUserById(app.currentUser.id);
+                if (user && user.notifications) {
+                  const notificationCount = Object
+                    .values(user.notifications)
+                    .reduce((total, current) => total + current.length, 0);
 
-            if (user) {
-              setUid(user.uid);
-              setHandle(user.handle);
-
-              if (user.profilePic) {
-                const pic = await getProfilePic(user.profilePic);
-                setProfilePic(pic.img);
+                  setNotificationCount(notificationCount);
+                }
               }
-
-              const notificationCount = Object.values(
-                user.notifications
-              ).reduce((total, current) => total + current.length, 0);
-              setNotificationCount(notificationCount);
+              break;
+            default:
+              console.log("Unhandled change event:", change);
             }
           }
+        } catch (err) {
+          console.error("Error listening for changes:", err);
         }
 
         //  clean up;

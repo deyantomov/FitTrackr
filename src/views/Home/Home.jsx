@@ -23,6 +23,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     const getUser = async () => {
       if (app.currentUser && app.currentUser.id) {
         setLoading(true);

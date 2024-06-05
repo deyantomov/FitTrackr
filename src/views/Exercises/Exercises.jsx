@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { useEffect, useState } from "react";
 import {
   getAllExercises,
@@ -23,6 +24,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import { likeExercise } from "../../api/api";
 import { useApp } from "../../hooks/useApp";
 import ExerciseModal from "./ExercisesModal";
+import { Buffer } from "buffer";
 
 const Exercises = () => {
   const app = useApp();
@@ -35,7 +37,7 @@ const Exercises = () => {
   const [filter, setFilter] = useState("all-exercises");
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   useEffect(() => {
     const fetchExercises = async () => {
       try {
@@ -63,7 +65,7 @@ const Exercises = () => {
     };
 
     fetchExercises();
-  }, [page]);
+  }, [page, app.currentUser]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -71,7 +73,9 @@ const Exercises = () => {
 
   const handleLikeExercise = async (id, owner) => {
     try {
-      const result = await likeExercise(app, id, owner);
+      const result = await Promise.all(await likeExercise(app, id, owner));
+
+      console.log(result);
 
       return result;
     } catch (err) {
@@ -113,9 +117,7 @@ const Exercises = () => {
     const listenForChanges = async () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
       const collection = mongoClient.db("sample_data").collection("exercises");
-      const changeStream = collection.watch([], {
-        fullDocument: "updateLookup",
-      });
+      const changeStream = collection.watch();
 
       const cleanup = () => {
         changeStream.close();
@@ -133,15 +135,29 @@ const Exercises = () => {
             break;
           case "update":
           case "replace":
-            setExercises((prevExercises) =>
-              prevExercises.map((exercise) => {
-                if (exercise) {
-                  return exercise["_id"] === change.fullDocument["_id"].toHexString()
-                    ? { ...change.fullDocument, img: exercise.img }
-                    : exercise;
+            setExercises((prevExercises) => {
+              const updatedExercises = [...prevExercises];
+              const exerciseId = change.fullDocument["_id"].toHexString();
+              const index = updatedExercises.findIndex((exercise) => {
+                if (exercise["_id"]) {
+                  return exercise["_id"].toString() === exerciseId;
+                } else {
+                  return false;
                 }
-              })
-            );
+              });
+              
+              console.log(index);
+
+              if (index !== -1) {
+                updatedExercises[index] = {
+                  ...change.fullDocument,
+                  _id: exerciseId,
+                  owner: change.fullDocument.owner.toHexString(),
+                  img: updatedExercises[index].img,
+                };
+              }
+              return updatedExercises;
+            });
             break;
           case "delete":
             setExercises((prevExercises) =>
@@ -158,12 +174,12 @@ const Exercises = () => {
         console.error("Error listening for changes:", err);
       }
 
-      //  clean up;
-      return cleanup;
+      // //  clean up;
+      // return cleanup;
     };
 
-    listenForChanges().catch(console.error);
-  }, [app.currentUser]);
+    listenForChanges();
+  });
 
   const openModal = (exercise) => {
     setSelectedExercise(exercise);
@@ -194,7 +210,7 @@ const Exercises = () => {
       }
       return false;
     }
-  });
+  }, []);
 
   if (loading) {
     return (
