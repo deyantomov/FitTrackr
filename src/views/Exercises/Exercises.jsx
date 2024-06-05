@@ -222,17 +222,19 @@ const Exercises = () => {
 
   return (
     <div className="w-full h-full p-12">
-      <div className="w-1/2 mx-auto mb-6">
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="select select-bordered w-full"
-        >
-          <option value="all-exercises">All Exercises</option>
-          <option value="my-exercises">My Exercises</option>
-          <option value="liked-exercises">Liked Exercises</option>
-        </select>
-      </div>
+      {app.currentUser && (
+        <div className="w-1/2 mx-auto mb-6">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="select select-bordered w-full"
+          >
+            <option value="all-exercises">All Exercises</option>
+            <option value="my-exercises">My Exercises</option>
+            <option value="liked-exercises">Liked Exercises</option>
+          </select>
+        </div>
+      )}
       <div className="w-1/2 mx-auto mb-6">
         <SearchBar onSearch={handleSearch} />
       </div>
