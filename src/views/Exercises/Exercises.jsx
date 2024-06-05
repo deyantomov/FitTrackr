@@ -22,6 +22,7 @@ import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { likeExercise } from "../../api/api";
 import { useApp } from "../../hooks/useApp";
+import ExerciseModal from "./ExercisesModal";
 
 const Exercises = () => {
   const app = useApp();
@@ -32,7 +33,9 @@ const Exercises = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [filter, setFilter] = useState("all-exercises");
-
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   useEffect(() => {
     const fetchExercises = async () => {
       try {
@@ -161,6 +164,16 @@ const Exercises = () => {
 
     listenForChanges().catch(console.error);
   }, [app.currentUser]);
+
+  const openModal = (exercise) => {
+    setSelectedExercise(exercise);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedExercise(null);
+    setIsModalOpen(false);
+  };
 
   const filteredExercises = exercises.filter((exercise) => {
     if (exercise) {
@@ -295,8 +308,11 @@ const Exercises = () => {
                         )}
                       {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>
-                    <Button className="btn-md btn-warning rounded">
+                    <Button className="btn-md btn-warning rounded"
+                      onClick={() => openModal(exercise)}
+                    >
                       Start Workout
+                      <ChevronRightIcon className="h-5 w-5 ml-2" />
                     </Button>
                   </div>
                 </Card.Actions>
@@ -320,6 +336,11 @@ const Exercises = () => {
           ))}
         </div>
       </div>
+      <ExerciseModal
+        exercise={selectedExercise}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </div>
   );
 };

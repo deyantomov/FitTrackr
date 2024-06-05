@@ -134,7 +134,7 @@ export default function Notifications() {
                     {handles[like.from]}
                   </span>
                   <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
-                    {exercises && exercises.length > 0 && getExercise(notifications.likes[index].postId)["title"]}
+                    {exercises && exercises.length > 0 && getExercise(notifications.likes[index].postId) && getExercise(notifications.likes[index].postId)["title"]}
                   </span>
                   <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
                     {new Date(
