@@ -1,9 +1,11 @@
 import { useApp } from "../../hooks/useApp";
 import { login } from "../../services/auth.service";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
 
 export default function Login() {
   const app = useApp();
+  const { setToast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -11,11 +13,11 @@ export default function Login() {
     const user = await login(app, email, password);
 
     if (user) {
-      location.state ? navigate(location.state) : navigate('/');
+      location.state ? navigate(location.state) : navigate("/");
     } else {
-      alert('Login failed');
+      setToast({ type: "error", message: "Login failed" });
     }
-  }
+  };
 
   return (
     <div className="flex flex-row h-screen justify-center items-center">
@@ -59,5 +61,5 @@ export default function Login() {
         </form>
       </div>
     </div>
-  )
+  );
 }

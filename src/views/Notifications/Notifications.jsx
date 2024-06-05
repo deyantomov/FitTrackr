@@ -15,6 +15,7 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState({});
   const [handles, setHandles] = useState({});
   const [loading, setLoading] = useState(false);
+  const [exercises, setExercises] = useState([]);
 
   useEffect(() => {
     const fetchNotificationData = async () => {
@@ -58,8 +59,15 @@ export default function Notifications() {
   }, [app, id]);
 
   useEffect(() => {
-    
-  })
+    const fetchExercises = async () => {
+      setLoading(true);
+      const fetchedExercises = await getExercisesByUserId(app.currentUser.id);
+      setExercises(fetchedExercises.data);
+      setLoading(false);
+    };
+  
+    fetchExercises();
+  }, []);
 
   async function handleGetUser(uid) {
     setLoading(true);
@@ -70,11 +78,6 @@ export default function Notifications() {
     return user.handle;
   }
 
-  //  TODO: Get each exercise by id and link to exercise id in the table
-  async function handleGetExercise(postId) {
-    // const post = await getExercisesByUserId();
-  }
-
   const handleRemoveNotification = async (exerciseId, from) => {
     setLoading(true);
     const response = await markNotificationAsRead(app, exerciseId, from);
@@ -83,6 +86,16 @@ export default function Notifications() {
 
     return response;
   };
+
+  const getExercise = (exerciseId) => {
+    const exercise = exercises.find(exercise => exercise["_id"] === exerciseId);
+
+    return exercise;
+  };
+
+  useEffect(() => {
+    console.log(exercises);
+  }, [exercises])
 
   if (loading) {
     return (
@@ -103,7 +116,7 @@ export default function Notifications() {
                 User Handle
               </span>
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
-                Exercise ID
+                Exercise
               </span>
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
                 Date
@@ -125,7 +138,7 @@ export default function Notifications() {
                     {handles[like.from]}
                   </span>
                   <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
-                    {notifications.likes[index].postId}
+                    {exercises && exercises.length > 0 && getExercise(notifications.likes[index].postId)["title"]}
                   </span>
                   <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
                     {new Date(

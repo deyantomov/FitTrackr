@@ -2,9 +2,11 @@
 import { useApp } from "../../hooks/useApp";
 import { register } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
 
 export default function SignUp() {
   const app = useApp();
+  const { setToast } = useToast();
   const navigate = useNavigate();
 
   const onFormSubmit = async ({
@@ -15,7 +17,7 @@ export default function SignUp() {
     lastName,
   }) => {
     try {
-      await register(
+      const result = await register(
         app,
         email,
         password,
@@ -24,23 +26,34 @@ export default function SignUp() {
         handle,
         navigate
       );
-    } catch (erry) {
-      console.error(err.message);
+
+      if (result === "User already registered") {
+        setToast({ type: "error", message: "User already registered" });
+      }
+    } catch (err) {
+      setToast({ type: "error", message: err.message });
     }
   };
 
-  //  TODO: Fix design, make it more responsive (landscape:hidden or portrait:hidden to control visibility on different screen sizes)
   return (
     <div className="flex flex-row h-screen justify-center items-center">
       <div className="card w-auto bg-gray-200 opacity-80 p-10 lg:px-12 md:px-10 sm:px-8 flex flex-column flex-wrap justify-center align-center items-center text-black">
-        <h2 className="card-title text-4xl md:text-5xl font-thin">Sign up with email</h2>
+        <h2 className="card-title text-4xl md:text-5xl font-thin">
+          Sign up with email
+        </h2>
         <form
           className="signup-form mt-4"
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            const { email, password, confirmPassword, handle, firstName, lastName } =
-              Object.fromEntries(formData.entries());
+            const {
+              email,
+              password,
+              confirmPassword,
+              handle,
+              firstName,
+              lastName,
+            } = Object.fromEntries(formData.entries());
 
             if (password === confirmPassword) {
               onFormSubmit({
@@ -55,10 +68,8 @@ export default function SignUp() {
               });
             } else {
               //  TODO: Add toast
-              console.log('Passwords do not match!');
+              console.log("Passwords do not match!");
             }
-
-            
           }}
         >
           <div className="mt-8 flex flex-col landscape:flex-row gap-2 text-lg items-center">
@@ -103,25 +114,25 @@ export default function SignUp() {
             </div>
           </div>
           <div className="flex flex-col mt-2 text-lg">
-              <label className="w-full">
-                Password:
-                <input
-                  id="signup-password"
-                  name="password"
-                  type="password"
-                  className="input w-full mt-1 bg-white"
-                />
-              </label>
-              <label className="w-full">
-                Confirm password:
-                <input
-                  id="signup-confirm-password"
-                  name="confirmPassword"
-                  type="password"
-                  className="input w-full mt-1 bg-white"
-                />
-              </label>
-            </div>
+            <label className="w-full">
+              Password:
+              <input
+                id="signup-password"
+                name="password"
+                type="password"
+                className="input w-full mt-1 bg-white"
+              />
+            </label>
+            <label className="w-full">
+              Confirm password:
+              <input
+                id="signup-confirm-password"
+                name="confirmPassword"
+                type="password"
+                className="input w-full mt-1 bg-white"
+              />
+            </label>
+          </div>
           <button
             id="submit-button"
             data-testid="submitbutton"

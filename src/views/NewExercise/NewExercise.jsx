@@ -8,7 +8,6 @@ import {
   PencilIcon,
   DocumentTextIcon,
 } from "@heroicons/react/16/solid";
-import { Input } from "react-daisyui";
 import { imageToBase64 } from "../../common/utils";
 
 const NewExerciseForm = () => {
@@ -148,36 +147,44 @@ const NewExerciseForm = () => {
           <label className="flex items-center space-x-2">
             <LockClosedIcon className="h-5 w-5 mr-2" />
             <input
-            type="checkbox"
-            checked={isPrivate}
-            onChange={(e) => setIsPrivate(e.target.checked)}
-            className="checkbox checkbox-accent text-accent h-6 w-6"
+              type="checkbox"
+              checked={isPrivate}
+              onChange={(e) => setIsPrivate(e.target.checked)}
+              className="checkbox checkbox-accent text-accent h-6 w-6"
             />
-            <span className="text-sm text-gray-500">Tick the box to make private</span>
-            </label>
-            <label className="btn bg-transparent px-4 py-2 mx-auto text-black-500 border border-yellow-500 hover:bg-yellow-500 hover:text-white">
-              <span>Upload Image</span>
-              <input
+            <span className="text-sm text-gray-500">
+              Tick the box to make private
+            </span>
+          </label>
+          <label className="btn bg-transparent px-4 py-2 mx-auto text-black-500 border border-yellow-500 hover:bg-yellow-500 hover:text-white">
+            <span>Upload Image</span>
+            <input
               type="file"
               className="hidden"
-              onChange={e => {
+              onChange={(e) => {
                 setImage(e.target.files[0]);
                 setImageURL(URL.createObjectURL(e.target.files[0]));
               }}
+            />
+          </label>
+          {imageURL && (
+            <div className="flex items-center space-x-2">
+              <img
+                src={imageURL}
+                alt="Preview"
+                className="mt-4 w-32 h-32 object-cover"
               />
-              </label>
-              {imageURL && (
-              <div className="flex items-center space-x-2">
-                <img src={imageURL} alt="Preview" className="mt-4 w-32 h-32 object-cover"/>
-                <span className="text-sm text-gray-500">← Current image uploaded</span>
-                <button 
-                onClick={() => setImageURL(null)} 
+              <span className="text-sm text-gray-500">
+                ← Current image uploaded
+              </span>
+              <button
+                onClick={() => setImageURL(null)}
                 className="px-2 py-1 text-xs bg-red-500 text-white rounded"
-                >
-                  Remove
-                  </button>
-                </div>
-              )}
+              >
+                Remove
+              </button>
+            </div>
+          )}
           <button
             type="submit"
             className="btn bg-yellow-500 px-8 py-4 w-full md:auto rounded"

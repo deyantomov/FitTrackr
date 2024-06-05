@@ -1,15 +1,18 @@
 import { Card, Button, Modal, Input } from "react-daisyui";
 import { useRef, useCallback, useState, useEffect } from "react";
 import { useApp } from "../../../../hooks/useApp";
-// import { getUserById, updateSteps } from "../../../../api/api";
 import useTrackProgress from "../../../../hooks/useTrackProgress";
-import { Link } from "react-router-dom";
 import {
   updateCalories,
   updateDistance,
   updateSteps,
 } from "../../../../api/api";
+import PropTypes from "prop-types";
 
+/**
+ * @param {{trackParam: string, imgName: string, title: string}} props
+ * @returns {React.FC}
+ */
 export default function ProgressCard({ trackParam, imgName, title }) {
   const app = useApp();
   const ref = useRef();
@@ -30,35 +33,34 @@ export default function ProgressCard({ trackParam, imgName, title }) {
     }
   };
 
-  const handleUpdate = async () => {        
+  const handleUpdate = async () => {
     switch (trackParam) {
-      case "steps":
-        const stepsRes = await updateSteps(app, Number(inputValue));
-        setInputValue("");
-        setTriggerFetch(!triggerFetch);
+    case "steps":
+      const stepsRes = await updateSteps(app, Number(inputValue));
+      setInputValue("");
+      setTriggerFetch(!triggerFetch);
 
-        return stepsRes;
-      case "distance":
-        const distanceRes = await updateDistance(app, Number(inputValue));
-        setInputValue("");
-        setTriggerFetch(!triggerFetch);
+      return stepsRes;
+    case "distance":
+      const distanceRes = await updateDistance(app, Number(inputValue));
+      setInputValue("");
+      setTriggerFetch(!triggerFetch);
 
-        return distanceRes;
-      case "calories":
-        const caloriesRes = await updateCalories(app, Number(inputValue));
-        setInputValue("");
-        setTriggerFetch(!triggerFetch);
+      return distanceRes;
+    case "calories":
+      const caloriesRes = await updateCalories(app, Number(inputValue));
+      setInputValue("");
+      setTriggerFetch(!triggerFetch);
 
-        return caloriesRes;
-      default:
-        throw new Error("Invalid parameter!");
+      return caloriesRes;
+    default:
+      throw new Error("Invalid parameter!");
     }
-
   };
 
   useEffect(() => {
     setProgress(progressHook);
-    setInputValue("")
+    setInputValue("");
   }, [progressHook, triggerFetch]);
 
   return (
@@ -93,7 +95,8 @@ export default function ProgressCard({ trackParam, imgName, title }) {
                 <b className="text-xl">Weekly:</b> {progress.weekly || 0}{" "}
                 {trackParam === "calories" && "kcal"}
                 {trackParam === "distance" && "m"}
-                {trackParam === "exercise" && (progress.weekly === 1 ? "day" : "days")}
+                {trackParam === "exercise" &&
+                  (progress.weekly === 1 ? "day" : "days")}
               </p>
               {trackParam !== "exercise" && (
                 <p>
@@ -133,9 +136,9 @@ export default function ProgressCard({ trackParam, imgName, title }) {
                 (value) => (
                   <Button
                     key={value}
-                    className={`numpad-btn bg-white text-black ${value === "C" && "btn-warning"} ${
-                      value === "C" && "col-span-2"
-                    }`}
+                    className={`numpad-btn bg-white text-black ${
+                      value === "C" && "btn-warning"
+                    } ${value === "C" && "col-span-2"}`}
                     onClick={() => handleNumpadClick(value)}
                   >
                     {value}
@@ -145,7 +148,10 @@ export default function ProgressCard({ trackParam, imgName, title }) {
             </div>
           </Modal.Body>
           <Modal.Actions className="flex flex-row justify-center align-center items-center gap-8">
-            <Button className="btn-success mt-6 w-24" onClick={async () => await handleUpdate()}>
+            <Button
+              className="btn-success mt-6 w-24"
+              onClick={async () => await handleUpdate()}
+            >
               Update
             </Button>
             <form method="dialog">
@@ -157,3 +163,9 @@ export default function ProgressCard({ trackParam, imgName, title }) {
     </Card>
   );
 }
+
+ProgressCard.propTypes = {
+  trackParam: PropTypes.string.isRequired,
+  imgName: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+};

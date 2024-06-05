@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
+/**
+ * @param {{uid: string}} props
+ * @returns {React.FC}
+ */
 export default function ConnToFb({ uid }) {
   return (
     <div
@@ -18,7 +23,7 @@ export default function ConnToFb({ uid }) {
         <h2 className="text-4xl text-black mt-2 mb-4 rounded-lg text-center">
           Connect to your Fitbit
         </h2>
-        <Link to={`/`}>
+        <Link to={"/"}>
           <button className="btn btn-md btn-warning text-black mt-12">
             Link Fitbit account
           </button>
@@ -27,3 +32,7 @@ export default function ConnToFb({ uid }) {
     </div>
   );
 }
+
+PropTypes.ConnToFb = {
+  uid: PropTypes.string.isRequired,
+};

@@ -158,10 +158,11 @@ export default function Navbar({ toggleDrawer }) {
     listenForNotificationChanges();
 
     return () => {
-      isMounted = false; // set the flag to false when the component unmounts
+      isMounted = false; // set the flag to false on cleanup
     };
   }, [app]);
 
+  //  close dropdown
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -169,21 +170,13 @@ export default function Navbar({ toggleDrawer }) {
       }
     }
 
-    // Bind the event listener
+    //  bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Unbind the event listener on clean up
+      //  unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // useEffect(() => {
-  //   console.log(notificationCount);
-  // }, [notificationCount]);
-
-  // useEffect(() => {
-  //   console.log(profilePic);
-  // }, [profilePic]);
 
   if (loading) {
     return (

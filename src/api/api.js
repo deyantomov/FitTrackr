@@ -586,4 +586,4 @@ export const markNotificationAsRead = async (app, exerciseId, from) => {
 
     return response.json();
   }
-}
+};

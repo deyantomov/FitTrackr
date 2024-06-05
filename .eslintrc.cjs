@@ -27,6 +27,6 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'], 
     'semi': ['warn', 'always'], 
     'quotes': ['error', 'double'], 
-    'react/prop-types': 'off', 
+    'no-case-declarations': 'off'
   },
 }

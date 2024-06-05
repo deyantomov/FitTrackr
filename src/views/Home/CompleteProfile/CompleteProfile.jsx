@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { useCompleteProfile } from "../../../hooks/useCompleteProfile";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
+/**
+ * @param {uid: string} props
+ * @returns {React.FC}
+ */
 export default function CompleteProfile({ uid }) {
   const progressHook = useCompleteProfile();
   const [progress, setProgress] = useState(progressHook);
@@ -63,3 +68,7 @@ export default function CompleteProfile({ uid }) {
     </div>
   );
 }
+
+CompleteProfile.propTypes = {
+  uid: PropTypes.string.isRequired,
+};

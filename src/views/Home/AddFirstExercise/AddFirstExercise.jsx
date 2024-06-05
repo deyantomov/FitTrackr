@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
+/**
+ * @param {uid: string} props
+ * @returns {React.FC}
+ */
 export default function AddFirstExercise({ uid }) {
   return (
     <div
@@ -27,3 +32,7 @@ export default function AddFirstExercise({ uid }) {
     </div>
   );
 }
+
+AddFirstExercise.propTypes = {
+  uid: PropTypes.string.isRequired,
+};
