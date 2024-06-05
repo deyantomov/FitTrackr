@@ -3,6 +3,7 @@ import { getProfilePic, getUserById, updateUserProfile } from "../../api/api";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useApp } from "../../hooks/useApp";
+import { useToast } from "../../hooks/useToast";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { imageToBase64 } from "../../common/utils";
 import { Card, Button, Input, Badge, Modal, Loading } from "react-daisyui";
@@ -10,6 +11,7 @@ import { PlusIcon, PhoneIcon } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const app = useApp();
+  const { setToast } = useToast();
   const params = useParams();
   const [user, setUser] = useState({});
   const [userPic, setUserPic] = useState("");
@@ -55,23 +57,31 @@ export default function Profile() {
       });
 
       if (newUserInfo.newPassword !== newUserInfo.oldPassword) {
-        console.error("Passwords do not match!");
+        return setToast({ type: "error", message: "Passwords do not match" });
       }
 
-      await updateUserProfile(
+      const result = await updateUserProfile(
         app,
         user.uid,
         newUserInfo,
         user.email,
         newUserInfo.oldPassword
       );
+
+      if (result && result.message) {
+        const type = result.message === "Profile updated successfully" ? "success" : "error";
+        return setToast({ type: type, message: result.message });
+      } else {
+        return setToast({ type: "error", message: result });
+      }
+
     } catch (err) {
-      console.error(err);
+      return setToast({ type: "error", message: err.message });
     } finally {
       const profile = await getUserById(params.id);
       setUser(profile);
 
-      const profilePic = await getProfilePic(app, profile.profilePic);
+      const profilePic = await getProfilePic(profile.profilePic);
       setUserPic(profilePic.img);
 
       setLoading(false);
@@ -89,7 +99,7 @@ export default function Profile() {
         const img = await imageToBase64(file);
         setNewProfilePic(img);
       } catch (err) {
-        console.error(err);
+        return setToast({ type: "error", message: err.message });
       }
     }
 
@@ -116,7 +126,7 @@ export default function Profile() {
         setUserPic(newProfilePic);
         setIsOpen(false);
       } catch (err) {
-        console.error(err);
+        setToast({ type: "error", message: err.message });
       }
     }
 

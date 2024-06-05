@@ -16,12 +16,15 @@ import NewExerciseForm from "./views/NewExercise/NewExercise";
 import NotFound from "./views/NotFound/NotFound";
 import Exercises from "./views/Exercises/Exercises";
 import FriendList from "./views/FriendList/FriendList";
+import { ToastProvider } from "./providers/ToastProvider";
 const { appId } = atlasConfig;
 
 export default function ProvidedApp() {
   return (
     <AppProvider appId={appId}>
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </AppProvider>
   );
 }

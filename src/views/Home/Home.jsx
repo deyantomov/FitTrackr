@@ -11,9 +11,11 @@ import Progress from "./Progress/Progress";
 import { Link } from "react-router-dom";
 import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useToast } from "../../hooks/useToast";
 
 export default function Home() {
   const app = useApp();
+  const { setToast } = useToast();
   const progressHook = useCompleteProfile();
   const [user, setUser] = useState({});
   const [progress, setProgress] = useState(progressHook);
@@ -23,11 +25,14 @@ export default function Home() {
   useEffect(() => {
     const getUser = async () => {
       if (app.currentUser && app.currentUser.id) {
+        setLoading(true);
         const user = await getUserById(app.currentUser.id);
 
         if (user) {
           setUser(user);
           setProgress(progressHook);
+        } else {
+          setToast({ type: "error", message: "Unable to log in" });
         }
       }
 
@@ -51,9 +56,10 @@ export default function Home() {
       const completedFields = Object.values(progress).filter(
         (field) => field
       ).length;
+
       setProgressPercentage((completedFields / totalFields) * 100 || 0);
     } catch (err) {
-      console.error(err);
+      setToast({ type: "error", message: err.message });
     } finally {
       setLoading(false);
     }
