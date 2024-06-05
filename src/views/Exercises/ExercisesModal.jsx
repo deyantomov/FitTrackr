@@ -25,7 +25,7 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
   }, [isOpen]);
 
   return (
-    <Modal open={isOpen} onClickBackdrop={onClose}>
+    <Modal open={isOpen} onClose={onClose}>
       {exercise && (
         <Modal.Body>
           <div className="text-center mb-4">

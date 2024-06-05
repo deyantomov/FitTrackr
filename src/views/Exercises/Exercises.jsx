@@ -256,38 +256,44 @@ const Exercises = () => {
                     )}
                   </Card.Title>
                   <div className="space-y-4">
-                    <p className="flex items-center">
-                      <PencilIcon className="h-5 w-5 mr-2" />
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <PencilIcon className="h-6 w-6 mr-2 text-green-300" />
                       {exercise.description}
                     </p>
-                    <p className="flex items-center">
-                      <ChartBarIcon className="h-5 w-5 mr-2" />
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <ChartBarIcon className="h-6 w-6 mr-2 text-purple-500" />
                       <strong className="mr-2">Level:</strong> {exercise.level}
                     </p>
-                    <p className="flex items-center">
-                      <ClockIcon className="h-5 w-5 mr-2" />
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <ClockIcon className="h-6 w-6 mr-2 text-pink-500" />
                       <strong className="mr-2">Duration:</strong>{" "}
                       {exercise.duration} minutes
                     </p>
-                    <p className="flex items-center">
-                      <StarIcon className="h-5 w-5 mr-2" />
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <StarIcon className="h-6 w-6 mr-2 text-yellow-500" />
                       <strong className="mr-2">Rating:</strong>{" "}
                       {exercise.rating}
                     </p>
-                    <p className="flex items-center">
-                      <CalendarIcon className="h-5 w-5 mr-2" />
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <CalendarIcon className="h-6 w-6 mr-2 text-blue-500" />
                       <strong className="mr-2">Created On:</strong>{" "}
                       {new Date(exercise.createdOn).toLocaleDateString()}
                     </p>
-                    <p className="flex items-center">
-                      <UserCircleIcon className="h-5 w-5 mr-2" />
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <UserCircleIcon className="h-6 w-6 mr-2 text-white" />
                       <strong className="mr-2">Owner:</strong>{" "}
                       {exercise.ownerHandle}
                     </p>
-                    <p className="flex items-center">
-                      <LockClosedIcon className="h-5 w-5 mr-2" />
-                      <strong className="mr-2">Is Private:</strong>{" "}
-                      {exercise.isPrivate ? "Yes" : "No"}
+                    <p className="text-gray-700 flex items-center mb-2">
+                      <LockClosedIcon
+                        className={`h-6 w-6 mr-2 ${exercise.isPrivate ? "text-red-500" : "text-green-500"
+                        }`}
+                      />
+                      <strong>
+                        <span className="text-lg">
+                          {exercise.isPrivate ? "Private" : "Public"}
+                        </span>
+                      </strong>
                     </p>
                   </div>
                 </div>
@@ -300,15 +306,16 @@ const Exercises = () => {
                       }
                     >
                       {exercise.likedBy &&
-                      app.currentUser &&
-                      exercise.likedBy.includes(app.currentUser.id) ? (
+                        app.currentUser &&
+                        exercise.likedBy.includes(app.currentUser.id) ? (
                           <HeartSolidIcon className="h-5 w-5 mr-2" />
                         ) : (
                           <HeartOutlineIcon className="h-5 w-5 mr-2" />
                         )}
                       {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>
-                    <Button className="btn-md btn-warning rounded"
+                    <Button
+                      className="btn-md btn-warning rounded"
                       onClick={() => openModal(exercise)}
                     >
                       Start Workout
