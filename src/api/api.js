@@ -355,7 +355,7 @@ export const createNewGoal = async (app, goal) => {
         owner: user.uid,
         title: goal.title,
         type: goal.type, // "steps" || "calories" || "distance"
-        period: goal.duration, // "daily" || "weekly" || "monthly"
+        period: goal.period, // "daily" || "weekly" || "monthly"
         targetValue: goal[goal.type], // targetValue is dynamically set based on the type
       }),
     });
@@ -576,13 +576,16 @@ export const markNotificationAsRead = async (app, exerciseId, from) => {
   const { currentUser } = app;
 
   if (currentUser) {
-    const response = await fetch(`${markNotificationAsReadEndpoint}?id=${exerciseId}&uid=${currentUser.id}&from=${from}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${currentUser.accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${markNotificationAsReadEndpoint}?id=${exerciseId}&uid=${currentUser.id}&from=${from}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.accessToken}`,
+        },
+      }
+    );
 
     return response.json();
   }

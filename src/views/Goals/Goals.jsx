@@ -31,29 +31,21 @@ export default function Goals() {
     // console.log(currentUser);
   })();
 
-  const handleSetTarget = () => {
-    console.log(type);
-    switch (type) {
-      case "steps":
-        setTarget((prevState) => ({
-          ...prevState,
-          steps: targetNumber,
-        }));
-      case "distance":
-        setTarget((prevState) => ({
-          ...prevState,
-          distance: targetNumber,
-        }));
-      case "calories":
-        setTarget((prevState) => ({
-          ...prevState,
-          calories: targetNumber,
-        }));
-    }
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    handleSetTarget();
+
+    let updatedTarget = { ...target };
+    switch (type) {
+      case "steps":
+        updatedTarget.steps = targetNumber;
+        break;
+      case "distance":
+        updatedTarget.distance = targetNumber;
+        break;
+      case "calories":
+        updatedTarget.calories = targetNumber;
+        break;
+    }
     console.log(target);
 
     setError("");
@@ -63,7 +55,7 @@ export default function Goals() {
       const goal = {
         title,
         type,
-        target,
+        target: updatedTarget,
         period,
       };
 
@@ -89,6 +81,8 @@ export default function Goals() {
     setDistance(0);
     // setWeeklyStreak(0);
     setPeriod("daily");
+    setTarget({});
+    setTargetNumber(0);
   };
 
   useEffect(() => {
