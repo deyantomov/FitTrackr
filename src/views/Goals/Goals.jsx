@@ -17,7 +17,9 @@ export default function Goals() {
   const [distance, setDistance] = useState(0);
   // const [type, setType] = useState({ steps, calories, distance });
   const [type, setType] = useState("");
-  const [target, setTarget] = useState(0);
+  const [target, setTarget] = useState({});
+  const [targetNumber, setTargetNumber] = useState(0);
+
   const [period, setPeriod] = useState("daily");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -29,8 +31,30 @@ export default function Goals() {
     // console.log(currentUser);
   })();
 
+  const handleSetTarget = () => {
+    console.log(type);
+    switch (type) {
+      case "steps":
+        setTarget((prevState) => ({
+          ...prevState,
+          steps: targetNumber,
+        }));
+      case "distance":
+        setTarget((prevState) => ({
+          ...prevState,
+          distance: targetNumber,
+        }));
+      case "calories":
+        setTarget((prevState) => ({
+          ...prevState,
+          calories: targetNumber,
+        }));
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    handleSetTarget();
+    console.log(target);
 
     setError("");
     setSuccess("");
@@ -38,11 +62,8 @@ export default function Goals() {
     if (app.currentUser) {
       const goal = {
         title,
-        type: {
-          steps,
-          calories,
-          distance,
-        },
+        type,
+        target,
         period,
       };
 
@@ -106,21 +127,20 @@ export default function Goals() {
   //       throw new Error("Incorrect form filling!");
   //   }
   // };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "type") {
-      setType(value);
-    } else {
-      if (name === "steps") {
-        setSteps(parseInt(value));
-      } else if (name === "calories") {
-        setCalories(parseInt(value));
-      } else if (name === "distance") {
-        setDistance(parseInt(value));
-      }
-      // setType({ steps: steps, calories: calories, distance: distance });
-    }
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   if (name === "type") {
+  //     setType(value);
+  //   } else {
+  //     if (name === "steps") {
+  //       setSteps(parseInt(value));
+  //     } else if (name === "calories") {
+  //       setCalories(parseInt(value));
+  //     } else if (name === "distance") {
+  //       setDistance(parseInt(value));
+  //     }
+  //     // setType({ steps: steps, calories: calories, distance: distance });
+  //   }
 
   return (
     <div className="h-full">
@@ -173,8 +193,8 @@ export default function Goals() {
               <input
                 type="number"
                 placeholder="Goal target:"
-                value={target}
-                onChange={(e) => setTarget(e.target.value)}
+                value={targetNumber}
+                onChange={(e) => setTargetNumber(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
