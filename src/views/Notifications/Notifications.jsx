@@ -67,7 +67,7 @@ export default function Notifications() {
     };
   
     fetchExercises();
-  }, []);
+  }, [app.currentUser.id]);
 
   async function handleGetUser(uid) {
     setLoading(true);
@@ -92,10 +92,6 @@ export default function Notifications() {
 
     return exercise;
   };
-
-  useEffect(() => {
-    console.log(exercises);
-  }, [exercises])
 
   if (loading) {
     return (

@@ -11,10 +11,14 @@ import { useNavigate } from "react-router-dom";
 import {
   UserCircleIcon,
   BellIcon,
-  HeartIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
+import PropTypes from "prop-types";
 
+/**
+ * @param {{toggleDrawer: function}} props
+ * @returns {React.FC}
+ */
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
   const [profilePic, setProfilePic] = useState("");
@@ -65,97 +69,100 @@ export default function Navbar({ toggleDrawer }) {
   useEffect(() => {
     let isMounted = true;
 
-    const listenForPicChanges = async () => {
-      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-      const picCollection = mongoClient
-        .db("sample_data")
-        .collection("profile_pics");
+    if (isMounted) {
+      const listenForPicChanges = async () => {
+        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+        const picCollection = mongoClient
+          .db("sample_data")
+          .collection("profile_pics");
 
-      const changeStreamPics = picCollection.watch();
+        const changeStreamPics = picCollection.watch();
 
-      const cleanup = () => {
-        changeStreamPics.close();
-      };
+        const cleanup = () => {
+          changeStreamPics.close();
+        };
 
-      // Listen for changes
-      for await (const change of changeStreamPics) {
-        if (app.currentUser) {
-          const user = await getUserById(app.currentUser.id);
+        // Listen for changes
+        for await (const change of changeStreamPics) {
+          if (app.currentUser) {
+            const user = await getUserById(app.currentUser.id);
 
-          if (user) {
-            setUid(user.uid);
-            setHandle(user.handle);
+            if (user) {
+              setUid(user.uid);
+              setHandle(user.handle);
 
-            if (user.profilePic) {
-              const pic = await getProfilePic(user.profilePic);
-              setProfilePic(pic.img);
+              if (user.profilePic) {
+                const pic = await getProfilePic(user.profilePic);
+                setProfilePic(pic.img);
+              }
             }
           }
         }
-      }
 
-      //  clean up;
-      return cleanup;
-    };
+        //  clean up;
+        return cleanup;
+      };
 
-    const initializeNotificationCount = async () => {
-      const user = await getUserById(app.currentUser.id);
-      if (user) {
-        const notificationCount = Object.values(user.notifications).reduce(
-          (total, current) => total + current.length,
-          0
-        );
-        setNotificationCount(notificationCount);
-      }
-    };
+      const initializeNotificationCount = async () => {
+        const user = await getUserById(app.currentUser.id);
+        if (user) {
+          const notificationCount = Object.values(user.notifications).reduce(
+            (total, current) => total + current.length,
+            0
+          );
+          setNotificationCount(notificationCount);
+        }
+      };
 
-    initializeNotificationCount();
+      initializeNotificationCount();
 
-    const listenForNotificationChanges = async () => {
-      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-      const usersCollection = mongoClient.db("sample_data").collection("users");
+      const listenForNotificationChanges = async () => {
+        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+        const usersCollection = mongoClient
+          .db("sample_data")
+          .collection("users");
 
-      const changeStreamUsers = usersCollection.watch([
-        {
-          $match: {
-            "fullDocument.userId": app.currentUser.id,
+        const changeStreamUsers = usersCollection.watch([
+          {
+            $match: {
+              "fullDocument.userId": app.currentUser.id,
+            },
           },
-        },
-      ]);
+        ]);
 
-      const cleanup = () => {
-        changeStreamUsers.close();
-      };
+        const cleanup = () => {
+          changeStreamUsers.close();
+        };
 
-      // Listen for changes
-      for await (const change of changeStreamUsers) {
-        if (app.currentUser) {
-          const user = await getUserById(app.currentUser.id);
+        // Listen for changes
+        for await (const change of changeStreamUsers) {
+          if (app.currentUser) {
+            const user = await getUserById(app.currentUser.id);
 
-          if (user) {
-            setUid(user.uid);
-            setHandle(user.handle);
+            if (user) {
+              setUid(user.uid);
+              setHandle(user.handle);
 
-            if (user.profilePic) {
-              const pic = await getProfilePic(user.profilePic);
-              setProfilePic(pic.img);
+              if (user.profilePic) {
+                const pic = await getProfilePic(user.profilePic);
+                setProfilePic(pic.img);
+              }
+
+              const notificationCount = Object.values(
+                user.notifications
+              ).reduce((total, current) => total + current.length, 0);
+              setNotificationCount(notificationCount);
             }
-
-            const notificationCount = Object.values(user.notifications).reduce(
-              (total, current) => total + current.length,
-              0
-            );
-            setNotificationCount(notificationCount);
           }
         }
-      }
 
-      //  clean up;
-      return cleanup;
-    };
+        //  clean up;
+        return cleanup;
+      };
 
-    listenForPicChanges();
-    listenForNotificationChanges();
+      listenForPicChanges();
+      listenForNotificationChanges();
+    }
 
     return () => {
       isMounted = false; // set the flag to false on cleanup
@@ -250,7 +257,7 @@ export default function Navbar({ toggleDrawer }) {
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                   <h2 className="text-xl cursor-default">{handle}</h2>
                 </Dropdown.Item>
-                <Link to={`/profile/${uid}`}>
+                <Link to={`/profile/${uid}`} as="div">
                   <Dropdown.Item>
                     <UserCircleIcon className="h-5 w-5 mr-2" />
                     <p>My profile</p>
@@ -267,7 +274,7 @@ export default function Navbar({ toggleDrawer }) {
                     )}
                   </Dropdown.Item>
                 </Link>
-                <Link to="/friend-list">
+                <Link to="/friend-list" as="div">
                   <Dropdown.Item>
                     <UserGroupIcon className="h-5 w-5 mr-2" />
                     <p>Friend List</p>
@@ -283,3 +290,7 @@ export default function Navbar({ toggleDrawer }) {
     </div>
   );
 }
+
+Navbar.propTypes = {
+  toggleDrawer: PropTypes.func.isRequired,
+};

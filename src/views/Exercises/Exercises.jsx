@@ -110,7 +110,9 @@ const Exercises = () => {
     const listenForChanges = async () => {
       const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
       const collection = mongoClient.db("sample_data").collection("exercises");
-      const changeStream = collection.watch();
+      const changeStream = collection.watch([], {
+        fullDocument: "updateLookup",
+      });
 
       const cleanup = () => {
         changeStream.close();
@@ -119,26 +121,34 @@ const Exercises = () => {
       // Listen for changes
       try {
         for await (const change of changeStream) {
-          try {
-            const response = await getAllExercises();
-
-            const updatedExercises = await Promise.all(
-              response.data.map(async (exercise) => {
-                if (exercise.img) {
-                  const imgData = await getExerciseImage(exercise.img);
-                  return { ...exercise, img: imgData["img"] };
-                } else {
-                  return exercise;
+          switch (change.operationType) {
+          case "insert":
+            setExercises((prevExercises) => [
+              ...prevExercises,
+              change.fullDocument,
+            ]);
+            break;
+          case "update":
+          case "replace":
+            setExercises((prevExercises) =>
+              prevExercises.map((exercise) => {
+                if (exercise) {
+                  return exercise["_id"] === change.fullDocument["_id"].toHexString()
+                    ? { ...change.fullDocument, img: exercise.img }
+                    : exercise;
                 }
               })
             );
-
-            //  zero delay timeout to ensure previous operations are complete before setting the state
-            setTimeout(() => {}, 0);
-
-            setExercises(updatedExercises);
-          } catch (err) {
-            console.error("Error processing change:", err);
+            break;
+          case "delete":
+            setExercises((prevExercises) =>
+              prevExercises.filter(
+                (exercise) => exercise._id !== change.documentKey._id
+              )
+            );
+            break;
+          default:
+            console.log("Unhandled change event:", change);
           }
         }
       } catch (err) {
@@ -150,21 +160,27 @@ const Exercises = () => {
     };
 
     listenForChanges().catch(console.error);
-  }, []);
+  }, [app.currentUser]);
 
   const filteredExercises = exercises.filter((exercise) => {
-    const matchesSearchTerm =
-      exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
+    if (exercise) {
+      const matchesSearchTerm =
+        exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    if (filter === "all-exercises") {
-      return matchesSearchTerm;
-    } else if (filter === "my-exercises") {
-      return matchesSearchTerm && exercise.owner === app.currentUser.id;
-    } else if (filter === "liked-exercises") {
-      return matchesSearchTerm && exercise.likedBy && exercise.likedBy.includes(app.currentUser.id);
+      if (filter === "all-exercises") {
+        return matchesSearchTerm;
+      } else if (filter === "my-exercises") {
+        return matchesSearchTerm && exercise.owner === app.currentUser.id;
+      } else if (filter === "liked-exercises") {
+        return (
+          matchesSearchTerm &&
+          exercise.likedBy &&
+          exercise.likedBy.includes(app.currentUser.id)
+        );
+      }
+      return false;
     }
-    return false;
   });
 
   if (loading) {
@@ -174,11 +190,15 @@ const Exercises = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="w-full h-full p-12">
       <div className="w-1/2 mx-auto mb-6">
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="select select-bordered w-full">
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="select select-bordered w-full"
+        >
           <option value="all-exercises">All Exercises</option>
           <option value="my-exercises">My Exercises</option>
           <option value="liked-exercises">Liked Exercises</option>
@@ -208,7 +228,8 @@ const Exercises = () => {
                     <strong className="text-center text-2xl">
                       {exercise.title}
                     </strong>
-                    {exercise.owner === (app.currentUser ? app.currentUser.id : null) && (
+                    {exercise.owner ===
+                      (app.currentUser ? app.currentUser.id : null) && (
                       <span className="ml-4 flex">
                         <PencilIcon
                           className="h-6 w-6 text-blue-500 hover:text-blue-700 transform transition-all duration-200 ease-in-out hover:scale-125"
@@ -261,13 +282,17 @@ const Exercises = () => {
                   <div className="flex w-full justify-center align-center gap-8 mt-6">
                     <Button
                       className="btn-md btn-warning rounded"
-                      onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
+                      onClick={() =>
+                        handleLikeExercise(exercise["_id"], exercise.owner)
+                      }
                     >
-                      {exercise.likedBy && app.currentUser && exercise.likedBy.includes(app.currentUser.id) ? (
-                        <HeartSolidIcon className="h-5 w-5 mr-2" />
-                      ) : (
-                        <HeartOutlineIcon className="h-5 w-5 mr-2" />
-                      )}
+                      {exercise.likedBy &&
+                      app.currentUser &&
+                      exercise.likedBy.includes(app.currentUser.id) ? (
+                          <HeartSolidIcon className="h-5 w-5 mr-2" />
+                        ) : (
+                          <HeartOutlineIcon className="h-5 w-5 mr-2" />
+                        )}
                       {exercise.likedBy ? exercise.likedBy.length : 0}
                     </Button>
                     <Button className="btn-md btn-warning rounded">
@@ -285,10 +310,10 @@ const Exercises = () => {
         )}
         <div className="flex w-full justify-center align-center items-center col-span-full gap-4 mb-12">
           {Array.from({ length: totalPages }, (_, i) => (
-            <Button 
-              key={i} 
+            <Button
+              key={i}
               onClick={() => setPage(i + 1)}
-              className={`btn-warning ${(page !== i + 1) && "btn-outline"}`}
+              className={`btn-warning ${page !== i + 1 && "btn-outline"}`}
             >
               {i + 1}
             </Button>

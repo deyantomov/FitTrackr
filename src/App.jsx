@@ -1,6 +1,5 @@
 import { AppProvider } from "./providers/AppProvider";
-import { useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./hoc/Sidebar";
 import Home from "./views/Home/Home";
 import Login from "./views/Login/Login";
@@ -30,14 +29,7 @@ export default function ProvidedApp() {
 }
 
 function App() {
-  const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    if (location.pathname === "/") {
-      navigate("/home");
-    }
-  }, [location, navigate]);
 
   return (
     <Routes>
@@ -114,7 +106,7 @@ function App() {
         path="/exercises"
         element={
           <Sidebar>
-            <Exercises />
+            <Exercises key={location.key} />
           </Sidebar>
         }
       />
