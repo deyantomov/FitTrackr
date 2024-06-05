@@ -11,14 +11,14 @@ import { getUserById, removeGoal } from "../../api/api";
 
 export default function Goals() {
   const app = useApp();
-
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("");
   const [steps, setSteps] = useState(0);
   const [calories, setCalories] = useState(0);
   const [distance, setDistance] = useState(0);
-  const [weeklyStreak, setWeeklyStreak] = useState(0);
-  const [duration, setDuration] = useState("");
+  // const [type, setType] = useState({ steps, calories, distance });
+  const [type, setType] = useState("");
+  // const [target, setTarget] = useState(0);
+  const [period, setPeriod] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userGoals, setUserGoals] = useState([]);
@@ -26,7 +26,7 @@ export default function Goals() {
 
   (async function getCurrentUser() {
     const currentUser = await getUserById(app.currentUser.id);
-    console.log(currentUser);
+    // console.log(currentUser);
   })();
 
   const handleSubmit = async (e) => {
@@ -38,13 +38,15 @@ export default function Goals() {
     if (app.currentUser) {
       const goal = {
         title,
-        type,
-        steps,
-        calories,
-        distance,
-        weeklyStreak,
-        duration,
+        type: {
+          steps,
+          calories,
+          distance,
+        },
+        period,
       };
+
+      console.log("goal log: ", goal);
       try {
         await createNewGoal(app, goal);
         setSuccess("Goal created successfully!");
@@ -64,28 +66,9 @@ export default function Goals() {
     setSteps(0);
     setCalories(0);
     setDistance(0);
-    setWeeklyStreak(0);
-    setDuration(0);
+    // setWeeklyStreak(0);
+    setPeriod("");
   };
-
-  // useEffect(() => {
-  //   const createGoal = async () => {
-  //     const goalObj = {
-  //       title: 'Test3',
-  //       type: "calories",
-  //       steps: null,
-  //       calories: 10000,
-  //       distance: null,
-  //       duration: 'Daily'
-  //     }
-
-  //     const res = await createNewGoal(app, goalObj);
-
-  //     console.log(res);
-  //   }
-
-  //   createGoal();
-  // }, []);
 
   useEffect(() => {
     const getGoals = async () => {
@@ -107,6 +90,37 @@ export default function Goals() {
     };
     getUser();
   }, []);
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   switch (name) {
+  //     case "type":
+  //       setType(value);
+  //     case "steps":
+  //       setSteps(value);
+  //     case "calories":
+  //       setCalories(value);
+  //     case "distance":
+  //       setDistance(value);
+  //     default:
+  //       throw new Error("Incorrect form filling!");
+  //   }
+  // };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "type") {
+      setType(value);
+    } else {
+      if (name === "steps") {
+        setSteps(parseInt(value));
+      } else if (name === "calories") {
+        setCalories(parseInt(value));
+      } else if (name === "distance") {
+        setDistance(parseInt(value));
+      }
+      // setType({ steps: steps, calories: calories, distance: distance });
+    }
+  };
 
   return (
     <div className="h-full">
@@ -144,68 +158,67 @@ export default function Goals() {
               <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <select
                 value={type}
-                onChange={(e) => setType(e.target.value)}
+                // onChange={(e) => setType(e.target.value)}
+                onChange={handleChange}
                 className="select select-bordered w-full"
               >
-                <option value="activity">Activity</option>
-                <option value="health">Health</option>
+                <option value="steps">Steps</option>
+                <option value="calories">Calories</option>
+                <option value="distance">Distance</option>
               </select>
             </label>
-            <span>Steps:</span>
+            <span>Target:</span>
             <label className="label mb-4 w-full">
-              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
+              <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
-                placeholder="Number of steps"
-                value={steps}
-                onChange={(e) => setSteps(e.target.value)}
+                placeholder="Goal target:"
+                value={
+                  type === "steps"
+                    ? steps
+                    : type === "calories"
+                    ? calories
+                    : distance
+                }
+                onChange={handleChange}
                 className="input input-bordered w-full"
               />
             </label>
-            <span>Calories:</span>
-            <label className="label mb-4 w-full">
-              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
+            {/* <label className="label mb-4 w-full">
+              <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
-                placeholder="Calories burned"
+                placeholder="Goal target:"
                 value={calories}
                 onChange={(e) => setCalories(e.target.value)}
                 className="input input-bordered w-full"
               />
             </label>
-            <span>Distance:</span>
             <label className="label mb-4 w-full">
-              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
+              <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
               <input
                 type="number"
-                placeholder="Distance passed"
+                placeholder="Goal target:"
                 value={distance}
                 onChange={(e) => setDistance(e.target.value)}
                 className="input input-bordered w-full"
               />
-            </label>
-            <span>Weekly streak:</span>
+            </label> */}
+
+            <span>Period:</span>
             <label className="label mb-4 w-full">
-              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
-              <input
-                type="number"
-                placeholder="Weekly streak"
-                value={weeklyStreak}
-                onChange={(e) => setWeeklyStreak(e.target.value)}
-                className="input input-bordered w-full"
-              />
+              <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
+              <select
+                value={period}
+                onChange={(e) => setPeriod(e.target.value)}
+                className="select select-bordered w-full"
+              >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
             </label>
-            <span>Duration:</span>
-            <label className="label mb-4 w-full">
-              <ArrowTrendingUpIcon className="h-5 w-5 mr-2" />
-              <input
-                type="string"
-                placeholder="Duration"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="input input-bordered w-full"
-              />
-            </label>
+
             <button
               type="submit"
               className="btn bg-yellow-500 px-8 py-4 w-full md:auto rounded"
@@ -259,12 +272,12 @@ export default function Goals() {
           goalSet={userGoals.length > 0 ? userGoals[0].calories : 0}
           metricString="calories"
         ></GoalsCard>
-        <GoalsCard
-          metricTitle="WORKOUT DURATION"
+        {/* <GoalsCard
+          metricTitle="WORKOUT PERIOD"
           currentProgress="22"
           goalSet={userGoals.length > 0 ? userGoals[0].duration : 0}
           metricString="minutes"
-        ></GoalsCard>
+        ></GoalsCard> */}
       </div>
     </div>
   );
