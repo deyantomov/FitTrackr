@@ -356,7 +356,7 @@ export const createNewGoal = async (app, goal) => {
         title: goal.title,
         type: goal.type, // "steps" || "calories" || "distance"
         period: goal.period, // "daily" || "weekly" || "monthly"
-        targetValue: goal[goal.type], // targetValue is dynamically set based on the type
+        target: goal.target
       }),
     });
 

@@ -36,15 +36,15 @@ export default function Goals() {
 
     let updatedTarget = { ...target };
     switch (type) {
-      case "steps":
-        updatedTarget.steps = targetNumber;
-        break;
-      case "distance":
-        updatedTarget.distance = targetNumber;
-        break;
-      case "calories":
-        updatedTarget.calories = targetNumber;
-        break;
+    case "steps":
+      updatedTarget.steps = targetNumber;
+      break;
+    case "distance":
+      updatedTarget.distance = targetNumber;
+      break;
+    case "calories":
+      updatedTarget.calories = targetNumber;
+      break;
     }
     console.log(target);
 
