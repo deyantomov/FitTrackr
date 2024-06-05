@@ -250,7 +250,7 @@ export const createNewExercise = async (app, exercise) => {
 };
 
 export const updateExercise = async (app, exercise) => {
-  if (Object.keys(exercise) === 0) {
+  if (Object.keys(exercise).length === 0) {
     throw new Error("Exercise object cannot be empty!");
   }
 
@@ -260,7 +260,7 @@ export const updateExercise = async (app, exercise) => {
     const { uid, handle } = await getUserById(currentUser.id);
 
     const response = await fetch(
-      `${updateExerciseEndpoint}?id=${exercise.id}`,
+      `${updateExerciseEndpoint}?id=${exercise["_id"]}`,
       {
         method: "POST",
         headers: {
