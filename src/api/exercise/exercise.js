@@ -141,6 +141,24 @@ export const getExerciseImage = async (id) => {
   }
 };
 
+export const getExerciseById = async (app, exerciseId) => {
+  const url = buildUrl(endpoints.exercise);
+
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${url}/get_by_id?id=${exerciseId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+    });
+
+    return response.json();
+  }
+};
+
 export const likeExercise = async (app, exerciseId, owner) => {
   const url = buildUrl(endpoints.exercise);
   const notificationsUrl = buildUrl(endpoints.notifications);
@@ -157,22 +175,28 @@ export const likeExercise = async (app, exerciseId, owner) => {
       body: app.currentUser.id,
     });
 
-    const notification = await fetch(
-      `${notificationsUrl}?type=likedExercise`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
-        },
-        body: JSON.stringify({
-          to: owner,
-          from: app.currentUser.id,
-          postId: exerciseId,
-        }),
-      }
-    );
+    const exercise = (await getExerciseById(app, exerciseId))["exercise"];
 
-    return [response.json(), notification.json()];
+    if (exercise.likedBy.includes(app.currentUser.id)) {
+      const notification = await fetch(
+        `${notificationsUrl}?type=likedExercise`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+          body: JSON.stringify({
+            to: owner,
+            from: app.currentUser.id,
+            postId: exerciseId,
+          }),
+        }
+      );
+
+      return [exercise, response.json(), notification.json()];
+    }
+
+    return [exercise, response.json()];
   }
 };
