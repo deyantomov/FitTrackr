@@ -199,21 +199,24 @@ const Exercises = () => {
       const matchesSearchTerm =
         exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
-
+  
+      const isVisibleToUser =
+        !exercise.isPrivate || (app.currentUser && exercise.owner === app.currentUser.id);
+  
       if (filter === "all-exercises") {
-        return matchesSearchTerm;
+        return matchesSearchTerm && isVisibleToUser;
       } else if (filter === "my-exercises") {
-        return matchesSearchTerm && exercise.owner === app.currentUser.id;
+        return matchesSearchTerm && app.currentUser && exercise.owner === app.currentUser.id;
       } else if (filter === "liked-exercises") {
         return (
           matchesSearchTerm &&
           exercise.likedBy &&
-          exercise.likedBy.includes(app.currentUser.id)
+          exercise.likedBy.includes(app.currentUser && app.currentUser.id) &&
+          isVisibleToUser
         );
       }
-      return false;
     }
-  }, []);
+  });
 
   if (loading) {
     return (
