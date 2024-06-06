@@ -17,7 +17,7 @@ export default function Goals() {
   const [calories, setCalories] = useState(0);
   const [distance, setDistance] = useState(0);
   // const [type, setType] = useState({ steps, calories, distance });
-  const [type, setType] = useState("");
+  const [type, setType] = useState("steps");
   const [target, setTarget] = useState({});
   const [targetNumber, setTargetNumber] = useState(0);
 
@@ -37,15 +37,15 @@ export default function Goals() {
 
     let updatedTarget = { ...target };
     switch (type) {
-    case "steps":
-      updatedTarget.steps = targetNumber;
-      break;
-    case "distance":
-      updatedTarget.distance = targetNumber;
-      break;
-    case "calories":
-      updatedTarget.calories = targetNumber;
-      break;
+      case "steps":
+        updatedTarget.steps = targetNumber;
+        break;
+      case "distance":
+        updatedTarget.distance = targetNumber;
+        break;
+      case "calories":
+        updatedTarget.calories = targetNumber;
+        break;
     }
     console.log(target);
 
@@ -76,7 +76,7 @@ export default function Goals() {
 
   const resetForm = () => {
     setTitle("");
-    setType("");
+    setType("steps");
     setSteps(0);
     setCalories(0);
     setDistance(0);
