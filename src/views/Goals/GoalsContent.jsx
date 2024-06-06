@@ -11,7 +11,8 @@ import CreateNewGoal from "./CreateNewGoal";
 
 const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
 
-export default function GoalsContent() {
+export default function GoalsContent({ periodToShow }) {
+  console.log("period to show: ", periodToShow);
   const app = useApp();
   const [title, setTitle] = useState("");
   const [steps, setSteps] = useState(0);
@@ -87,6 +88,11 @@ export default function GoalsContent() {
   useEffect(() => {
     const getGoals = async () => {
       setUserGoals(await getAllGoals(app));
+
+      console.log(
+        "userGoals filtered",
+        userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
+      );
     };
 
     // const deleteGoal = async () => {
@@ -95,8 +101,9 @@ export default function GoalsContent() {
     // }
 
     getGoals();
+
     // deleteGoal();
-  }, []);
+  }, [periodToShow]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -105,9 +112,36 @@ export default function GoalsContent() {
     getUser();
   }, []);
 
+  function goalSetFunction(metric) {
+    const result =
+      userGoals.length > 0
+        ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
+            .length > 0
+          ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
+              .target[metric]
+            ? userGoals.filter(
+                (eachGoal) => eachGoal.period === periodToShow
+              )[0].target[metric]
+            : 0
+          : 0
+        : 0;
+    return result;
+  }
+  function goalName() {
+    const result =
+      userGoals.length > 0
+        ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
+            .length > 0
+          ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
+              .title
+          : "no title"
+        : "no title";
+    return result;
+  }
+
   return (
     <div className="h-full">
-      <h1>*GOAL TITLE*</h1>
+      <h1>*{goalName()}*</h1>
 
       <div
         className="card-container"
@@ -126,7 +160,7 @@ export default function GoalsContent() {
           currentProgress={
             Object.keys(currentUser).length > 0 ? currentUser.steps.daily : 0
           }
-          goalSet={userGoals.length > 0 ? userGoals[0].steps : 0}
+          goalSet={goalSetFunction("steps")}
           metricString="steps"
         ></GoalsCard>
         <GoalsCard
@@ -134,7 +168,7 @@ export default function GoalsContent() {
           currentProgress={
             Object.keys(currentUser).length > 0 ? currentUser.distance.daily : 0
           }
-          goalSet={userGoals.length > 0 ? userGoals[0].distance : 0}
+          goalSet={goalSetFunction("distance")}
           metricString="meters"
         ></GoalsCard>
         <GoalsCard
@@ -142,7 +176,7 @@ export default function GoalsContent() {
           currentProgress={
             Object.keys(currentUser).length > 0 ? currentUser.calories.daily : 0
           }
-          goalSet={userGoals.length > 0 ? userGoals[0].calories : 0}
+          goalSet={goalSetFunction("calories")}
           metricString="calories"
         ></GoalsCard>
       </div>
