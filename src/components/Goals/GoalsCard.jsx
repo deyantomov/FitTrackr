@@ -49,7 +49,7 @@ export default function GoalsCard({
                     : `${progress.toFixed(2)}%`
                 }
                 styles={buildStyles({
-                  pathColor: `#f7c000`,
+                  pathColor: "#f7c000",
                   textColor: "#f7c000",
                 })}
               />

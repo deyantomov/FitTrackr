@@ -63,11 +63,10 @@ export default function SignUp() {
                 lastName: lastName.toString(),
               }).catch((err) => {
                 e.preventDefault();
-                console.error(err.message);
+                setToast({ type: "error", message: err.message });
               });
             } else {
-              //  TODO: Add toast
-              console.log("Passwords do not match!");
+              setToast({ type: "error", message: "Passwords do not match" });
             }
           }}
         >

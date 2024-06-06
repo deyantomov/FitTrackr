@@ -33,15 +33,15 @@ export default function GoalsContent({ periodToShow }) {
 
     let updatedTarget = { ...target };
     switch (type) {
-      case "steps":
-        updatedTarget.steps = targetNumber;
-        break;
-      case "distance":
-        updatedTarget.distance = targetNumber;
-        break;
-      case "calories":
-        updatedTarget.calories = targetNumber;
-        break;
+    case "steps":
+      updatedTarget.steps = targetNumber;
+      break;
+    case "distance":
+      updatedTarget.distance = targetNumber;
+      break;
+    case "calories":
+      updatedTarget.calories = targetNumber;
+      break;
     }
     console.log(target);
 
@@ -102,22 +102,56 @@ export default function GoalsContent({ periodToShow }) {
   }, [periodToShow]);
 
   useEffect(() => {
+    const listenForChanges = async () => {
+      const changeStream = app.currentUser.mongoClient("mongodb-atlas")
+        .db("sample_data")
+        .collection("goals")
+        .watch();
+      
+      try {
+        for await (const change of changeStream) {
+          if (!change.fullDocument) {
+            continue; 
+          }
+
+          if (change.fullDocument.period === periodToShow) {
+            setUserGoals([...userGoals, change.fullDocument]);
+          }
+        }
+      } catch (err) {
+        console.error("Error listening to change stream:", err);
+      }
+    };
+  
+    listenForChanges();
+  
+    // Cleanup function to close the change stream on component unmount
+    return () => {
+      console.log("Closing change stream");
+    };
+  }, [app, periodToShow]);
+  
+  // useEffect(() => {
+  //   console.log("userGoals: ", userGoals);
+  // }, [userGoals]);
+
+  useEffect(() => {
     const getUser = async () => {
       setCurrentUser(await getUserById(app.currentUser.id));
     };
     getUser();
-  }, []);
+  }, [app]);
 
   function goalSetFunction(metric) {
     const result =
       userGoals.length > 0
         ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
-            .length > 0
+          .length > 0
           ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
-              .target[metric]
+            .target[metric]
             ? userGoals.filter(
-                (eachGoal) => eachGoal.period === periodToShow
-              )[0].target[metric]
+              (eachGoal) => eachGoal.period === periodToShow
+            )[0].target[metric]
             : 0
           : 0
         : 0;
@@ -131,9 +165,9 @@ export default function GoalsContent({ periodToShow }) {
     const result =
       userGoals.length > 0
         ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
-            .length > 0
+          .length > 0
           ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
-              .title
+            .title
           : "No goal set for this time period"
         : "No goal set for this time period";
 
@@ -149,8 +183,10 @@ export default function GoalsContent({ periodToShow }) {
   }
 
   return (
-    <div className="h-full">
-      <h1>*{goalName()}*</h1>
+    <div className="flex flex-col justify-center align-center items-center h-full">
+      <h1 className="font-thin">
+        <b>Title:</b> {goalName()}
+      </h1>
 
       <div
         className="card-container"
