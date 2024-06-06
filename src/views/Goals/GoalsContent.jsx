@@ -2,7 +2,7 @@ import GoalsCard from "../../components/Goals/GoalsCard";
 import { Card, Button, Modal, Input } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
 import api from "../../api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import CreateNewGoal from "./CreateNewGoal";
 
 const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
@@ -23,6 +23,12 @@ export default function GoalsContent({ periodToShow }) {
   const [success, setSuccess] = useState("");
   const [userGoals, setUserGoals] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
+
+  const periodToShowRef = useRef(periodToShow);
+
+  useEffect(() => {
+    periodToShowRef.current = periodToShow;
+  }, [periodToShow]);
 
   (async function getCurrentUser() {
     const currentUser = await getUserById(app.currentUser.id);
@@ -111,7 +117,7 @@ export default function GoalsContent({ periodToShow }) {
           .collection("goals");
           
         const changeStream = collection.watch();
-        
+
         const cleanup = () => {
           changeStream.close();
         };
@@ -121,8 +127,8 @@ export default function GoalsContent({ periodToShow }) {
             if (!change.fullDocument) {
               continue; 
             }
-  
-            if (change.fullDocument.period === periodToShow) {
+
+            if (change.fullDocument.period === periodToShowRef.current) {
               setUserGoals([...userGoals, change.fullDocument]);
             }
           }
@@ -131,6 +137,8 @@ export default function GoalsContent({ periodToShow }) {
         } finally {
           cleanup();
         }
+  
+        return cleanup;
       };
     
       listenForChanges();
@@ -138,12 +146,8 @@ export default function GoalsContent({ periodToShow }) {
 
     return () => {
       isMounted = false;
-    };
-  }, [app, periodToShow]);
-  
-  // useEffect(() => {
-  //   console.log("userGoals: ", userGoals);
-  // }, [userGoals]);
+    }
+  }, [app, periodToShowRef]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -153,23 +157,16 @@ export default function GoalsContent({ periodToShow }) {
   }, [app]);
 
   function goalSetFunction(metric) {
-    const result =
-      userGoals.length > 0
-        ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
-          .length > 0
-          ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
-            .target[metric]
-            ? userGoals.filter(
-              (eachGoal) => eachGoal.period === periodToShow
-            )[0].target[metric]
-            : 0
-          : 0
-        : 0;
+    const filteredByPeriod = userGoals.filter((goal) => goal.period === periodToShow);
 
-    if (result === 0) {
-      return null;
+    switch(metric) {
+    case "steps":
+      return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.steps : null;
+    case "distance":
+      return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.distance : null;
+    case "calories":
+      return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.calories : null;
     }
-    return result;
   }
   function goalName() {
     const result =
