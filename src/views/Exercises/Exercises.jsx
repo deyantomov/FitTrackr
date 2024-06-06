@@ -38,6 +38,7 @@ const Exercises = () => {
   const [filter, setFilter] = useState("all-exercises");
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -84,19 +85,9 @@ const Exercises = () => {
     }
   };
 
-  const handleUpdateExercise = async (id) => {
+  const handleUpdateExercise = async (updatedExercise) => {
     try {
-      const exercise = {
-        id,
-        title: "Test",
-        description: "Test update exercise",
-        level: "pro",
-        duration: 19,
-        isPrivate: false,
-      };
-
-      const result = await updateExercise(app, exercise);
-
+      const result = await updateExercise(app, updatedExercise);
       console.log(result);
     } catch (err) {
       console.error(err);
@@ -192,6 +183,16 @@ const Exercises = () => {
     setIsModalOpen(false);
   };
 
+  const openUpdateModal = (exercise) => {
+    setSelectedExercise(exercise);
+    setIsUpdateModalOpen(true);
+  };
+
+  const closeUpdateModal = () => {
+    setSelectedExercise(null);
+    setIsUpdateModalOpen(false);
+  };
+
   const filteredExercises = exercises.filter((exercise) => {
     if (exercise) {
       const matchesSearchTerm =
@@ -223,17 +224,19 @@ const Exercises = () => {
 
   return (
     <div className="w-full h-full p-12">
-      <div className="w-1/2 mx-auto mb-6">
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="select select-bordered w-full"
-        >
-          <option value="all-exercises">All Exercises</option>
-          <option value="my-exercises">My Exercises</option>
-          <option value="liked-exercises">Liked Exercises</option>
-        </select>
-      </div>
+      {app.currentUser && (
+        <div className="w-1/2 mx-auto mb-6">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="select select-bordered w-full"
+          >
+            <option value="all-exercises">All Exercises</option>
+            <option value="my-exercises">My Exercises</option>
+            <option value="liked-exercises">Liked Exercises</option>
+          </select>
+        </div>
+      )}
       <div className="w-1/2 mx-auto mb-6">
         <SearchBar onSearch={handleSearch} />
       </div>
@@ -263,7 +266,7 @@ const Exercises = () => {
                       <span className="ml-4 flex">
                         <PencilIcon
                           className="h-6 w-6 text-blue-500 hover:text-blue-700 transform transition-all duration-200 ease-in-out hover:scale-125"
-                          onClick={() => handleUpdateExercise(exercise["_id"])}
+                          onClick={() => openUpdateModal(exercise)}
                         />
                         <TrashIcon
                           className="h-6 w-6 text-red-500 hover:text-red-700 transform transition-all duration-200 ease-in-out hover:scale-125 ml-2"
@@ -364,6 +367,12 @@ const Exercises = () => {
         exercise={selectedExercise}
         isOpen={isModalOpen}
         onClose={closeModal}
+      />
+      <UpdateExerciseModal
+        exercise={selectedExercise}
+        isOpen={isUpdateModalOpen}
+        onClose={closeUpdateModal}
+        onUpdate={handleUpdateExercise}
       />
     </div>
   );
