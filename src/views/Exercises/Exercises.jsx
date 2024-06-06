@@ -18,6 +18,7 @@ import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useApp } from "../../hooks/useApp";
 import ExerciseModal from "./ExercisesModal";
+import UpdateExerciseModal from "./ExercisesUpdateModal";
 
 const {
   getAllExercises,
