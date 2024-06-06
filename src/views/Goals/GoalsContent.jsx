@@ -93,7 +93,7 @@ export default function GoalsContent({ periodToShow }) {
 
       console.log(
         "userGoals filtered",
-        userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
+        userGoals.filter((eachGoal) => eachGoal.period === periodToShowRef.current)
       );
     };
 
@@ -105,7 +105,7 @@ export default function GoalsContent({ periodToShow }) {
     getGoals();
 
     // deleteGoal();
-  }, [periodToShow]);
+  }, [periodToShowRef]);
 
   useEffect(() => {
     let isMounted = true;
@@ -146,7 +146,7 @@ export default function GoalsContent({ periodToShow }) {
 
     return () => {
       isMounted = false;
-    }
+    };
   }, [app, periodToShowRef]);
 
   useEffect(() => {
@@ -157,7 +157,7 @@ export default function GoalsContent({ periodToShow }) {
   }, [app]);
 
   function goalSetFunction(metric) {
-    const filteredByPeriod = userGoals.filter((goal) => goal.period === periodToShow);
+    const filteredByPeriod = userGoals.filter((goal) => goal.period === periodToShowRef.current);
 
     switch(metric) {
     case "steps":
@@ -171,9 +171,9 @@ export default function GoalsContent({ periodToShow }) {
   function goalName() {
     const result =
       userGoals.length > 0
-        ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)
+        ? userGoals.filter((eachGoal) => eachGoal.period === periodToShowRef.current)
           .length > 0
-          ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
+          ? userGoals.filter((eachGoal) => eachGoal.period === periodToShowRef.current)[0]
             .title
           : "No goal set for this time period"
         : "No goal set for this time period";
@@ -184,7 +184,7 @@ export default function GoalsContent({ periodToShow }) {
   function currentProgressFunction(metric) {
     const result =
       Object.keys(currentUser).length > 0
-        ? currentUser[metric][periodToShow]
+        ? currentUser[metric][periodToShowRef.current]
         : 0;
     return result;
   }
