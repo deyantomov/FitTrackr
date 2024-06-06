@@ -78,13 +78,21 @@ export default function Navbar({ toggleDrawer }) {
           .db("sample_data")
           .collection("profile_pics");
 
-        const changeStreamPics = picCollection.watch();
+        const pipeline = [
+          {
+            $match: {
+              "fullDocument.userId": app.currentUser.id,
+              operationType: { $in: ["insert", "update", "replace", "delete"] }
+            }
+          }
+        ];
+    
+        const changeStreamPics = picCollection.watch(pipeline);
 
         const cleanup = () => {
           changeStreamPics.close();
         };
 
-        // Listen for changes
         try {
           for await (const change of changeStreamPics) {
             switch (change.operationType) {
@@ -105,15 +113,14 @@ export default function Navbar({ toggleDrawer }) {
               setProfilePic(null);
               break;
             default:
-              console.log("Unhandled change event:", change);
+              throw new Error("Unhandled change event:", change);
             }
           }
         } catch (err) {
           console.error("Error listening for changes:", err);
+        } finally {
+          cleanup();
         }
-
-        //  clean up;
-        return cleanup;
       };
 
       const initializeNotificationCount = async () => {
@@ -140,8 +147,7 @@ export default function Navbar({ toggleDrawer }) {
         const cleanup = () => {
           changeStreamUsers.close();
         };
-
-        // Listen for changes
+        
         try {
           for await (const change of changeStreamUsers) {
             switch (change.operationType) {
@@ -150,6 +156,7 @@ export default function Navbar({ toggleDrawer }) {
             case "replace":
               if (app.currentUser) {
                 const user = await getUserById(app.currentUser.id);
+
                 if (user && user.notifications) {
                   const notificationCount = Object
                     .values(user.notifications)
@@ -158,17 +165,20 @@ export default function Navbar({ toggleDrawer }) {
                   setNotificationCount(notificationCount);
                 }
               }
+
+              break;
+            case "delete":
+              setNotificationCount(prev => prev - 1);
               break;
             default:
-              console.log("Unhandled change event:", change);
+              throw new Error("Unhandled change event:", change);
             }
           }
         } catch (err) {
-          console.error("Error listening for changes:", err);
+          console.error(err);
+        } finally {
+          cleanup();
         }
-
-        //  clean up;
-        return cleanup;
       };
 
       listenForPicChanges();

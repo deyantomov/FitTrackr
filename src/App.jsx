@@ -97,9 +97,11 @@ function App() {
       <Route
         path="/goals"
         element={
-          <Sidebar>
-            <Goals />
-          </Sidebar>
+          <Authenticated>
+            <Sidebar>
+              <Goals />
+            </Sidebar>
+          </Authenticated>
         }
       />
       <Route

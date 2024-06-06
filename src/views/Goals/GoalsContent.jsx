@@ -102,32 +102,42 @@ export default function GoalsContent({ periodToShow }) {
   }, [periodToShow]);
 
   useEffect(() => {
-    const listenForChanges = async () => {
-      const changeStream = app.currentUser.mongoClient("mongodb-atlas")
-        .db("sample_data")
-        .collection("goals")
-        .watch();
-      
-      try {
-        for await (const change of changeStream) {
-          if (!change.fullDocument) {
-            continue; 
-          }
+    let isMounted = true;
+    
+    if (isMounted) {
+      const listenForChanges = async () => {
+        const collection = app.currentUser.mongoClient("mongodb-atlas")
+          .db("sample_data")
+          .collection("goals");
+          
+        const changeStream = collection.watch();
+        
+        const cleanup = () => {
+          changeStream.close();
+        };
 
-          if (change.fullDocument.period === periodToShow) {
-            setUserGoals([...userGoals, change.fullDocument]);
+        try {
+          for await (const change of changeStream) {
+            if (!change.fullDocument) {
+              continue; 
+            }
+  
+            if (change.fullDocument.period === periodToShow) {
+              setUserGoals([...userGoals, change.fullDocument]);
+            }
           }
+        } catch (err) {
+          console.error("Error listening to change stream:", err);
+        } finally {
+          cleanup();
         }
-      } catch (err) {
-        console.error("Error listening to change stream:", err);
-      }
-    };
-  
-    listenForChanges();
-  
-    // Cleanup function to close the change stream on component unmount
+      };
+    
+      listenForChanges();
+    }
+
     return () => {
-      console.log("Closing change stream");
+      isMounted = false;
     };
   }, [app, periodToShow]);
   

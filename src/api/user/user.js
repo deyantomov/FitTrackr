@@ -108,6 +108,7 @@ export const updateUserProfile = async (
   password
 ) => {
   const url = buildUrl(endpoints.updateProfile);
+  const imgUpdateUrl = buildUrl(endpoints.updateProfilePic);
   const user = await login(app, email, password);
 
   if (user) {
@@ -116,7 +117,7 @@ export const updateUserProfile = async (
 
     if (updatedFields.profilePic) {
       //  update image
-      const updateImgRes = await fetch(`${url}`, {
+      const updateImgRes = await fetch(`${imgUpdateUrl}?uid=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
