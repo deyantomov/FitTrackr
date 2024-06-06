@@ -1,7 +1,9 @@
 import { Card, Button, Modal, Input } from "react-daisyui";
 import { useRef, useCallback, useState } from "react";
 import { useApp } from "../../../hooks/useApp";
-import { updateSteps } from "../../../api/api";
+import api from "../../../api/api";
+
+const { updateSteps } = api;
 
 export default function StepsActivity() {
   const ref = useRef();

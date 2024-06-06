@@ -3,7 +3,7 @@ import ProfilePic from "../ProfilePic/ProfilePic";
 import AuthButtons from "../AuthButtons/AuthButtons";
 import { useApp } from "../../hooks/useApp";
 import { useEffect, useState, useRef } from "react";
-import { getProfilePic, getUserById } from "../../api/api";
+import api from "../../api/api";
 import { Link } from "react-router-dom";
 import { Dropdown, Input, Indicator, Badge } from "react-daisyui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -14,6 +14,8 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
+
+const { getProfilePic, getUserById } = api;
 
 /**
  * @param {{toggleDrawer: function}} props

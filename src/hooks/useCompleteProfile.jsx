@@ -1,7 +1,8 @@
-import { getUserById } from "../api/api";
+import api from "../api/api";
 import { useState, useEffect } from "react";
 import { useApp } from "../hooks/useApp";
 
+const { getUserById } = api;
 
 export function useCompleteProfile() {
   const app = useApp();

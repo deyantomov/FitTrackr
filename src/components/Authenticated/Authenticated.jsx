@@ -1,9 +1,11 @@
 import { useApp } from "../../hooks/useApp";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getUserById } from "../../api/api";
+import api from "../../api/api";
 import { Loading } from "react-daisyui";
 import PropTypes from "prop-types";
+
+const { getUserById } = api;
 
 /**
  * @param {children: React.FC | Array<React.FC>} props

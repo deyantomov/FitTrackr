@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { getUserById } from "../api/api";
+import api from "../api/api";
+const { getUserById } = api;
 
 export default function useTrackProgress(app, trackParam, triggerFetch) {
   const [progress, setProgress] = useState({});

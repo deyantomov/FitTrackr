@@ -1,4 +1,3 @@
-// import { createUser } from "../api/api";
 import { useApp } from "../../hooks/useApp";
 import { register } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";

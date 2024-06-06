@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
+import api from "../../api/api";
+import { Card, Loading, Button } from "react-daisyui";
+import { useApp } from "../../hooks/useApp";
+import ProfilePic from "../../components/ProfilePic/ProfilePic";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+
+const {
   getAllUsers,
   getAllExercises,
   getProfilePic,
   getExerciseImage,
   sendFriendRequest,
   getUserById,
-} from "../../api/api";
-import { Card, Loading, Button } from "react-daisyui";
-import { useApp } from "../../hooks/useApp";
-import ProfilePic from "../../components/ProfilePic/ProfilePic";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+} = api;
 
 export default function SearchResults() {
   const app = useApp();

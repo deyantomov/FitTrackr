@@ -2,12 +2,14 @@ import { Card, Button, Modal, Input } from "react-daisyui";
 import { useRef, useCallback, useState, useEffect } from "react";
 import { useApp } from "../../../../hooks/useApp";
 import useTrackProgress from "../../../../hooks/useTrackProgress";
-import {
+import api from "../../../../api/api";
+import PropTypes from "prop-types";
+
+const {
   updateCalories,
   updateDistance,
   updateSteps,
-} from "../../../../api/api";
-import PropTypes from "prop-types";
+} = api;
 
 /**
  * @param {{trackParam: string, imgName: string, title: string}} props

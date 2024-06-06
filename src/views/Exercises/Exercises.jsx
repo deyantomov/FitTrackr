@@ -1,11 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 import { useEffect, useState } from "react";
-import {
-  getAllExercises,
-  getExerciseImage,
-  removeExercise,
-  updateExercise,
-} from "../../api/api";
+import api from "../../api/api";
 import { Card, Button, Loading } from "react-daisyui";
 import {
   FireIcon,
@@ -21,10 +16,16 @@ import { ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartOutlineIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { likeExercise } from "../../api/api";
 import { useApp } from "../../hooks/useApp";
 import ExerciseModal from "./ExercisesModal";
-import { Buffer } from "buffer";
+
+const {
+  getAllExercises,
+  getExerciseImage,
+  removeExercise,
+  updateExercise,
+  likeExercise,
+} = api;
 
 const Exercises = () => {
   const app = useApp();

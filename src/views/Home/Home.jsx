@@ -5,13 +5,15 @@ import CompleteProfile from "./CompleteProfile/CompleteProfile";
 import ConnToFb from "./ConnToFb/ConnToFb";
 import AddFirstExercise from "./AddFirstExercise/AddFirstExercise";
 import { useEffect, useState } from "react";
-import { getUserById } from "../../api/api";
+import api from "../../api/api";
 import { useCompleteProfile } from "../../hooks/useCompleteProfile";
 import Progress from "./Progress/Progress";
 import { Link } from "react-router-dom";
 import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../../hooks/useToast";
+
+const { getUserById } = api;
 
 export default function Home() {
   const app = useApp();

@@ -1,13 +1,15 @@
 import { useApp } from "../../hooks/useApp";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
+import api from "../../api/api";
+import { Loading, Table, Button } from "react-daisyui";
+
+const {
   getExercisesByUserId,
   getUserById,
   acceptFriendRequest,
   markNotificationAsRead,
-} from "../../api/api";
-import { Loading, Table, Button } from "react-daisyui";
+} = api;
 
 export default function Notifications() {
   const app = useApp();

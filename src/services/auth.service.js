@@ -1,6 +1,6 @@
 import * as Realm from "realm-web";
-import { createUser, getUserByEmail } from "../api/api";
-import { setUserOnlineStatus } from "../api/api";
+import api from "../api/api"
+const { setUserOnlineStatus, getUserByEmail, createUser } = api;
 
 /**
  * Logs in a user using the provided email and password
@@ -93,7 +93,6 @@ export const register = async (
         handle,
         firstName,
         lastName,
-        role: 'user',
       });
 
       setUserOnlineStatus(user, user.id, true);

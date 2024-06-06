@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createNewExercise } from "../../api/api";
+import api from "../../api/api";
 import { useApp } from "../../hooks/useApp";
 import {
   LockClosedIcon,
@@ -9,6 +9,8 @@ import {
   DocumentTextIcon,
 } from "@heroicons/react/16/solid";
 import { imageToBase64 } from "../../common/utils";
+
+const { createNewExercise } = api;
 
 const NewExerciseForm = () => {
   const app = useApp();

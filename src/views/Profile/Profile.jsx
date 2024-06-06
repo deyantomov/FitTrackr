@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getProfilePic, getUserById, updateUserProfile } from "../../api/api";
+import api from "../../api/api";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useApp } from "../../hooks/useApp";
@@ -8,6 +8,8 @@ import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { imageToBase64 } from "../../common/utils";
 import { Card, Button, Input, Badge, Modal, Loading } from "react-daisyui";
 import { PlusIcon, PhoneIcon } from "@heroicons/react/24/outline";
+
+const { getProfilePic, getUserById, updateUserProfile } = api;
 
 export default function Profile() {
   const app = useApp();

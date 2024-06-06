@@ -1,13 +1,14 @@
 import GoalsCard from "../../components/Goals/GoalsCard";
 import { Card, Button, Modal, Input } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
-import { createNewGoal, getAllGoals } from "../../api/api";
+import api from "../../api/api";
 import { useEffect, useState } from "react";
 import {
   ChevronDoubleRightIcon,
   ArrowTrendingUpIcon,
 } from "@heroicons/react/16/solid";
-import { getUserById, removeGoal } from "../../api/api";
+
+const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
 
 export default function Goals() {
   const app = useApp();
