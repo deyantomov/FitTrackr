@@ -3,10 +3,6 @@ import { Card, Button, Modal, Input } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
 import api from "../../api/api";
 import { useEffect, useState } from "react";
-import {
-  ChevronDoubleRightIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/16/solid";
 import CreateNewGoal from "./CreateNewGoal";
 
 const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
@@ -125,6 +121,10 @@ export default function GoalsContent({ periodToShow }) {
             : 0
           : 0
         : 0;
+
+    if (result === 0) {
+      return null;
+    }
     return result;
   }
   function goalName() {
@@ -134,8 +134,17 @@ export default function GoalsContent({ periodToShow }) {
             .length > 0
           ? userGoals.filter((eachGoal) => eachGoal.period === periodToShow)[0]
               .title
-          : "no title"
-        : "no title";
+          : "No goal set for this time period"
+        : "No goal set for this time period";
+
+    return result;
+  }
+
+  function currentProgressFunction(metric) {
+    const result =
+      Object.keys(currentUser).length > 0
+        ? currentUser[metric][periodToShow]
+        : 0;
     return result;
   }
 
@@ -154,31 +163,31 @@ export default function GoalsContent({ periodToShow }) {
           gap: "30px",
         }}
       >
-        <GoalsCard
-          key={1}
-          metricTitle="STEPS"
-          currentProgress={
-            Object.keys(currentUser).length > 0 ? currentUser.steps.daily : 0
-          }
-          goalSet={goalSetFunction("steps")}
-          metricString="steps"
-        ></GoalsCard>
-        <GoalsCard
-          metricTitle="DISTANCE"
-          currentProgress={
-            Object.keys(currentUser).length > 0 ? currentUser.distance.daily : 0
-          }
-          goalSet={goalSetFunction("distance")}
-          metricString="meters"
-        ></GoalsCard>
-        <GoalsCard
-          metricTitle="CALORIES"
-          currentProgress={
-            Object.keys(currentUser).length > 0 ? currentUser.calories.daily : 0
-          }
-          goalSet={goalSetFunction("calories")}
-          metricString="calories"
-        ></GoalsCard>
+        {goalSetFunction("steps") && (
+          <GoalsCard
+            key={1}
+            metricTitle="STEPS"
+            currentProgress={currentProgressFunction("steps")}
+            goalSet={goalSetFunction("steps")}
+            metricString="steps"
+          ></GoalsCard>
+        )}
+        {goalSetFunction("steps") && (
+          <GoalsCard
+            metricTitle="DISTANCE"
+            currentProgress={currentProgressFunction("distance")}
+            goalSet={goalSetFunction("distance")}
+            metricString="meters"
+          ></GoalsCard>
+        )}
+        {goalSetFunction("steps") && (
+          <GoalsCard
+            metricTitle="CALORIES"
+            currentProgress={currentProgressFunction("calories")}
+            goalSet={goalSetFunction("calories")}
+            metricString="calories"
+          ></GoalsCard>
+        )}
       </div>
       <Button
         className="btn btn-warning"

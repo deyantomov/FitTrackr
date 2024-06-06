@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TrophyIcon } from "@heroicons/react/24/outline";
 import GoalsContent from "./GoalsContent";
 
 export default function Goals() {
@@ -19,3 +20,4 @@ export default function Goals() {
     </div>
   );
 }
+

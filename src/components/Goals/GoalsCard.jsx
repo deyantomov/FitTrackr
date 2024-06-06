@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { TrophyIcon } from "@heroicons/react/16/solid";
 
 export default function GoalsCard({
   metricTitle,
@@ -16,9 +17,8 @@ export default function GoalsCard({
       if (percentage < 100) {
         setPercentage(percentage + 1);
       }
-      const newProgress = ((currentProgress * 100) / goalSet) || 0;
+      const newProgress = (currentProgress * 100) / goalSet || 0;
       setProgress(newProgress);
-      console.log("progress", progress);
     }, 10);
   }, [percentage, currentProgress, goalSet]);
 
@@ -43,7 +43,11 @@ export default function GoalsCard({
             <div style={{ width: 120, margin: 10 }}>
               <CircularProgressbar
                 value={progress.toFixed(2)}
-                text={`${progress.toFixed(2)}%`}
+                text={
+                  progress >= 100
+                    ? `${(100.0).toFixed(2)}%`
+                    : `${progress.toFixed(2)}%`
+                }
                 styles={buildStyles({
                   pathColor: `#f7c000`,
                   textColor: "#f7c000",
