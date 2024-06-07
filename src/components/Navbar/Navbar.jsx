@@ -274,10 +274,11 @@ export default function Navbar({ toggleDrawer }) {
               </Dropdown.Toggle>
             </div>
             {isOpen && (
-              <Dropdown.Menu className="w-52 mt-4 absolute right-2 shadow-xl z-50">
+              <Dropdown.Menu className="w-52 mt-2 ms-10 absolute right-0 shadow-xl z-50">
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                   <h2 className="text-xl cursor-default">{handle}</h2>
                 </Dropdown.Item>
+                <hr className="border-1 border-warning my-2" />
                 <Link to={`/profile/${uid}`} as="div">
                   <Dropdown.Item>
                     <UserCircleIcon className="h-5 w-5 mr-2" />

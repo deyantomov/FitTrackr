@@ -14,9 +14,9 @@ export default function CustomToast({ type, message, onClose }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setOpacityLevel(prev => (prev > 0 ? prev - 1 : 0));
-    }, 60);
+    }, 40);
 
-    const timeout = setTimeout(onClose, 6000);
+    const timeout = setTimeout(onClose, 4000);
 
     return () => {
       clearInterval(interval);
