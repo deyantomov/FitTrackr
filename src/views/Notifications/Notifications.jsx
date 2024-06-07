@@ -179,7 +179,7 @@ export default function Notifications() {
                 </Table.Row>
               ))
             ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-base-100 p-6 py-12 text-black">
+              <div className="flex w-full text-center justify-center align-center items-center bg-base-200 p-6 py-12">
                 Nothing to show here :\
               </div>
             )}

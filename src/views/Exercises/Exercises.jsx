@@ -19,6 +19,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import { useApp } from "../../hooks/useApp";
 import ExerciseModal from "./ExercisesModal";
 import UpdateExerciseModal from "./ExercisesUpdateModal";
+import { useToast } from "../../hooks/useToast";
 
 const {
   getAllExercises,
@@ -26,6 +27,7 @@ const {
   removeExercise,
   updateExercise,
   likeExercise,
+  getExerciseById
 } = api;
 
 const Exercises = () => {
@@ -40,6 +42,8 @@ const Exercises = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+  const { setToast } = useToast(); 
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -78,11 +82,15 @@ const Exercises = () => {
     try {
       const result = await Promise.all(await likeExercise(app, id, owner));
 
-      console.log(result);
+      const exercise = (await getExerciseById(app, id))["exercise"];
+
+      if (exercise.likedBy && exercise.likedBy.includes(app.currentUser.id)) {
+        setToast({ type: "success", message: "Exercise liked successfully" });
+      }
 
       return result;
     } catch (err) {
-      console.error(err);
+      setToast({ type: "success", message: "Failed to like exercise" });
     }
   };
 
@@ -105,73 +113,82 @@ const Exercises = () => {
     }
   };
 
-  //  Create a realtime listener for the exercises collection (to track likes in real-time)
+  //  Realtime listener for the exercises collection
   useEffect(() => {
-    const listenForChanges = async () => {
-      const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-      const collection = mongoClient.db("sample_data").collection("exercises");
-      const changeStream = collection.watch();
+    let isMounted = true;
+    
+    if (isMounted) {
+      const listenForChanges = async () => {
+        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+        const collection = mongoClient.db("sample_data").collection("exercises");
+        const changeStream = collection.watch();
+  
+        const cleanup = () => {
+          changeStream.close();
+        };
+  
+        //  Listen for changes
+        try {
+          for await (const change of changeStream) {
+            switch (change.operationType) {
+            case "insert":
+              setExercises((prevExercises) => [
+                ...prevExercises,
+                change.fullDocument,
+              ]);
 
-      const cleanup = () => {
-        changeStream.close();
-      };
-
-      // Listen for changes
-      try {
-        for await (const change of changeStream) {
-          switch (change.operationType) {
-          case "insert":
-            setExercises((prevExercises) => [
-              ...prevExercises,
-              change.fullDocument,
-            ]);
-            break;
-          case "update":
-          case "replace":
-            setExercises((prevExercises) => {
-              const updatedExercises = [...prevExercises];
-              const exerciseId = change.fullDocument["_id"].toHexString();
-              const index = updatedExercises.findIndex((exercise) => {
-                if (exercise["_id"]) {
-                  return exercise["_id"].toString() === exerciseId;
-                } else {
-                  return false;
+              break;
+            case "update":
+            case "replace":
+              setExercises((prevExercises) => {
+                const updatedExercises = [...prevExercises];
+                const exerciseId = change.fullDocument["_id"].toHexString();
+                const index = updatedExercises.findIndex((exercise) => {
+                  if (exercise["_id"]) {
+                    return exercise["_id"].toString() === exerciseId;
+                  } else {
+                    return false;
+                  }
+                });
+  
+                if (index !== -1) {
+                  updatedExercises[index] = {
+                    ...change.fullDocument,
+                    _id: exerciseId,
+                    owner: change.fullDocument.owner.toHexString(),
+                    img: updatedExercises[index].img,
+                  };
                 }
+
+                return updatedExercises;
               });
-              
-              console.log(index);
+              break;
+            case "delete":
+              setExercises((prevExercises) =>
+                prevExercises.filter(
+                  (exercise) => exercise._id !== change.documentKey._id
+                )
+              );
 
-              if (index !== -1) {
-                updatedExercises[index] = {
-                  ...change.fullDocument,
-                  _id: exerciseId,
-                  owner: change.fullDocument.owner.toHexString(),
-                  img: updatedExercises[index].img,
-                };
-              }
-              return updatedExercises;
-            });
-            break;
-          case "delete":
-            setExercises((prevExercises) =>
-              prevExercises.filter(
-                (exercise) => exercise._id !== change.documentKey._id
-              )
-            );
-            break;
-          default:
-            console.log("Unhandled change event:", change);
+              break;
+            default:
+              throw new Error("Unhandled change event");
+            }
           }
+        } catch (err) {
+          setToast({ type: "error", message: err.message });
+        } finally {
+          cleanup();
         }
-      } catch (err) {
-        console.error("Error listening for changes:", err);
-      }
+      };
+  
+      listenForChanges();
+    }
+    
 
-      // //  clean up;
-      // return cleanup;
+    return () => {
+      isMounted = false;
     };
-
-    listenForChanges();
   });
 
   const openModal = (exercise) => {
@@ -241,7 +258,7 @@ const Exercises = () => {
           </select>
         </div>
       )}
-      <div className="w-1/2 mx-auto mb-6">
+      <div className="w-1/2 mx-auto mb-12">
         <SearchBar onSearch={handleSearch} />
       </div>
       <div className="grid grid-cols-1 gap-4 p-0 pb-12 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">

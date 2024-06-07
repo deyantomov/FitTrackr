@@ -15,6 +15,7 @@ import {
   updateExercise,
   removeExercise,
   getAllExercises,
+  getExerciseById,
   getExercisesByUserId,
   getExercisesByDifficulty,
   sortExercisesByRating,
@@ -70,4 +71,5 @@ export default {
   acceptFriendRequest,
   markNotificationAsRead,
   getFriendList,
+  getExerciseById
 };
