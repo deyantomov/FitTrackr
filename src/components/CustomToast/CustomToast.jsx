@@ -37,7 +37,10 @@ export default function CustomToast({ type, message, onClose }) {
             className="text-red-500"
           />
         ) : (
-          <CheckIcon style={{ maxWidth: "24px" }} />
+          <CheckIcon 
+            style={{ maxWidth: "24px" }}
+            className="text-green-500"
+          />
         )}
         <p className="w-full">{message}</p>
       </div>

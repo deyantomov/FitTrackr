@@ -25,10 +25,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const getUser = async () => {
       if (app.currentUser && app.currentUser.id) {
-        setLoading(true);
         const user = await getUserById(app.currentUser.id);
 
         if (user) {
@@ -43,7 +41,7 @@ export default function Home() {
     };
 
     getUser();
-  }, [app.currentUser]);
+  }, [app.currentUser, progressHook, setToast]);
 
   useEffect(() => {
     setLoading(true);
@@ -66,7 +64,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [progress, progressHook]);
+  }, [progress, progressHook, setToast]);
 
   if (loading) {
     return (
@@ -132,7 +130,7 @@ export default function Home() {
             <h2 className="mt-8 lg:mt-12 mb-2 lg:mb-6 font-light text-6xl lg:text-7xl">
               Features
             </h2>
-            <div className="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-36 w-full my-6">
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-36 w-full mt-6 mb-12">
               <FeatureCard
                 img="exercises.jpg"
                 title="Track your daily activity and exercises"

@@ -80,10 +80,6 @@ export default function Notifications() {
     return user.handle;
   }
 
-  useEffect(() => {
-    console.log(notifications)
-  }, [notifications]);
-
   const handleRemoveLikeNotification = async (postId, from) => {
     setLoading(true);
     const response = await markNotificationAsRead(app, postId, from);
@@ -131,12 +127,12 @@ export default function Notifications() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full justify-start align-center items-center">
-      <h2 className="text-3xl md:text-4xl lg:text-5xl my-12">Likes</h2>
+    <div className="flex flex-col w-full h-full justify-start align-center items-center py-12">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl mb-12">Likes</h2>
       <div className="overflow-auto w-full flex justify-center align-center">
         <Table className="text-xs md:text-xl lg:text-2xl w-full">
           {notifications.likes && notifications.likes.length > 0 && (
-            <Table.Head className="invisible md:visible odd:bg-gray-200">
+            <Table.Head className="invisible md:visible odd:bg-base-200">
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
                 User Handle
               </span>
@@ -157,20 +153,20 @@ export default function Notifications() {
               notifications.likes.map((like, index) => (
                 <Table.Row
                   key={index}
-                  className="flex flex-col sm:table-row even:bg-gray-200 justify-center align-center items-center w-full"
+                  className="flex flex-col sm:table-row even:bg-base-200 justify-center align-center items-center w-full"
                 >
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                     {handles[like.from]}
                   </span>
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                     {exercises && exercises.length > 0 && getExercise(notifications.likes[index].postId) && getExercise(notifications.likes[index].postId)["title"]}
                   </span>
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                     {new Date(
                       notifications.likes[index].likedOn
                     ).toLocaleDateString("en-GB")}
                   </span>
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                     <Button
                       className="btn-ghost text-xs md:text-xl"
                       onClick={() =>
@@ -183,7 +179,7 @@ export default function Notifications() {
                 </Table.Row>
               ))
             ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-gray-100 p-6 py-12 text-black">
+              <div className="flex w-full text-center justify-center align-center items-center bg-base-100 p-6 py-12 text-black">
                 Nothing to show here :\
               </div>
             )}
@@ -194,7 +190,7 @@ export default function Notifications() {
       <div className="overflow-auto w-full flex justify-center align-center">
         <Table className="text-xs md:text-xl lg:text-2xl w-full">
           {notifications.friendRequests && notifications.friendRequests.length > 0 && (
-            <Table.Head className="invisible md:visible odd:bg-gray-200">
+            <Table.Head className="invisible md:visible odd:bg-base-200">
               <span style={{ padding: "12px 24px" }}>User Handle</span>
               <span style={{ padding: "12px 24px" }}>Date</span>
               <span style={{ padding: "12px 24px" }}>Action</span>
@@ -204,7 +200,7 @@ export default function Notifications() {
           <Table.Body className="w-full">
             {notifications.friendRequests && notifications.friendRequests.length > 0 ? (
               notifications.friendRequests.map((request, index) => (
-                <Table.Row key={index} className="even:bg-gray-200">
+                <Table.Row key={index} className="even:bg-base-200">
                   <span style={{ padding: "12px 24px" }}>
                     {handles[request.from]}
                   </span>
@@ -222,7 +218,7 @@ export default function Notifications() {
                 </Table.Row>
               ))
             ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-gray-100 p-6 py-12 text-black">
+              <div className="flex w-full text-center justify-center align-center items-center bg-base-200 p-6 py-12">
                 Nothing to show here :\
               </div>
             )}

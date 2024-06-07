@@ -355,7 +355,7 @@ const Exercises = () => {
             <p>No exercises found.</p>
           </div>
         )}
-        <div className="flex w-full justify-center align-center items-center col-span-full gap-4 mb-12">
+        <div className="flex w-full justify-center align-center items-center col-span-full gap-4 pb-12 mb-12">
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}

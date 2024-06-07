@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 
-/**
- * @param {uid: string} props
- * @returns {React.FC}
- */
-export default function AddFirstExercise({ uid }) {
+export default function AddFirstExercise() {
   return (
     <div
       className="card w-96 h-full p-6 flex flex-col items-center justify-center rounded-md"
@@ -23,7 +18,7 @@ export default function AddFirstExercise({ uid }) {
         <h2 className="text-4xl text-black mt-2 mb-4 rounded-lg text-center">
           Add your first exercise
         </h2>
-        <Link to={`/new-exercise`}>
+        <Link to={"/new-exercise"}>
           <button className="btn btn-md btn-warning text-black mt-12">
             Add an exercise
           </button>
@@ -32,7 +27,3 @@ export default function AddFirstExercise({ uid }) {
     </div>
   );
 }
-
-AddFirstExercise.propTypes = {
-  uid: PropTypes.string.isRequired,
-};
