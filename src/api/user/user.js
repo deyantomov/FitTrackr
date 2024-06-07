@@ -203,3 +203,23 @@ export const setUserOnlineStatus = async (user, id, isOnline) => {
 
   return response.json();
 };
+
+export const getFriendList = async (app) => {
+  const url = buildUrl(endpoints.friendList);
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${url}?id=${currentUser.id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  }
+};

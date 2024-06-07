@@ -7,6 +7,7 @@ import {
   updateUserProfile,
   getProfilePic,
   setUserOnlineStatus,
+  getFriendList
 } from "./user/user";
 
 import {
@@ -68,4 +69,5 @@ export default {
   sendFriendRequest,
   acceptFriendRequest,
   markNotificationAsRead,
+  getFriendList,
 };

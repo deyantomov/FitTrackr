@@ -183,7 +183,7 @@ export default function Notifications() {
                 </Table.Row>
               ))
             ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-gray-100 p-6 py-12">
+              <div className="flex w-full text-center justify-center align-center items-center bg-gray-100 p-6 py-12 text-black">
                 Nothing to show here :\
               </div>
             )}
@@ -222,7 +222,7 @@ export default function Notifications() {
                 </Table.Row>
               ))
             ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-gray-100 p-6 py-12">
+              <div className="flex w-full text-center justify-center align-center items-center bg-gray-100 p-6 py-12 text-black">
                 Nothing to show here :\
               </div>
             )}

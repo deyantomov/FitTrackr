@@ -6,7 +6,5 @@ export const endpoints = {
   exercise: "/exercises",
   goal: "/goals",
   notifications: "/notifications",
-  sendFriendRequest: "/users/send_friend_request",
-  acceptFriendRequest: "/users/accept_friend_request",
-  markNotificationAsRead: "/notifications/mark_as_read"
+  friendList: "/friendlist",
 };

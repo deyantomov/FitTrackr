@@ -1,22 +1,16 @@
-import { useState, useEffect } from 'react';
+import PropTypes from "prop-types";
 
-export default function SwitchTheme() {
-  const [theme, setTheme] = useState("bumblebee");
-
-  const toggleTheme = () => {
-    setTheme(theme === "bumblebee" ? "night" : "bumblebee");
-  }
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-  
+/**
+ * @param {{toggle: () => void, theme: string}} props
+ * @returns {JSX.Element}
+ */
+export default function SwitchTheme({ theme, toggle }) {  
   return (
     <label className="cursor-pointer grid place-items-center">
       <input
         type="checkbox"
-        value={theme}
-        onChange={toggleTheme}
+        checked={theme === "night"}
+        onChange={toggle}
         className="toggle theme-controller bg-base-content row-start-1 col-start-1 col-span-2"
       />
       <svg
@@ -51,3 +45,8 @@ export default function SwitchTheme() {
     </label>
   );
 }
+
+SwitchTheme.propTypes = {
+  toggle: PropTypes.func.isRequired,
+  theme: PropTypes.string.isRequired,
+};

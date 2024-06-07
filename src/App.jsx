@@ -1,5 +1,6 @@
 import { AppProvider } from "./providers/AppProvider";
 import { Routes, Route, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Sidebar from "./hoc/Sidebar";
 import Home from "./views/Home/Home";
 import Login from "./views/Login/Login";
@@ -30,13 +31,22 @@ export default function ProvidedApp() {
 
 function App() {
   const location = useLocation();
+  const [theme, setTheme] = useState("bumblebee");
+
+  const toggleTheme = () => {
+    setTheme(theme === "bumblebee" ? "night" : "bumblebee");
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <Home />
           </Sidebar>
         }
@@ -45,7 +55,7 @@ function App() {
         path="/home"
         index
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <Home />
           </Sidebar>
         }
@@ -53,7 +63,7 @@ function App() {
       <Route
         path="/login"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <Login />
           </Sidebar>
         }
@@ -61,7 +71,7 @@ function App() {
       <Route
         path="/signup"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <SignUp />
           </Sidebar>
         }
@@ -69,7 +79,7 @@ function App() {
       <Route
         path="/profile/:id"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <Profile />
           </Sidebar>
         }
@@ -78,7 +88,7 @@ function App() {
         path="/notifications/:id"
         element={
           <Authenticated>
-            <Sidebar>
+            <Sidebar theme={theme} toggleTheme={toggleTheme}>
               <Notifications />
             </Sidebar>
           </Authenticated>
@@ -88,7 +98,7 @@ function App() {
         path="/new-exercise"
         element={
           <Authenticated>
-            <Sidebar>
+            <Sidebar theme={theme} toggleTheme={toggleTheme}>
               <NewExerciseForm />
             </Sidebar>
           </Authenticated>
@@ -98,7 +108,7 @@ function App() {
         path="/goals"
         element={
           <Authenticated>
-            <Sidebar>
+            <Sidebar theme={theme} toggleTheme={toggleTheme}>
               <Goals />
             </Sidebar>
           </Authenticated>
@@ -107,7 +117,7 @@ function App() {
       <Route
         path="/exercises"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <Exercises key={location.key} />
           </Sidebar>
         }
@@ -115,7 +125,7 @@ function App() {
       <Route
         path="/search/:query"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <SearchResults />
           </Sidebar>
         }
@@ -123,7 +133,7 @@ function App() {
       <Route
         path="friend-list"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <FriendList />
           </Sidebar>
         }
@@ -131,7 +141,7 @@ function App() {
       <Route
         path="*"
         element={
-          <Sidebar>
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <NotFound />
           </Sidebar>
         }

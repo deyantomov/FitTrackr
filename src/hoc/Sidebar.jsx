@@ -7,7 +7,6 @@ import {
   QuestionMarkCircleIcon,
   PlusIcon,
   TrophyIcon,
-  PresentationChartLineIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
@@ -15,12 +14,13 @@ import { useApp } from "../hooks/useApp";
 import { logout } from "../services/auth.service";
 import FooterNav from "../components/Footer/Footer";
 import SwitchTheme from "./SwitchTheme";
+import PropTypes from "prop-types";
 
 /**
  *
- * @param {{children: JSX.Element | Array<JSX.Element>}} props
+ * @param {{children: JSX.Element | Array<JSX.Element>, toggleTheme: () => void, theme: string}} props
  */
-export default function Sidebar({ children }) {
+export default function Sidebar({ children, toggleTheme, theme }) {
   const app = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -61,7 +61,7 @@ export default function Sidebar({ children }) {
               {/* <img src="logo.png" className="w-16 m-0 p-0" /> */}
               <h2 className="text-5xl font-light ms-2">FitTrackr</h2>
             </Link>
-            <SwitchTheme></SwitchTheme>
+            <SwitchTheme theme={theme} toggle={toggleTheme}></SwitchTheme>
           </div>
           <hr className="border-t-2 border-warning my-4" />
           <Link to="/home">
@@ -122,3 +122,12 @@ export default function Sidebar({ children }) {
     </div>
   );
 }
+
+Sidebar.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element)
+  ]),
+  toggleTheme: PropTypes.func.isRequired,
+  theme: PropTypes.string.isRequired,
+};
