@@ -80,9 +80,36 @@ export default function Notifications() {
     return user.handle;
   }
 
-  const handleRemoveNotification = async (exerciseId, from) => {
+  useEffect(() => {
+    console.log(notifications)
+  }, [notifications]);
+
+  const handleRemoveLikeNotification = async (postId, from) => {
     setLoading(true);
-    const response = await markNotificationAsRead(app, exerciseId, from);
+    const response = await markNotificationAsRead(app, postId, from);
+
+    const updatedLikes = notifications.likes.filter(like => like.postId !== postId || like.from !== from);
+  
+    setNotifications({
+      ...notifications,
+      likes: updatedLikes,
+    });
+  
+    setLoading(false);
+  
+    return response;
+  };
+
+  const handleRemoveRequestNotification = async (from) => {
+    setLoading(true);
+    const response = await acceptFriendRequest(app, from);
+
+    const updatedRequests = notifications.friendRequests.filter(request => request.from !== from);
+  
+    setNotifications({
+      ...notifications,
+      friendRequests: updatedRequests,
+    });
 
     setLoading(false);
 
@@ -107,7 +134,7 @@ export default function Notifications() {
     <div className="flex flex-col w-full h-full justify-start align-center items-center">
       <h2 className="text-3xl md:text-4xl lg:text-5xl my-12">Likes</h2>
       <div className="overflow-auto w-full flex justify-center align-center">
-        <Table className="text-xs md:text-xl lg:text-2xl">
+        <Table className="text-xs md:text-xl lg:text-2xl w-full">
           {notifications.likes && notifications.likes.length > 0 && (
             <Table.Head className="invisible md:visible odd:bg-gray-200">
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
@@ -147,7 +174,7 @@ export default function Notifications() {
                     <Button
                       className="btn-ghost text-xs md:text-xl"
                       onClick={() =>
-                        handleRemoveNotification(like.postId, like.from)
+                        handleRemoveLikeNotification(like.postId, like.from)
                       }
                     >
                       Mark as read
@@ -165,7 +192,7 @@ export default function Notifications() {
       </div>
       <h2 className="text-5xl my-12">Friend requests</h2>
       <div className="overflow-auto w-full flex justify-center align-center">
-        <Table className="text-xs md:text-xl lg:text-2xl">
+        <Table className="text-xs md:text-xl lg:text-2xl w-full">
           {notifications.friendRequests && notifications.friendRequests.length > 0 && (
             <Table.Head className="invisible md:visible odd:bg-gray-200">
               <span style={{ padding: "12px 24px" }}>User Handle</span>
@@ -187,7 +214,7 @@ export default function Notifications() {
                   <span style={{ padding: "12px 24px" }}>
                     <Button
                       className="btn-ghost"
-                      onClick={() => acceptFriendRequest(app, request.from)}
+                      onClick={() => handleRemoveRequestNotification(request.from)}
                     >
                       Accept
                     </Button>
