@@ -1,7 +1,11 @@
+import api from "../../api/api";
 import { useApp } from "../../hooks/useApp";
 import { register } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
+import { checkEmail } from "../../common/utils";
+
+const { getUserByEmail } = api;
 
 export default function SignUp() {
   const app = useApp();
@@ -16,6 +20,28 @@ export default function SignUp() {
     lastName,
   }) => {
     try {
+      const isExistingUser = await getUserByEmail(email);
+
+      if (isExistingUser && isExistingUser["_id"]) {
+        throw new Error("User already registered");
+      }
+
+      if (handle.length < 2 || handle.length > 20) {
+        throw new Error("Username must be 2-20 characters long!");
+      }
+
+      if(firstName.length < 2 || firstName.length > 20) {
+        throw new Error("First name must be 2-20 characters long!");
+      }
+
+      if(lastName.length < 2 || lastName.length > 20) {
+        throw new Error("Last name must be 2-20 characters long!");
+      }
+  
+      if (!email || !checkEmail.test(email)) {
+        throw new Error("Invalid email address!");
+      }
+
       const result = await register(
         app,
         email,

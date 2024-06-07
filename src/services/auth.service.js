@@ -20,7 +20,7 @@ export const login = async (app, email, password) => {
     return user;
   
   } catch (err) {
-    console.error(err.message);
+    throw new Error(err.message);
   }
 };
 
@@ -44,7 +44,7 @@ export const logout = async (app) => {
     }
     
   } catch (err) {
-    console.error(err.message);
+    throw new Error(err.message);
   }
 };
 
@@ -71,20 +71,10 @@ export const register = async (
   navigate
 ) => {
   try {
-    const isExistingUser = await getUserByEmail(email);
-
-    if (isExistingUser && isExistingUser["_id"]) {
-      throw new Error("User already registered");
-    }
-
     await app.emailPasswordAuth.registerUser({ email, password });
 
     const credentials = Realm.Credentials.emailPassword(email, password);
     const user = await app.logIn(credentials);
-
-    if (handle.length < 2 || handle.length > 20) {
-      throw new Error("Username must be 2-20 characters long!");
-    }
 
     if (user) {
       await createUser({
@@ -102,7 +92,7 @@ export const register = async (
       return "Log in failed!";
     }
   } catch (err) {
-    console.error(err.message);
+    // throw new Error(err.message);
     return err.message;
   }
 };
