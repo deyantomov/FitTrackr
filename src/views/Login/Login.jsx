@@ -10,13 +10,13 @@ export default function Login() {
   const navigate = useNavigate();
 
   const onFormSubmit = async ({ email, password }) => {
-    const user = await login(app, email, password);
+    try {
+      await login(app, email, password);
 
-    if (user) {
       location.state ? navigate(location.state) : navigate("/");
-    } else {
+    } catch (err) {
       setToast({ type: "error", message: "Login failed" });
-    }
+    }    
   };
 
   return (
@@ -27,6 +27,7 @@ export default function Login() {
           className="login-form mt-4"
           onSubmit={(e) => {
             e.preventDefault();
+
             const formData = new FormData(e.target);
             const { email, password } = Object.fromEntries(formData.entries());
 
