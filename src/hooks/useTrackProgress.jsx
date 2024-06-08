@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../api/api";
+import { mongoCfg } from "../common/constants";
+
 const { getUserById } = api;
 
 export default function useTrackProgress(app, trackParam, triggerFetch) {
@@ -63,8 +65,8 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
       // console.log(getTrackParam());
   
       const listenForChanges = async () => {  
-        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-        const collection = mongoClient.db("sample_data").collection("users");
+        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
+        const collection = mongoClient.db(mongoCfg.db).collection(mongoCfg.collections.users);
         const changeStream = collection.watch();
   
         const cleanup = () => {

@@ -4,6 +4,7 @@ import { useApp } from "../../hooks/useApp";
 import api from "../../api/api";
 import { useEffect, useState, useRef } from "react";
 import CreateNewGoal from "./CreateNewGoal";
+import { mongoCfg } from "../../common/constants";
 
 const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
 
@@ -111,9 +112,9 @@ export default function GoalsContent({ periodToShow }) {
     
     if (isMounted) {
       const listenForChanges = async () => {
-        const collection = app.currentUser.mongoClient("mongodb-atlas")
-          .db("sample_data")
-          .collection("goals");
+        const collection = app.currentUser.mongoClient(mongoCfg.mongoClient)
+          .db(mongoCfg.db)
+          .collection(mongoCfg.collections.goals);
           
         const changeStream = collection.watch();
 

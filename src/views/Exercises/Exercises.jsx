@@ -20,6 +20,7 @@ import { useApp } from "../../hooks/useApp";
 import ExerciseModal from "./ExercisesModal";
 import UpdateExerciseModal from "./ExercisesUpdateModal";
 import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages, mongoCfg } from "../../common/constants";
 
 const {
   getAllExercises,
@@ -131,8 +132,8 @@ const Exercises = () => {
     
     if (isMounted) {
       const listenForChanges = async () => {
-        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
-        const collection = mongoClient.db("sample_data").collection("exercises");
+        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
+        const collection = mongoClient.db(mongoCfg.db).collection(mongoCfg.collections.exercises);
         const changeStream = collection.watch();
   
         // const cleanup = () => {
@@ -188,7 +189,7 @@ const Exercises = () => {
             }
           }
         } catch (err) {
-          setToast({ type: "error", message: err.message });
+          setToast({ type: toastTypes.ERROR, message: err.message });
         } finally {
           // cleanup();
         }

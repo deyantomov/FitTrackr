@@ -55,3 +55,16 @@ export const featureCards = [
     text: "Transform your aspirations into reality by tracking your goals. Reach new heights and celebrate every milestone on your fitness journey."
   }
 ];
+
+export const mongoCfg = {
+  mongoClient: "mongodb-atlas",
+  db: "sample_data",
+  collections: {
+    users: "users",
+    online_users: "online_users",
+    exercises: "exercises",
+    goals: "goals",
+    exercise_images: "exercise_images",
+    profile_pics: "profile_pics"
+  };
+};

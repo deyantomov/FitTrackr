@@ -14,6 +14,7 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
+import { mongoCfg } from "../../common/constants";
 
 const { getProfilePic, getUserById } = api;
 
@@ -73,10 +74,10 @@ export default function Navbar({ toggleDrawer }) {
 
     if (isMounted) {
       const listenForPicChanges = async () => {
-        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
         const picCollection = mongoClient
-          .db("sample_data")
-          .collection("profile_pics");
+          .db(mongoCfg.db)
+          .collection(mongoCfg.collections.profile_pics);
 
         const pipeline = [
           {
@@ -137,10 +138,10 @@ export default function Navbar({ toggleDrawer }) {
       initializeNotificationCount();
 
       const listenForNotificationChanges = async () => {
-        const mongoClient = app.currentUser.mongoClient("mongodb-atlas");
+        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
         const usersCollection = mongoClient
-          .db("sample_data")
-          .collection("users");
+          .db(mongoCfg.db)
+          .collection(mongoCfg.collections.users);
 
         const changeStreamUsers = usersCollection.watch();
 
