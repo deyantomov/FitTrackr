@@ -100,18 +100,21 @@ const Exercises = () => {
     try {
       const result = await updateExercise(app, updatedExercise);
       console.log(result);
+      setToast({ type: "success", message: "Exercise updated successfully" });
     } catch (err) {
       console.error(err);
+      setToast({ type: "error", message: "Failed to update exercise" });
     }
   };
 
   const handleRemoveExercise = async (id) => {
     try {
       const result = await removeExercise(app, id);
-
       console.log(result);
+      setToast({ type: "success", message: "Exercise deleted successfully" });
     } catch (err) {
       console.error(err);
+      setToast({ type: "error", message: "Failed to delete exercise" });
     }
   };
 
@@ -362,7 +365,7 @@ const Exercises = () => {
                       {exercise.likedBy &&
                         app.currentUser &&
                         exercise.likedBy.includes(app.currentUser.id) ? (
-                          <HeartSolidIcon className="h-5 w-5 mr-2" />
+                          <HeartSolidIcon className="h-5 w-5 mr-2 text-red-500" />
                         ) : (
                           <HeartOutlineIcon className="h-5 w-5 mr-2" />
                         )}
