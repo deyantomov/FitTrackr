@@ -123,9 +123,9 @@ const Exercises = () => {
         const collection = mongoClient.db("sample_data").collection("exercises");
         const changeStream = collection.watch();
   
-        const cleanup = () => {
-          changeStream.close();
-        };
+        // const cleanup = () => {
+        //   changeStream.close();
+        // };
   
         //  Listen for changes
         try {
@@ -164,11 +164,11 @@ const Exercises = () => {
               });
               break;
             case "delete":
-              setExercises((prevExercises) =>
-                prevExercises.filter(
-                  (exercise) => exercise._id !== change.documentKey._id
-                )
-              );
+              setExercises((prevExercises) => {
+                return prevExercises.filter(
+                  (exercise) => exercise["_id"] !== change.documentKey["_id"].toHexString()
+                );
+              });
 
               break;
             default:
@@ -178,7 +178,7 @@ const Exercises = () => {
         } catch (err) {
           setToast({ type: "error", message: err.message });
         } finally {
-          cleanup();
+          // cleanup();
         }
       };
   
