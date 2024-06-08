@@ -27,7 +27,8 @@ const {
   removeExercise,
   updateExercise,
   likeExercise,
-  getExerciseById
+  getExerciseById,
+  completeExercise
 } = api;
 
 const Exercises = () => {
@@ -112,6 +113,17 @@ const Exercises = () => {
       console.error(err);
     }
   };
+
+  // useEffect(() => {
+  //   const test = async () => {
+  //     const result = await completeExercise(app, "66586bf026fc273a018efc82", "66588dd87df6d7eac8acad1f");
+
+  //     console.log(result);
+  //     return result;
+  //   };
+
+  //   test();
+  // }, []);
 
   //  Realtime listener for the exercises collection
   useEffect(() => {

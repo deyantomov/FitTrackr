@@ -200,3 +200,21 @@ export const likeExercise = async (app, exerciseId, owner) => {
     return [exercise, response.json()];
   }
 };
+
+export const completeExercise = async (app, exerciseId, owner) => {
+  const url = buildUrl(endpoints.exercise);
+
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${url}/completeExercise?id=${exerciseId}&uid=${owner}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      }
+    });
+
+    return response.json();
+  }
+};

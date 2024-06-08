@@ -21,6 +21,7 @@ import {
   sortExercisesByRating,
   getExerciseImage,
   likeExercise,
+  completeExercise
 } from "./exercise/exercise";
 
 import {
@@ -71,5 +72,6 @@ export default {
   acceptFriendRequest,
   markNotificationAsRead,
   getFriendList,
-  getExerciseById
+  getExerciseById,
+  completeExercise
 };
