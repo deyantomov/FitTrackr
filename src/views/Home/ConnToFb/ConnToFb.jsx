@@ -10,7 +10,7 @@ export default function ConnToFb({ uid }) {
     <div
       className="card w-96 h-full p-6 flex flex-col items-center justify-center rounded-md"
       style={{
-        backgroundImage: "url(/public/fitbit-2.jpg)",
+        backgroundImage: "url(/fitbit-2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "550px",

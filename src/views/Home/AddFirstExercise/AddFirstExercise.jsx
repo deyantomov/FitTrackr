@@ -5,7 +5,7 @@ export default function AddFirstExercise() {
     <div
       className="card w-96 h-full p-6 flex flex-col items-center justify-center rounded-md"
       style={{
-        backgroundImage: "url(/public/add-first-exercise-2.jpg)",
+        backgroundImage: "url(/add-first-exercise-2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "550px",

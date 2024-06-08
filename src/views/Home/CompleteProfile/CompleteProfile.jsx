@@ -34,7 +34,7 @@ export default function CompleteProfile({ uid }) {
     <div
       className="card w-96 h-full p-6 flex flex-col items-center justify-center text-center rounded-md"
       style={{
-        backgroundImage: "url(/public/complete-profile.jpg)",
+        backgroundImage: "url(/complete-profile.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "550px",

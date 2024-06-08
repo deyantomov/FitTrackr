@@ -286,7 +286,7 @@ const Exercises = () => {
                 style={{
                   backgroundImage: exercise.img
                     ? `url(${exercise.img})`
-                    : "url(/public/add-first-exercise-2.jpg)",
+                    : "url(/add-first-exercise-2.jpg)",
                 }}
               >
                 <div className="flex flex-col w-full h-full justify-center p-4 rounded-md bg-white bg-opacity-55">

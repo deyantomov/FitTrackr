@@ -111,7 +111,7 @@ export default function Home() {
             <div className="w-full">
               <div
                 style={{
-                  backgroundImage: `url(${"/public/hero-banner.jpeg"})`,
+                  backgroundImage: `url(${"/hero-banner.jpeg"})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center",

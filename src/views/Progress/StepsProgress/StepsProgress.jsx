@@ -33,7 +33,7 @@ export default function StepsActivity() {
     <Card
       className="w-80 flex flex-col justify-center align-center items-center text-center p-6 rounded-md"
       style={{
-        backgroundImage: "url(/public/steps.jpg)",
+        backgroundImage: "url(/steps.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "450px",

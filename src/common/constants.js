@@ -31,7 +31,7 @@ export const progressUnits = {
 
 export const progressCardTitles = {
   steps: "Steps",
-  distace: "Distance",
+  distance: "Distance",
   calories: "Energy Burned",
   exercise: "Exercise Streak"
 };
@@ -66,5 +66,5 @@ export const mongoCfg = {
     goals: "goals",
     exercise_images: "exercise_images",
     profile_pics: "profile_pics"
-  };
+  }
 };

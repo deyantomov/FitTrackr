@@ -94,7 +94,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
     <Card
       className="w-80 flex flex-col justify-center align-center items-center text-center p-6 rounded-md"
       style={{
-        backgroundImage: `url(/public/${imgName}.jpg)`,
+        backgroundImage: `url(/${imgName}.jpg)`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "500px",
