@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { Modal, Button } from "react-daisyui";
+import { completeExercise } from "../../api/exercise/exercise";
+import { useApp } from "../../hooks/useApp";
 
 const ExerciseModal = ({ exercise, isOpen, onClose }) => {
+  const app = useApp();
   const [timer, setTimer] = useState(0);
   const [isTiming, setIsTiming] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
     let interval = null;
@@ -24,6 +28,15 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  const handleCompleteExercise = async () => {
+    try {
+      await completeExercise(app, exercise._id, exercise.owner);
+      setCompleted(true);
+    } catch (error) {
+      console.error("Failed to complete exercise:", error);
+    }
+  };
+  
   return (
     <Modal open={isOpen} onClose={onClose}>
       {exercise && (
@@ -37,6 +50,11 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
         </Modal.Body>
       )}
       <Modal.Actions>
+        {!completed && (
+          <Button onClick={handleCompleteExercise} className="btn-primary">
+            Complete Exercise
+          </Button>
+        )}
         <Button onClick={onClose}>Close</Button>
         <Button color="primary" onClick={() => setIsTiming(!isTiming)}>
           {isTiming ? "Pause Timer" : "Start Timer"}
