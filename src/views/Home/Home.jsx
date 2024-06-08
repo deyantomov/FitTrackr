@@ -133,7 +133,7 @@ export default function Home() {
             </h2>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-36 w-full mt-6 mb-12">
               {featureCards.map((card, index) => {
-                <FeatureCard key={index} img={card.img} title={card.title} text={card.text} />;
+                return <FeatureCard key={index} img={card.img} title={card.title} text={card.text} />;
               })}
             </div>
           </div>
