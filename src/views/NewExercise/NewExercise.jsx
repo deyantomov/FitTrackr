@@ -9,11 +9,13 @@ import {
   DocumentTextIcon,
 } from "@heroicons/react/16/solid";
 import { imageToBase64 } from "../../common/utils";
+import { useToast } from "../../hooks/useToast";
 
 const { createNewExercise } = api;
 
 const NewExerciseForm = () => {
   const app = useApp();
+  const { setToast } = useToast();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [level, setLevel] = useState("beginner");
@@ -55,13 +57,16 @@ const NewExerciseForm = () => {
       try {
         await createNewExercise(app, exercise);
         setSuccess("Exercise created successfully!");
+        setToast({ type: "success", message: "Exercise created successfully!" });
         resetForm();
       } catch (error) {
         setError("Failed to create exercise. Please try again.");
+        setToast({ type: "error", message: "Failed to create exercise. Please try again." });
         console.error("Error creating new exercise:", error);
       }
     } else {
       setError("You must be logged in to create an exercise.");
+      setToast({ type: "error", message: "You must be logged in to create an exercise." });
     }
   };
 
