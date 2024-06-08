@@ -49,7 +49,6 @@ export default function GoalsContent({ periodToShow }) {
       updatedTarget.calories = targetNumber;
       break;
     }
-    console.log(target);
 
     setError("");
     setSuccess("");
@@ -91,10 +90,10 @@ export default function GoalsContent({ periodToShow }) {
     const getGoals = async () => {
       setUserGoals(await getAllGoals(app));
 
-      console.log(
-        "userGoals filtered",
-        userGoals.filter((eachGoal) => eachGoal.period === periodToShowRef.current)
-      );
+    //   console.log(
+    //     "userGoals filtered",
+    //     userGoals.filter((eachGoal) => eachGoal.period === periodToShowRef.current)
+    //   );
     };
 
     // const deleteGoal = async () => {
@@ -105,7 +104,7 @@ export default function GoalsContent({ periodToShow }) {
     getGoals();
 
     // deleteGoal();
-  }, [periodToShowRef]);
+  }, [periodToShow, app]);
 
   useEffect(() => {
     let isMounted = true;

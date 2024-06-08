@@ -133,16 +133,16 @@ export default function Notifications() {
         <Table className="text-xs md:text-xl lg:text-2xl w-full">
           {notifications.likes && notifications.likes.length > 0 && (
             <Table.Head className="invisible md:visible odd:bg-base-200">
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                 User Handle
               </span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                 Exercise
               </span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                 Date
               </span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4 overflow-hidden overflow-ellipsis whitespace-nowrap break-words">
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                 Action
               </span>
             </Table.Head>
@@ -153,20 +153,20 @@ export default function Notifications() {
               notifications.likes.map((like, index) => (
                 <Table.Row
                   key={index}
-                  className="flex flex-col sm:table-row even:bg-base-200 justify-center align-center items-center w-full"
+                  className="even:bg-base-200 w-full text-center"
                 >
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
                     {handles[like.from]}
                   </span>
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
                     {exercises && exercises.length > 0 && getExercise(notifications.likes[index].postId) && getExercise(notifications.likes[index].postId)["title"]}
                   </span>
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
                     {new Date(
                       notifications.likes[index].likedOn
                     ).toLocaleDateString("en-GB")}
                   </span>
-                  <span className="block sm:table-cell w-full px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
                     <Button
                       className="btn-ghost text-xs md:text-xl"
                       onClick={() =>

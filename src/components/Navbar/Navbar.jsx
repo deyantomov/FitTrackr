@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 const { getProfilePic, getUserById } = api;
 
 /**
- * @param {{toggleDrawer: function}} props
+ * @param {{toggleDrawer: () => void}} props
  * @returns {React.FC}
  */
 export default function Navbar({ toggleDrawer }) {
@@ -223,22 +223,6 @@ export default function Navbar({ toggleDrawer }) {
         >
           <Bars3Icon className="w-full" />
         </label>
-        <div className="ms-12 xl:flex flex-row gap-8 hidden">
-          <Link to="/">
-            <h2 className="text-2xl">Home</h2>
-          </Link>
-          <Link to="/exercises">
-            <h2 className="text-2xl">Exercises</h2>
-          </Link>
-          {app.currentUser && (
-            <Link to="/goals">
-              <h2 className="text-2xl">Goals</h2>
-            </Link>
-          )}
-          <Link to="/about-us">
-            <h2 className="text-2xl">About</h2>
-          </Link>
-        </div>
       </div>
       <div className="flex justify-center items-center">
         <Input
@@ -254,7 +238,7 @@ export default function Navbar({ toggleDrawer }) {
           onClick={handleSearch}
         />
       </div>
-      <div className="rounded-full w-full flex flex-row gap-8 justify-end align-end p-0">
+      <div className="rounded-full w-full flex flex-row gap-4 md:gap-8 justify-end align-end p-0">
         {app.currentUser && (
           <Dropdown className="m-0 p-0" ref={dropdownRef}>
             <div className="relative">
