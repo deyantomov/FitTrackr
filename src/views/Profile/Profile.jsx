@@ -74,7 +74,7 @@ export default function Profile() {
         const type = result.message === "Profile updated successfully" ? "success" : "error";
         return setToast({ type: type, message: result.message });
       } else {
-        return setToast({ type: "error", message: result });
+        return setToast({ type: "error", message: "Couldn't update profile" });
       }
 
     } catch (err) {

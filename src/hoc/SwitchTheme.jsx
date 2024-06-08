@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
 /**
- * @param {{toggle: () => void, theme: string}} props
- * @returns {JSX.Element}
+ * @param {{theme: string, toggle: () => void}} props
+ * @returns {React.FC}
  */
 export default function SwitchTheme({ theme, toggle }) {  
   return (

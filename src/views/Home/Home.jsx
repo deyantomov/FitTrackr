@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages, featureCards } from "../../common/constants";
 
 const { getUserById } = api;
 
@@ -33,7 +34,7 @@ export default function Home() {
           setUser(user);
           setProgress(progressHook);
         } else {
-          setToast({ type: "error", message: "Unable to log in" });
+          setToast({ type: toastTypes.ERROR, message: toastMessages.unableToLogin });
         }
       }
 
@@ -41,7 +42,7 @@ export default function Home() {
     };
 
     getUser();
-  }, [app.currentUser, progressHook, setToast]);
+  }, [app, progressHook, setToast]);
 
   useEffect(() => {
     setLoading(true);
@@ -60,7 +61,7 @@ export default function Home() {
 
       setProgressPercentage((completedFields / totalFields) * 100 || 0);
     } catch (err) {
-      setToast({ type: "error", message: err.message });
+      setToast({ type: toastTypes.ERROR, message: err.message });
     } finally {
       setLoading(false);
     }
@@ -131,26 +132,9 @@ export default function Home() {
               Features
             </h2>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-36 w-full mt-6 mb-12">
-              <FeatureCard
-                img="exercises.jpg"
-                title="Track your daily activity and exercises"
-                text="Take control of your fitness journey by tracking your daily
-                  exercises and activities. Watch your progress and achieve your
-                  milestones with ease."
-              />
-              <FeatureCard
-                img="fitbit.jpg"
-                title="Connect with your Fitbit device or profile"
-                text="Stay ahead of the game by linking your Fitbit profile. Track
-                  your fitness progress seamlessly with data from your Fitbit
-                  device."
-              />
-              <FeatureCard
-                img="goals.jpg"
-                title="Set and achieve your fitness goals"
-                text="Transform your aspirations into reality by tracking your goals. 
-                  Reach new heights and celebrate every milestone on your fitness journey."
-              />
+              {featureCards.map((card, index) => {
+                <FeatureCard key={index} img={card.img} title={card.title} text={card.text} />;
+              })}
             </div>
           </div>
         </div>

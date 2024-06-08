@@ -6,6 +6,8 @@ import { useApp } from "../../hooks/useApp";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages } from "../../common/constants";
 
 const {
   getAllUsers,
@@ -19,6 +21,7 @@ const {
 export default function SearchResults() {
   const app = useApp();
   const params = useParams();
+  const { setToast } = useToast();
   const [users, setUsers] = useState([]);
   const [currentUserData, setCurrentUserData] = useState(null);
   const [exercises, setExercises] = useState([]);
@@ -61,10 +64,10 @@ export default function SearchResults() {
 
       const exercisesWithImage = await Promise.all(
         matchingExercises.map(async (exercise) => {
-          const img = await getExerciseImage(exercise.img);
+          const exerciseImg = await getExerciseImage(exercise.img);
 
-          if (img) {
-            const pic = img["img"];
+          if (exerciseImg) {
+            const pic = exerciseImg["img"];
             return { ...exercise, pic };
           }
 
@@ -97,12 +100,19 @@ export default function SearchResults() {
   }, [app]);
 
   const handleSendFriendRequest = async (to) => {
-    if (app.currentUser) {
-      setLoading(true);
-      const response = await sendFriendRequest(app, to);
+    try {
+      if (app.currentUser) {
+        setLoading(true);
 
-      setLoading(false);
-      return response;
+        const response = await sendFriendRequest(app, to);
+  
+        setLoading(false);
+        setToast({ type: toastTypes.SUCCESS, message: toastMessages.successfulFriendRequest });
+
+        return response;
+      }
+    } catch (err) {
+      setToast({ type: toastTypes.ERROR, message: toastMessages.unsuccessfulFriendRequest });
     }
   };
 

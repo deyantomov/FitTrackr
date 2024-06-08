@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../api/api";
 import { Loading, Table, Button } from "react-daisyui";
+import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages } from "../../common/constants";
 
 const {
   getExercisesByUserId,
@@ -14,6 +16,7 @@ const {
 export default function Notifications() {
   const app = useApp();
   const { id } = useParams();
+  const { setToast } = useToast();
   const [notifications, setNotifications] = useState({});
   const [handles, setHandles] = useState({});
   const [loading, setLoading] = useState(false);
@@ -28,12 +31,12 @@ export default function Notifications() {
         if (user) {
           setNotifications(user.notifications);
 
-          const likesHandles = await Promise.all(
+          const likesHandles = user.notifications && user.notifications.likes ? await Promise.all(
             user.notifications.likes.map((like) => handleGetUser(like.from))
-          );
+          ) : [];
 
           const friendRequestsHandles = await Promise.all(
-            user.notifications.friendRequests.map((request) =>
+            user.notifications.friendRequests.map((request) => 
               handleGetUser(request.from)
             )
           );
@@ -46,7 +49,7 @@ export default function Notifications() {
                 ...obj,
                 [i < likesHandles.length
                   ? user.notifications.likes[i].from
-                  : user.notifications.friendRequests[i - likesHandles.length].from]: handle,
+                  : user.notifications.friendRequests[i].from]: handle,
               }),
               {}
             )
@@ -72,12 +75,16 @@ export default function Notifications() {
   }, [app.currentUser.id]);
 
   async function handleGetUser(uid) {
-    setLoading(true);
-    const user = await getUserById(uid);
+    try {
+      setLoading(true);
 
-    setLoading(false);
-    
-    return user.handle;
+      const { handle } = await getUserById(uid);
+      setLoading(false);
+      
+      return handle;
+    } catch (err) {
+      setToast({ type: toastTypes.ERROR, message: toastMessages.unableToGetUserData });
+    }
   }
 
   const handleRemoveLikeNotification = async (postId, from) => {
@@ -117,6 +124,10 @@ export default function Notifications() {
 
     return exercise;
   };
+
+  useEffect(() => {
+    console.log(handles);
+  }, [handles]);
 
   if (loading) {
     return (
@@ -191,9 +202,9 @@ export default function Notifications() {
         <Table className="text-xs md:text-xl lg:text-2xl w-full">
           {notifications.friendRequests && notifications.friendRequests.length > 0 && (
             <Table.Head className="invisible md:visible odd:bg-base-200">
-              <span style={{ padding: "12px 24px" }}>User Handle</span>
-              <span style={{ padding: "12px 24px" }}>Date</span>
-              <span style={{ padding: "12px 24px" }}>Action</span>
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">User Handle</span>
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">Date</span>
+              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">Action</span>
             </Table.Head>
           )}
 
@@ -201,13 +212,13 @@ export default function Notifications() {
             {notifications.friendRequests && notifications.friendRequests.length > 0 ? (
               notifications.friendRequests.map((request, index) => (
                 <Table.Row key={index} className="even:bg-base-200">
-                  <span style={{ padding: "12px 24px" }}>
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                     {handles[request.from]}
                   </span>
-                  <span style={{ padding: "12px 24px" }}>
-                    {new Date(request.sentOn).toLocaleDateString("en-GB")}
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
+                    {new Date(request.sentOn).toLocaleDateString("en-US")}
                   </span>
-                  <span style={{ padding: "12px 24px" }}>
+                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                     <Button
                       className="btn-ghost"
                       onClick={() => handleRemoveRequestNotification(request.from)}

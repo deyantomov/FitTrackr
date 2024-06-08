@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 /**
  *
  * @param {{children: JSX.Element | Array<JSX.Element>, toggleTheme: () => void, theme: string}} props
+ * @returns {React.FC}
  */
 export default function Sidebar({ children, toggleTheme, theme }) {
   const app = useApp();

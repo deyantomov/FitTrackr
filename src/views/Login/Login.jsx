@@ -2,6 +2,7 @@ import { useApp } from "../../hooks/useApp";
 import { login } from "../../services/auth.service";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages } from "../../common/constants";
 
 export default function Login() {
   const app = useApp();
@@ -13,9 +14,10 @@ export default function Login() {
     try {
       await login(app, email, password);
 
+      setToast({ type: toastTypes.SUCCESS, message: toastMessages.successfulLogin });
       location.state ? navigate(location.state) : navigate("/");
     } catch (err) {
-      setToast({ type: "error", message: "Login failed" });
+      setToast({ type: toastTypes.ERROR, message: toastMessages.unableToLogin });
     }    
   };
 

@@ -5,11 +5,14 @@ import { useApp } from "../../hooks/useApp";
 import { Loading, Card } from "react-daisyui";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ProfilePic from "../../components/ProfilePic/ProfilePic";
+import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages } from "../../common/constants";
 
 const { getFriendList, getUserById, getProfilePic } = api;
 
 function FriendList() {
   const app = useApp();
+  const { setToast } = useToast();
   const [friendList, setFriendList] = useState([]);
   const [friendData, setFriendData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +26,7 @@ function FriendList() {
 
         return response;
       } catch (err) {
-        console.error(err);
+        setToast({ type: toastTypes.ERROR, message: toastMessages.unableToGetFriendList });
       } finally {
         setLoading(false);
       }
@@ -46,7 +49,7 @@ function FriendList() {
   
         setFriendData(usersWithProfilePic);
       } catch(err) {
-        console.error(err);
+        setToast({ type: toastTypes.ERROR, message: toastMessages.unableToGetUserData });
       } finally {
         setLoading(false);
       }
@@ -54,10 +57,6 @@ function FriendList() {
   
     fetchUserDataWithProfilePic();
   }, [friendList]);
-
-  useEffect(() => {
-    console.log(friendData);
-  }, [friendData]);
 
   if (loading) {
     return (
