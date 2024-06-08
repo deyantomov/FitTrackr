@@ -261,21 +261,21 @@ const Exercises = () => {
 
   return (
     <div className="w-full h-full p-12">
-      {app.currentUser && (
-        <div className="w-1/2 mx-auto mb-6">
+      <div className="w-full flex justify-between items-center mb-6">
+        {app.currentUser && (
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="select select-bordered w-full"
+            className="select select-bordered w-1/6 p-1 text-lg"
           >
-            <option value="all-exercises">All Exercises</option>
-            <option value="my-exercises">My Exercises</option>
-            <option value="liked-exercises">Liked Exercises</option>
+            <option value="all-exercises">All</option>
+            <option value="my-exercises">Mine</option>
+            <option value="liked-exercises">Liked</option>
           </select>
+        )}
+        <div className="w-full">
+          <SearchBar onSearch={handleSearch} />
         </div>
-      )}
-      <div className="w-1/2 mx-auto mb-12">
-        <SearchBar onSearch={handleSearch} />
       </div>
       <div className="grid grid-cols-1 gap-4 p-0 pb-12 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
         {filteredExercises && filteredExercises.length > 0 ? (
