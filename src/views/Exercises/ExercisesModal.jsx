@@ -8,6 +8,7 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
   const [timer, setTimer] = useState(0);
   const [isTiming, setIsTiming] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [completionTime, setCompletionTime] = useState(null);
 
   useEffect(() => {
     let interval = null;
@@ -32,8 +33,19 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
     try {
       await completeExercise(app, exercise._id, exercise.owner);
       setCompleted(true);
+      setCompletionTime(new Date());
     } catch (error) {
       console.error("Failed to complete exercise:", error);
+    }
+  };
+
+  const handleResetExercise = async () => {
+    //TODO:Edit 
+    try {
+      setCompleted(false);
+      setCompletionTime(null);
+    } catch (error) {
+      console.error("Failed to reset completion:", error);
     }
   };
   
@@ -44,21 +56,33 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
           <div className="text-center mb-4">
             <h3 className="text-lg font-bold">{exercise.title}</h3>
           </div>
-          <div className="text-center mb-4 bg-yellow-500 text-white p-2 rounded">
-            <span>{timer}s</span>
-          </div>
+          {completed ? (
+            <div className="text-center mb-4">
+              <p className="text-green-500">Completed on: {completionTime.toLocaleString()}</p>
+            </div>
+          ) : (
+            <div className="text-center mb-4 bg-yellow-500 text-white p-2 rounded">
+              <span>{timer}s</span>
+            </div>
+          )}
         </Modal.Body>
       )}
       <Modal.Actions>
-        {!completed && (
+        {completed ? (
+          <Button onClick={handleResetExercise} className="btn-warning">
+            Reset Exercise
+          </Button>
+        ) : (
           <Button onClick={handleCompleteExercise} className="btn-primary">
             Complete Exercise
           </Button>
         )}
         <Button onClick={onClose}>Close</Button>
-        <Button color="primary" onClick={() => setIsTiming(!isTiming)}>
-          {isTiming ? "Pause Timer" : "Start Timer"}
-        </Button>
+        {!completed && (
+          <Button color="primary" onClick={() => setIsTiming(!isTiming)}>
+            {isTiming ? "Pause Timer" : "Start Timer"}
+          </Button>
+        )}
       </Modal.Actions>
     </Modal>
   );
