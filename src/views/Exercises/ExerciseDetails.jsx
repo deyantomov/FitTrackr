@@ -12,10 +12,15 @@ const ExerciseDetails = () => {
 
   useEffect(() => {
     const fetchExercise = async () => {
+      if (!app.currentUser || !app.currentUser.id) {
+        console.error("User is not authenticated or does not have an id");
+        navigate("/login"); 
+        return;
+      }
       try {
         const response = await getExerciseById(app, id);
-        const exerciseData = response.exercise;
-        // console.log("Exercise Data:", exerciseData);
+        const exerciseData = response.exercise || response;
+        console.log("Exercise Data:", exerciseData);
         setExercise(exerciseData);
       } catch (error) {
         console.error("Failed to fetch exercise:", error);
