@@ -18,7 +18,7 @@ export const progressMetrics = {
   steps: "steps",
   distance: "distance",
   calories: "calories",
-  exercise: "exercise",
+  weeklyStreak: "weeklyStreak",
 };
 
 export const progressUnits = {
@@ -33,7 +33,7 @@ export const progressCardTitles = {
   steps: "Steps",
   distance: "Distance",
   calories: "Energy Burned",
-  exercise: "Exercise Streak"
+  weeklyStreak: "Exercise Streak"
 };
 
 export const numpad = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "C"];
@@ -58,7 +58,7 @@ export const featureCards = [
 
 export const mongoCfg = {
   mongoClient: "mongodb-atlas",
-  db: "sample_data",
+  db: "fitDB",
   collections: {
     users: "users",
     online_users: "online_users",

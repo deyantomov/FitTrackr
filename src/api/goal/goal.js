@@ -13,7 +13,7 @@ export const createNewGoal = async (app, goal) => {
     throw new Error("Goal object cannot be empty!");
   }
 
-  const url = buildUrl(endpoints.goal);
+  const url = buildUrl(endpoints.goals);
   const currentUser = app.currentUser;
 
   if (currentUser) {
@@ -46,7 +46,7 @@ export const createNewGoal = async (app, goal) => {
 
 export const getAllGoals = async (app) => {
   if (app.currentUser) {
-    const url = buildUrl(endpoints.goal);
+    const url = buildUrl(endpoints.goals);
     const user = await getUserById(app.currentUser.id);
     
     const response = await fetch(`${url}?uid=${user.uid}`, {
@@ -62,7 +62,7 @@ export const getAllGoals = async (app) => {
 };
 
 export const removeGoal = async (app, goalId) => {
-  const url = buildUrl(endpoints.goal);
+  const url = buildUrl(endpoints.goals);
   const { currentUser } = app;
 
   if (currentUser) {

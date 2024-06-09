@@ -16,7 +16,7 @@ export default function useTrackProgress(app, trackParam, triggerFetch) {
       if (currentUser) {
         const user = await getUserById(currentUser.id);
 
-        if (user[trackParam] && trackParam === "exercise") {
+        if (user[trackParam] && trackParam === "weeklyStreak") {
           const sortedDates = user[trackParam].sort((a, b) => new Date(b) - new Date(a));
           let streak = 0;
         
