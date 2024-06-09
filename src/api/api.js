@@ -23,7 +23,7 @@ import {
   getExerciseImage,
   likeExercise,
   completeExercise,
-  getAllExercisesNoPagination
+  getAllExercisesNoPagination,
 } from "./exercise/exercise";
 
 import {
@@ -77,5 +77,5 @@ export default {
   getExerciseById,
   completeExercise,
   storeAccessTokens,
-  getAllExercisesNoPagination
+  getAllExercisesNoPagination,
 };

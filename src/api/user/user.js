@@ -116,7 +116,7 @@ export const updateUserProfile = async (
 
     if (updatedFields.profilePic) {
       //  update image
-      const updateImgRes = await fetch(`${url}/update_profile_pic/?uid=${id}`, {
+      const updateImgRes = await fetch(`${url}/update_profile_pic?uid=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

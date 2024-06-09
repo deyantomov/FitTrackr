@@ -35,7 +35,6 @@ export const createNewExercise = async (app, exercise) => {
         duration: exercise.duration,
         rating: 0,
         isPrivate: exercise.isPrivate,
-        createdOn: new Date(),
       }),
     });
 
