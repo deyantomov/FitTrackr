@@ -1,11 +1,46 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { redirectToAuth, handleRedirect } from "../../../services/fitbit.service";
+import { useApp } from "../../../hooks/useApp";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 /**
- * @param {{uid: string}} props
+ * @param {{setToast: () => void}} props
  * @returns {React.FC}
  */
-export default function ConnToFb({ uid }) {
+export default function ConnToFb({ setToast }) {
+  const app = useApp();
+  const [authUrl, setAuthUrl] = useState("");
+  const params = useParams();
+  const navigate = useNavigate();
+  
+  const handleRedirectToAuth = async () => {
+    try {
+      const url = await redirectToAuth(setToast);
+      setAuthUrl(url);
+
+      setTimeout(() => {}, 0);
+      window.location.href = url;
+    } catch (err) {
+      setToast({ type: "error", message: err.message });
+    }
+  };
+
+  useEffect(() => {
+    if (authUrl) {
+      try {
+        handleRedirect(app, setToast);
+      } catch (err) {
+        setToast({ type: "error", message: err.message });
+      }
+    }
+  }, [authUrl]);
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
+  
   return (
     <div
       className="card w-96 h-full p-6 flex flex-col items-center justify-center rounded-md"
@@ -24,7 +59,7 @@ export default function ConnToFb({ uid }) {
           Connect to your Fitbit
         </h2>
         <Link to={"/"}>
-          <button className="btn btn-md btn-warning text-black mt-12">
+          <button className="btn btn-md btn-warning text-black mt-12" onClick={handleRedirectToAuth}>
             Link Fitbit account
           </button>
         </Link>
@@ -33,6 +68,6 @@ export default function ConnToFb({ uid }) {
   );
 }
 
-PropTypes.ConnToFb = {
-  uid: PropTypes.string.isRequired,
+ConnToFb.propTypes = {
+  setToast: PropTypes.func.isRequired,
 };

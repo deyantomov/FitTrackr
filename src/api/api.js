@@ -7,7 +7,8 @@ import {
   updateUserProfile,
   getProfilePic,
   setUserOnlineStatus,
-  getFriendList
+  getFriendList,
+  storeAccessTokens
 } from "./user/user";
 
 import {
@@ -73,5 +74,6 @@ export default {
   markNotificationAsRead,
   getFriendList,
   getExerciseById,
-  completeExercise
+  completeExercise,
+  storeAccessTokens
 };

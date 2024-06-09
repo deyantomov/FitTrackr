@@ -68,3 +68,11 @@ export const mongoCfg = {
     profile_pics: "profile_pics"
   }
 };
+
+export const fitbitCfg = {
+  authUri: "https://www.fitbit.com/oauth2/authorize",
+  tokenUri: "https://api.fitbit.com/oauth2/token",
+  client: "23PJ8N",
+  scopes: ["activity", "cardio_fitness"],
+  redirectUrl: "https://fittrackr-rnylmjz.mongodbstitch.com"
+};

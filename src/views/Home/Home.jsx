@@ -87,7 +87,7 @@ export default function Home() {
               {progressPercentage !== 100 && (
                 <CompleteProfile uid={app.currentUser.id} />
               )}
-              <ConnToFb uid={app.currentUser.id} />
+              <ConnToFb uid={app.currentUser.id} setToast={setToast} />
               {(user.exercises && user.exercises.own) && user.exercises.own.length > 0 ? null : (
                 <AddFirstExercise uid={app.currentUser.id} />
               )}

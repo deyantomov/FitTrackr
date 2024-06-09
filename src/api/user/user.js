@@ -223,3 +223,25 @@ export const getFriendList = async (app) => {
     return response.json();
   }
 };
+
+export const storeAccessTokens = async (app, tokens) => {
+  const url = buildUrl(endpoints.users);
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${url}/store_fitbit_data?id=${currentUser.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      },
+      body: JSON.stringify(tokens),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  } 
+};

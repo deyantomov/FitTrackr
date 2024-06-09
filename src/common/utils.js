@@ -1,3 +1,11 @@
+import pkceChallenge from "pkce-challenge";
+
+/**
+ * @typedef {Object} PKCEChallenge
+ * @property {string} code_verifier
+ * @property {string} code_challenge
+ */
+
 /**
  * Utilizing the FileReader API to convert an image to base64
  * 
@@ -17,3 +25,17 @@ export const imageToBase64 = (file) => {
 
 //  https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
 export const checkEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+
+/**
+ * @returns {Promise<PKCEChallenge>}
+ */
+export const generateCodeChallenge = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      const challenge = pkceChallenge();
+      resolve(challenge);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
