@@ -16,6 +16,7 @@ import NewExerciseForm from "./views/NewExercise/NewExercise";
 import NotFound from "./views/NotFound/NotFound";
 import Exercises from "./views/Exercises/Exercises";
 import FriendList from "./views/FriendList/FriendList";
+import ExerciseDetails from "./views/Exercises/ExerciseDetails";
 import { ToastProvider } from "./providers/ToastProvider";
 const { appId } = atlasConfig;
 
@@ -119,6 +120,14 @@ function App() {
         element={
           <Sidebar theme={theme} toggleTheme={toggleTheme}>
             <Exercises key={location.key} />
+          </Sidebar>
+        }
+      />
+      <Route
+        path="/exercises/:id"
+        element={
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
+            <ExerciseDetails />
           </Sidebar>
         }
       />

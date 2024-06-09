@@ -11,6 +11,7 @@ import {
   CalendarIcon,
   StarIcon,
   UserCircleIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/16/solid";
 import { ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartOutlineIcon } from "@heroicons/react/24/outline";
@@ -21,6 +22,8 @@ import ExerciseModal from "./ExercisesModal";
 import UpdateExerciseModal from "./ExercisesUpdateModal";
 import { useToast } from "../../hooks/useToast";
 import { toastTypes, toastMessages, mongoCfg } from "../../common/constants";
+import ExerciseDetails from "./ExerciseDetails";
+import { useNavigate } from "react-router-dom";
 
 const {
   getAllExercises,
@@ -34,6 +37,7 @@ const {
 
 const Exercises = () => {
   const app = useApp();
+  const navigate = useNavigate();
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +48,6 @@ const Exercises = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-
   const { setToast } = useToast(); 
 
   useEffect(() => {
@@ -221,6 +224,10 @@ const Exercises = () => {
     setIsUpdateModalOpen(false);
   };
 
+  const openViewDetails = (exercise) => {
+    navigate(`/exercises/${exercise.id}`);
+  };
+
   const filteredExercises = exercises.filter((exercise) => {
     if (exercise) {
       const matchesSearchTerm =
@@ -371,6 +378,13 @@ const Exercises = () => {
                     >
                       Start Workout
                       <ChevronRightIcon className="h-5 w-5 ml-2" />
+                    </Button>
+                    <Button
+                      className="btn-md btn-warning rounded"
+                      onClick={() => openViewDetails(exercise)}
+                    >
+                          Details
+                      <InformationCircleIcon className="h-5 w-5 ml-2 text-blue-200" />
                     </Button>
                   </div>
                 </Card.Actions>
