@@ -22,7 +22,8 @@ import {
   sortExercisesByRating,
   getExerciseImage,
   likeExercise,
-  completeExercise
+  completeExercise,
+  getAllExercisesNoPagination
 } from "./exercise/exercise";
 
 import {
@@ -75,5 +76,6 @@ export default {
   getFriendList,
   getExerciseById,
   completeExercise,
-  storeAccessTokens
+  storeAccessTokens,
+  getAllExercisesNoPagination
 };

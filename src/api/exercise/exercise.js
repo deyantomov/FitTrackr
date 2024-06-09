@@ -104,6 +104,13 @@ export const getAllExercises = async (page = 1) => {
   return response.json();
 };
 
+export const getAllExercisesNoPagination = async () => {
+  const url = buildUrl(endpoints.exercise);
+
+  const response = await fetch(`${url}/no_pagination`);
+  return response.json();
+};
+
 export const getExercisesByUserId = async (uid, page = 1) => {
   const url = buildUrl(endpoints.exercise);
   const response = await fetch(
