@@ -139,10 +139,6 @@ const Exercises = () => {
         const collection = mongoClient.db(mongoCfg.db).collection(mongoCfg.collections.exercises);
         const changeStream = collection.watch();
   
-        // const cleanup = () => {
-        //   changeStream.close();
-        // };
-  
         //  Listen for changes
         try {
           for await (const change of changeStream) {
@@ -193,8 +189,6 @@ const Exercises = () => {
           }
         } catch (err) {
           setToast({ type: toastTypes.ERROR, message: err.message });
-        } finally {
-          // cleanup();
         }
       };
   
@@ -277,7 +271,7 @@ const Exercises = () => {
           <SearchBar onSearch={handleSearch} />
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 p-0 pb-12 sm:grid-cols-2 lg:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
+      <div className="grid grid-cols-1 gap-4 p-0 pb-12 md:grid-cols-2 xl:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Card

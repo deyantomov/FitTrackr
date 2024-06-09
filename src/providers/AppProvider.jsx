@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import * as Realm from "realm-web";
 import { AppContext } from "../context/AppContext";
 import atlasConfig from "../../atlasConfig.json";
+import PropTypes from "prop-types";
 
 const { baseUrl } = atlasConfig;
 
@@ -9,6 +10,11 @@ const createApp = (id) => {
   return new Realm.App({ id, baseUrl });
 };
 
+/**
+ * 
+ * @param {{appId: string, children: React.FC}} props 
+ * @returns {React.FC}
+ */
 export const AppProvider = ({ appId, children }) => {
   const [app, setApp] = useState(createApp(appId));
 
@@ -38,7 +44,7 @@ export const AppProvider = ({ appId, children }) => {
     }
 
     setCurrentUser(app.currentUser);
-  }
+  };
   
   const appContext = {
     ...app,
@@ -52,4 +58,12 @@ export const AppProvider = ({ appId, children }) => {
       {children}
     </AppContext.Provider>
   );
+};
+
+AppProvider.propTypes = {
+  appId: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
 };

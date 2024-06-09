@@ -9,6 +9,7 @@ const UpdateExerciseModal = ({ exercise, isOpen, onClose, onUpdate }) => {
   const [level, setLevel] = useState("");
   const [duration, setDuration] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [exerciseId, setExerciseId] = useState("");
   
   useEffect(() => {
     if (exercise) {
@@ -17,12 +18,14 @@ const UpdateExerciseModal = ({ exercise, isOpen, onClose, onUpdate }) => {
       setLevel(exercise.level || "beginner");
       setDuration(exercise.duration || 0);
       setIsPrivate(exercise.isPrivate || false);
+      setExerciseId(exercise["_id"] || "");
     }
   }, [exercise]);
   
   const handleUpdate = async () => {
     const updatedExercise = {
       ...exercise,
+      id: exerciseId,
       title,
       description,
       level,
