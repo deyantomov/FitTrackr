@@ -107,8 +107,7 @@ export const updateUserProfile = async (
   email,
   password
 ) => {
-  const url = buildUrl(endpoints.updateProfile);
-  const imgUpdateUrl = buildUrl(endpoints.updateProfilePic);
+  const url = buildUrl(endpoints.users);
   const user = await login(app, email, password);
 
   if (user) {
@@ -117,7 +116,7 @@ export const updateUserProfile = async (
 
     if (updatedFields.profilePic) {
       //  update image
-      const updateImgRes = await fetch(`${imgUpdateUrl}?uid=${id}`, {
+      const updateImgRes = await fetch(`${url}/update_profile_pic?uid=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +139,7 @@ export const updateUserProfile = async (
       throw new Error("Phone number must be 10 digits");
     }
 
-    const response = await fetch(`${url}?uid=${id}`, {
+    const response = await fetch(`${url}/update_profile?uid=${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -169,9 +168,9 @@ export const updateUserProfile = async (
  * @param {string} id
  */
 export const getProfilePic = async (id) => {
-  const url = buildUrl(endpoints.getProfilePic);
+  const url = buildUrl(endpoints.users);
 
-  const response = await fetch(`${url}?id=${id}`, {
+  const response = await fetch(`${url}/profile_pic?id=${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -204,6 +203,11 @@ export const setUserOnlineStatus = async (user, id, isOnline) => {
   return response.json();
 };
 
+/**
+ * 
+ * @param {Realm.App} app 
+ * @returns {Promise<any>}
+ */
 export const getFriendList = async (app) => {
   const url = buildUrl(endpoints.friendList);
   const { currentUser } = app;
@@ -216,14 +220,16 @@ export const getFriendList = async (app) => {
       }
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     return response.json();
   }
 };
 
+/**
+ * 
+ * @param {Realm.App} app 
+ * @param {Array<string>} tokens 
+ * @returns {Promise<any>}
+ */
 export const storeAccessTokens = async (app, tokens) => {
   const url = buildUrl(endpoints.users);
   const { currentUser } = app;
@@ -237,10 +243,6 @@ export const storeAccessTokens = async (app, tokens) => {
       },
       body: JSON.stringify(tokens),
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
 
     return response.json();
   } 

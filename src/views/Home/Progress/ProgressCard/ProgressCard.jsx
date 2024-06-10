@@ -111,7 +111,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
         >
           {Object.keys(progress).length > 0 ? (
             <>
-              {trackParam !== progressMetrics.exercise && (
+              {trackParam !== progressMetrics.weeklyStreak && (
                 <p>
                   <b className="text-xl">Daily:</b> {progress.daily || 0}{" "}
                   {trackParam === progressMetrics.calories &&
@@ -126,12 +126,12 @@ export default function ProgressCard({ trackParam, imgName, title }) {
                   progressUnits.calories}
                 {trackParam === progressMetrics.distance &&
                   progressUnits.distance}
-                {trackParam === progressMetrics.exercise &&
+                {trackParam === progressMetrics.weeklyStreak &&
                   (progress.weekly === 1
                     ? progressUnits.day
                     : progressUnits.days)}
               </p>
-              {trackParam !== progressMetrics.exercise && (
+              {trackParam !== progressMetrics.weeklyStreak && (
                 <p>
                   <b className="text-xl">Monthly:</b> {progress.monthly || 0}{" "}
                   {trackParam === progressMetrics.calories &&
@@ -145,7 +145,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
             <h2>No data available</h2>
           )}
         </Card.Body>
-        {trackParam !== progressMetrics.exercise && (
+        {trackParam !== progressMetrics.weeklyStreak && (
           <Button
             className="border-0 mt-4 text-black rounded-lg"
             style={{ backgroundColor: "rgb(250, 204, 21)" }}

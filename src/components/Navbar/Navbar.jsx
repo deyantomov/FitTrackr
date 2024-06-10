@@ -90,10 +90,6 @@ export default function Navbar({ toggleDrawer }) {
     
         const changeStreamPics = picCollection.watch(pipeline);
 
-        const cleanup = () => {
-          changeStreamPics.close();
-        };
-
         try {
           for await (const change of changeStreamPics) {
             switch (change.operationType) {
@@ -119,8 +115,6 @@ export default function Navbar({ toggleDrawer }) {
           }
         } catch (err) {
           console.error("Error listening for changes:", err);
-        } finally {
-          cleanup();
         }
       };
 
@@ -144,10 +138,6 @@ export default function Navbar({ toggleDrawer }) {
           .collection(mongoCfg.collections.users);
 
         const changeStreamUsers = usersCollection.watch();
-
-        const cleanup = () => {
-          changeStreamUsers.close();
-        };
         
         try {
           for await (const change of changeStreamUsers) {
@@ -177,8 +167,6 @@ export default function Navbar({ toggleDrawer }) {
           }
         } catch (err) {
           console.error(err);
-        } finally {
-          cleanup();
         }
       };
 

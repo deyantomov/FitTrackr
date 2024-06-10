@@ -7,7 +7,7 @@ export default function Activities() {
       <ProgressCard key={progressMetrics.steps} trackParam={progressMetrics.steps} imgName={progressMetrics.steps} title={progressCardTitles.steps} />
       <ProgressCard key={progressMetrics.distance} trackParam={progressMetrics.distance} imgName={progressMetrics.distance} title={progressCardTitles.distance} />
       <ProgressCard key={progressMetrics.calories} trackParam={progressMetrics.calories} imgName="energy-burned" title={progressCardTitles.calories} />
-      <ProgressCard key={progressMetrics.exercise} trackParam={progressMetrics.exercise} imgName="exercise-days" title={progressCardTitles.exercise} />
+      <ProgressCard key={progressMetrics.weeklyStreak} trackParam={progressMetrics.weeklyStreak} imgName="exercise-days" title={progressCardTitles.weeklyStreak} />
     </div>
   );
 }

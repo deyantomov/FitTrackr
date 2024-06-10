@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import api from "../../api/api";
 import { useCompleteProfile } from "../../hooks/useCompleteProfile";
 import Progress from "./Progress/Progress";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../../hooks/useToast";
 import { toastTypes, toastMessages, featureCards } from "../../common/constants";
+import { handleRedirect } from "../../services/fitbit.service";
 
 const { getUserById } = api;
 
@@ -24,6 +25,16 @@ export default function Home() {
   const [progress, setProgress] = useState(progressHook);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const accessCode = query.get("code");
+
+  useEffect(() => {
+    if (accessCode) {
+      handleRedirect(app, setToast, accessCode);
+    }
+  }, [app, accessCode, setToast]);
 
   useEffect(() => {
     const getUser = async () => {

@@ -85,17 +85,26 @@ const Exercises = () => {
 
   const handleLikeExercise = async (id, owner) => {
     try {
+      // before
+      const exerciseBefore = exercises.find(exercise => exercise["_id"] === id);
+      const isLiked = exerciseBefore.likedBy && exerciseBefore.likedBy.includes(app.currentUser.id);
+      // after
       const result = await Promise.all(await likeExercise(app, id, owner));
-
-      const exercise = (await getExerciseById(app, id))["exercise"];
-
-      if (exercise.likedBy && exercise.likedBy.includes(app.currentUser.id)) {
-        setToast({ type: "success", message: "Exercise liked successfully" });
+      const exerciseAfter = (await getExerciseById(app, id))["exercise"];
+  
+      setExercises((prevExercises) => {
+        return prevExercises.map((exercise) => {
+          return exercise["_id"] === id ? exerciseAfter : exercise;
+        });
+      });
+  
+      if (!isLiked) {
+        setToast({ type: toastTypes.SUCCESS, message: "Exercise liked successfully" });
       }
-
+  
       return result;
     } catch (err) {
-      setToast({ type: "success", message: "Failed to like exercise" });
+      setToast({ type: toastTypes.ERROR, message: "Failed to like exercise" });
     }
   };
 
@@ -103,10 +112,10 @@ const Exercises = () => {
     try {
       const result = await updateExercise(app, updatedExercise);
       console.log(result);
-      setToast({ type: "success", message: "Exercise updated successfully" });
+      setToast({ type: toastTypes.SUCCESS, message: "Exercise updated successfully" });
     } catch (err) {
       console.error(err);
-      setToast({ type: "error", message: "Failed to update exercise" });
+      setToast({ type: toastTypes.ERROR, message: "Failed to update exercise" });
     }
   };
 
@@ -114,10 +123,10 @@ const Exercises = () => {
     try {
       const result = await removeExercise(app, id);
       console.log(result);
-      setToast({ type: "success", message: "Exercise deleted successfully" });
+      setToast({ type: toastTypes.SUCCESS, message: "Exercise deleted successfully" });
     } catch (err) {
       console.error(err);
-      setToast({ type: "error", message: "Failed to delete exercise" });
+      setToast({ type: toastTypes.ERROR, message: "Failed to delete exercise" });
     }
   };
 
@@ -141,7 +150,7 @@ const Exercises = () => {
         const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
         const collection = mongoClient.db(mongoCfg.db).collection(mongoCfg.collections.exercises);
         const changeStream = collection.watch();
-  
+
         //  Listen for changes
         try {
           for await (const change of changeStream) {
@@ -202,7 +211,7 @@ const Exercises = () => {
     return () => {
       isMounted = false;
     };
-  });
+  }, [app, setToast]);
 
   const openModal = (exercise) => {
     setSelectedExercise(exercise);
@@ -396,7 +405,7 @@ const Exercises = () => {
             <p>No exercises found.</p>
           </div>
         )}
-        <div className="flex w-full justify-center align-center items-center col-span-full gap-4 pb-12 mb-12">
+        <div className="flex w-full justify-center align-center items-center col-span-full gap-4">
           {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}

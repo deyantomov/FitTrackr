@@ -1,5 +1,5 @@
 //  Revealing module pattern (encapsulation/information hiding)
-const baseUrl = "https://eu-central-1.aws.data.mongodb-api.com/app/application-0-sffvmko/endpoint";
+const baseUrl = "https://eu-central-1.aws.data.mongodb-api.com/app/fittrackr-rnylmjz/endpoint";
 
 /**
  * Creates a URL by appending the endpoint to the base URL.

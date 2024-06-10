@@ -16,5 +16,5 @@ export default function ProfilePic({ profilePic, dimensions, className }) {
 ProfilePic.propTypes = {
   profilePic: PropTypes.string.isRequired,
   dimensions: PropTypes.string.isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string
 };

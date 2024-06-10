@@ -13,7 +13,7 @@ export const createNewExercise = async (app, exercise) => {
     throw new Error("Exercise object cannot be empty!");
   }
 
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
   const currentUser = app.currentUser;
 
   if (currentUser) {
@@ -35,7 +35,6 @@ export const createNewExercise = async (app, exercise) => {
         duration: exercise.duration,
         rating: 0,
         isPrivate: exercise.isPrivate,
-        createdOn: new Date(),
       }),
     });
 
@@ -48,7 +47,7 @@ export const updateExercise = async (app, exercise) => {
     throw new Error("Exercise object cannot be empty!");
   }
 
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
   const currentUser = app.currentUser;
 
   if (currentUser) {
@@ -81,7 +80,7 @@ export const updateExercise = async (app, exercise) => {
 };
 
 export const removeExercise = async (app, exerciseId) => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
   const currentUser = app.currentUser;
 
   if (currentUser) {
@@ -98,21 +97,21 @@ export const removeExercise = async (app, exerciseId) => {
 };
 
 export const getAllExercises = async (page = 1) => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
 
   const response = await fetch(`${url}?page=${page}`);
   return response.json();
 };
 
 export const getAllExercisesNoPagination = async () => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
 
   const response = await fetch(`${url}/no_pagination`);
   return response.json();
 };
 
 export const getExercisesByUserId = async (uid, page = 1) => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
   const response = await fetch(
     `${url}?uid=${uid}&page=${page}`
   );
@@ -121,7 +120,7 @@ export const getExercisesByUserId = async (uid, page = 1) => {
 
 export const getExercisesByDifficulty = async (difficulty, page = 1) => {
   //  Difficulty - "Beginner" | "Intermediate" | "Pro"
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
 
   const response = await fetch(
     `${url}?level=${difficulty}&page=${page}`
@@ -131,7 +130,7 @@ export const getExercisesByDifficulty = async (difficulty, page = 1) => {
 
 export const sortExercisesByRating = async (rating, page = 1) => {
   //  Rating = "lowest" | "highest"
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
   
   const response = await fetch(
     `${url}?rating=${rating}&page=${page}`
@@ -141,7 +140,7 @@ export const sortExercisesByRating = async (rating, page = 1) => {
 
 export const getExerciseImage = async (id) => {
   if (id) {
-    const url = buildUrl(endpoints.exercise);
+    const url = buildUrl(endpoints.exercises);
     
     const response = await fetch(`${url}/image?id=${id}`);
     return response.json();
@@ -149,7 +148,7 @@ export const getExerciseImage = async (id) => {
 };
 
 export const getExerciseById = async (app, exerciseId) => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
 
   const { currentUser } = app;
 
@@ -167,7 +166,7 @@ export const getExerciseById = async (app, exerciseId) => {
 };
 
 export const likeExercise = async (app, exerciseId, owner) => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
   const notificationsUrl = buildUrl(endpoints.notifications);
   
   const user = app.currentUser;
@@ -209,7 +208,7 @@ export const likeExercise = async (app, exerciseId, owner) => {
 };
 
 export const completeExercise = async (app, exerciseId, owner) => {
-  const url = buildUrl(endpoints.exercise);
+  const url = buildUrl(endpoints.exercises);
 
   const { currentUser } = app;
 

@@ -1,24 +1,16 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { redirectToAuth, handleRedirect } from "../../../services/fitbit.service";
-import { useApp } from "../../../hooks/useApp";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { redirectToAuth } from "../../../services/fitbit.service";
 
 /**
  * @param {{setToast: () => void}} props
  * @returns {React.FC}
  */
 export default function ConnToFb({ setToast }) {
-  const app = useApp();
-  const [authUrl, setAuthUrl] = useState("");
-  const params = useParams();
-  const navigate = useNavigate();
   
   const handleRedirectToAuth = async () => {
     try {
       const url = await redirectToAuth(setToast);
-      setAuthUrl(url);
 
       setTimeout(() => {}, 0);
       window.location.href = url;
@@ -26,20 +18,6 @@ export default function ConnToFb({ setToast }) {
       setToast({ type: "error", message: err.message });
     }
   };
-
-  useEffect(() => {
-    if (authUrl) {
-      try {
-        handleRedirect(app, setToast);
-      } catch (err) {
-        setToast({ type: "error", message: err.message });
-      }
-    }
-  }, [authUrl]);
-
-  useEffect(() => {
-    console.log(params);
-  }, [params]);
   
   return (
     <div
