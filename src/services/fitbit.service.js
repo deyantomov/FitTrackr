@@ -20,12 +20,8 @@ export const redirectToAuth = async (setToast) => {
   }
 };
 
-export const handleRedirect = async (app, setToast) => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
-  const code_verifier = codeVerifier;
-
-  if (code && code_verifier) {
+export const handleRedirect = async (app, setToast, accessCode) => {
+  if (accessCode && codeVerifier) {
     try {
       const { clientId, redirectUri, tokenUri } = fitbitCfg;
 
@@ -33,8 +29,8 @@ export const handleRedirect = async (app, setToast) => {
         client_id: clientId,
         grant_type: "authorization_code",
         redirect_uri: redirectUri,
-        code: code,
-        code_verifier: code_verifier
+        code: accessCode,
+        code_verifier: codeVerifier
       });
 
       const response = await fetch(tokenUri, {

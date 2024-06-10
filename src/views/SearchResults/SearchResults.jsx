@@ -145,19 +145,20 @@ export default function SearchResults() {
                     {app.currentUser && app.currentUser.id !== user.uid && (
                       <Button
                         className={`me-4 btn-warning ${
-                          currentUserData &&
+                          currentUserData && (currentUserData.friendlist &&
                           (currentUserData.friendList.some(
                             (friend) => friend.uid === user.uid
-                          ) ||
-                            currentUserData.notifications.friendRequests.some(
-                              (request) => request.from === user.uid
-                            ))
+                          )) ||
+                          currentUserData.notifications && currentUserData.notifications.friendRequests &&
+                          (currentUserData.notifications.friendRequests.some(
+                            (request) => request.from === user.uid
+                          )))
                             ? "btn-disabled"
                             : ""
                         }`}
                         onClick={() => {
                           if (
-                            currentUserData &&
+                            currentUserData && currentUserData.friendlist &&
                             !currentUserData.friendList.some(
                               (friend) => friend.uid === user.uid
                             ) &&
@@ -169,7 +170,7 @@ export default function SearchResults() {
                           }
                         }}
                         disabled={
-                          currentUserData &&
+                          currentUserData && currentUserData.friendlist &&
                           (currentUserData.friendList.some(
                             (friend) => friend.uid === user.uid
                           ) ||
