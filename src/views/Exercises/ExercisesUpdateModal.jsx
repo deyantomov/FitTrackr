@@ -41,50 +41,47 @@ const UpdateExerciseModal = ({ exercise, isOpen, onClose, onUpdate }) => {
   }
 
   return (
-    <Modal open={isOpen} onClose={onClose} className="z-50">
-      <Modal.Header>Update Exercise</Modal.Header>
-      <Modal.Body>
-        <div className="form-control">
-          <label className="label">Title</label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
-        <div className="form-control">
-          <label className="label">Description</label>
-          <Textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div className="form-control">
-          <label className="label">Level</label>
-          <Select value={level} onChange={(e) => setLevel(e.target.value)}>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="pro">Pro</option>
-          </Select>
-        </div>
-        <div className="form-control">
-          <label className="label">Duration (minutes)</label>
-          <Input
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-          />
-        </div>
-        <div className="form-control">
-          <label className="label">Privacy</label>
-          <Select value={isPrivate} onChange={(e) => setIsPrivate(e.target.value === "true")}>
-            <option value="false">Public</option>
-            <option value="true">Private</option>
-          </Select>
-        </div>
-      </Modal.Body>
-      <Modal.Actions>
-        <Button onClick={handleUpdate} className="btn-primary">Update</Button>
-        <Button onClick={onClose} className="btn-secondary">Cancel</Button>
-      </Modal.Actions>
-    </Modal>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-80 transition-opacity" aria-hidden="true"></div>
+      <Modal open={isOpen} onClose={onClose} className=" z-60 border border-gray-400 rounded-lg overflow-hidden bg-white shadow-lg w-96">
+        <Modal.Header className="text-2xl font-bold text-center text-blue-500 bg-gray-200 py-4">Update Exercise</Modal.Header>
+        <Modal.Body className="p-6">
+          <div className="form-control mb-6">
+            <label className="label text-lg font-semibold">Title</label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full" />
+          </div>
+          <div className="form-control mb-6">
+            <label className="label text-lg font-semibold">Description</label>
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full" />
+          </div>
+          <div className="form-control mb-6">
+            <label className="label text-lg font-semibold">Level</label>
+            <Select value={level} onChange={(e) => setLevel(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="pro">Pro</option>
+            </Select>
+          </div>
+          <div className="form-control mb-6">
+            <label className="label text-lg font-semibold">Duration (minutes)</label>
+            <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full"/>
+          </div>
+          <div className="form-control mb-6">
+            <label className="label text-lg font-semibold">Privacy</label>
+            <Select value={isPrivate} onChange={(e) => setIsPrivate(e.target.value === "true")} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full">
+              <option value="false">Public</option>
+              <option value="true">Private</option>
+            </Select>
+          </div>
+        </Modal.Body>
+        <Modal.Actions className="bg-gray-200 py-4 px-6 flex justify-end">
+          <Button onClick={handleUpdate} className="btn-primary text-lg font-semibold mr-4">Update</Button>
+          <Button onClick={onClose} className="btn-secondary text-lg font-semibold">Cancel</Button>
+        </Modal.Actions>
+      </Modal>
+    </div>
   );
+  
 };
 
 export default UpdateExerciseModal;
