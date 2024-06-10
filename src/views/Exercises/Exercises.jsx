@@ -270,46 +270,43 @@ const Exercises = () => {
   }
 
   return (
-    <div className="w-full h-full p-12">
-      <div className="w-full flex justify-between items-center mb-6">
+    <div className="container mx-auto p-6 relative">
+      <div className="flex justify-between items-center mb-6">
         {app.currentUser && (
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="select select-bordered w-1/6 p-1 text-lg"
+            className="select select-bordered w-1/4 p-1 text-lg"
           >
             <option value="all-exercises">All</option>
             <option value="my-exercises">Mine</option>
             <option value="liked-exercises">Liked</option>
           </select>
         )}
-        <div className="w-full">
+        <div className="w-3/4">
           <SearchBar onSearch={handleSearch} />
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 p-0 pb-12 md:grid-cols-2 xl:grid-cols-3 justify-center align-center items-center place-items-center w-full h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Card
               key={exercise._id}
-              className="w-96 bg-base-100 shadow-xl transform transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gray-500/50 text-black"
+              className="w-full bg-base-100 shadow-xl rounded-lg overflow-hidden relative transition-transform duration-300 hover:shadow-2xl hover:transform hover:scale-105"
             >
-              <Card.Body
-                className="text-lg mb-2 bg-cover bg-center"
+              <div
+                className="absolute inset-0 bg-cover bg-center"
                 style={{
                   backgroundImage: exercise.img
                     ? `url(${exercise.img})`
                     : "url(/add-first-exercise-2.jpg)",
                 }}
-              >
-                <div className="flex flex-col w-full h-full justify-center p-4 rounded-md bg-white bg-opacity-55">
-                  <Card.Title className="flex items-center justify-center border p-2 bg-yellow-500 rounded bg-opacity-55 mb-4">
-                    <FireIcon className="h-5 w-5 mr-2 text-orange-500" />
-                    <strong className="text-center text-2xl">
-                      {exercise.title}
-                    </strong>
-                    {exercise.owner ===
-                      (app.currentUser ? app.currentUser.id : null) && (
+              />
+              <Card.Body className="relative">
+                <div className="p-4 bg-white bg-opacity-90 rounded-lg">
+                  <Card.Title className="font-bold text-2xl mb-2">
+                  Title: {exercise.title}
+                    {exercise.owner === (app.currentUser ? app.currentUser.id : null) && (
                       <span className="ml-4 flex">
                         <PencilIcon
                           className="h-6 w-6 text-blue-500 hover:text-blue-700 transform transition-all duration-200 ease-in-out hover:scale-125"
@@ -322,59 +319,15 @@ const Exercises = () => {
                       </span>
                     )}
                   </Card.Title>
-                  <div className="space-y-4">
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <PencilIcon className="h-6 w-6 mr-2 text-green-300" />
-                      {exercise.description}
-                    </p>
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <ChartBarIcon className="h-6 w-6 mr-2 text-purple-500" />
-                      <strong className="mr-2">Level:</strong> {exercise.level}
-                    </p>
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <ClockIcon className="h-6 w-6 mr-2 text-pink-500" />
-                      <strong className="mr-2">Duration:</strong>{" "}
-                      {exercise.duration} minutes
-                    </p>
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <StarIcon className="h-6 w-6 mr-2 text-yellow-500" />
-                      <strong className="mr-2">Rating:</strong>{" "}
-                      {exercise.rating}
-                    </p>
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <CalendarIcon className="h-6 w-6 mr-2 text-blue-500" />
-                      <strong className="mr-2">Created On:</strong>{" "}
-                      {new Date(exercise.createdOn).toLocaleDateString()}
-                    </p>
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <UserCircleIcon className="h-6 w-6 mr-2 text-white" />
-                      <strong className="mr-2">Owner:</strong>{" "}
-                      {exercise.ownerHandle}
-                    </p>
-                    <p className="text-gray-700 flex items-center mb-2">
-                      <LockClosedIcon
-                        className={`h-6 w-6 mr-2 ${exercise.isPrivate ? "text-red-500" : "text-green-500"
-                        }`}
-                      />
-                      <strong>
-                        <span className="text-lg">
-                          {exercise.isPrivate ? "Private" : "Public"}
-                        </span>
-                      </strong>
-                    </p>
-                  </div>
-                </div>
-                <Card.Actions>
-                  <div className="flex w-full justify-center align-center gap-8 mt-6">
+                  <p className="text-sm text-gray-600 mb-4">Description: {exercise.description}</p>
+                  <div className="flex justify-between items-center">
                     <Button
-                      className="btn-md btn-warning rounded"
-                      onClick={() =>
-                        handleLikeExercise(exercise["_id"], exercise.owner)
-                      }
+                      className="btn-warning flex items-center"
+                      onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
                     >
                       {exercise.likedBy &&
-                        app.currentUser &&
-                        exercise.likedBy.includes(app.currentUser.id) ? (
+                      app.currentUser &&
+                      exercise.likedBy.includes(app.currentUser.id) ? (
                           <HeartSolidIcon className="h-5 w-5 mr-2 text-red-500" />
                         ) : (
                           <HeartOutlineIcon className="h-5 w-5 mr-2" />
@@ -392,11 +345,11 @@ const Exercises = () => {
                       className="btn-md btn-warning rounded"
                       onClick={() => openViewDetails(exercise)}
                     >
-                          Details
+                      Details
                       <InformationCircleIcon className="h-5 w-5 ml-2 text-blue-200" />
                     </Button>
                   </div>
-                </Card.Actions>
+                </div>
               </Card.Body>
             </Card>
           ))
@@ -405,17 +358,17 @@ const Exercises = () => {
             <p>No exercises found.</p>
           </div>
         )}
-        <div className="flex w-full justify-center align-center items-center col-span-full gap-4">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <Button
-              key={i}
-              onClick={() => setPage(i + 1)}
-              className={`btn-warning ${page !== i + 1 && "btn-outline"}`}
-            >
-              {i + 1}
-            </Button>
-          ))}
-        </div>
+      </div>
+      <div className="flex justify-center mt-6">
+        {Array.from({ length: totalPages }, (_, i) => (
+          <Button
+            key={i}
+            onClick={() => setPage(i + 1)}
+            className={`btn-warning ${page !== i + 1 && "btn-outline"}`}
+          >
+            {i + 1}
+          </Button>
+        ))}
       </div>
       <ExerciseModal
         exercise={selectedExercise}

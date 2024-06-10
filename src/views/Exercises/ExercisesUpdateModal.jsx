@@ -41,7 +41,7 @@ const UpdateExerciseModal = ({ exercise, isOpen, onClose, onUpdate }) => {
   }
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={isOpen} onClose={onClose} className="z-50">
       <Modal.Header>Update Exercise</Modal.Header>
       <Modal.Body>
         <div className="form-control">
