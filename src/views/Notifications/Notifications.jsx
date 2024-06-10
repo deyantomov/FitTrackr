@@ -143,10 +143,10 @@ export default function Notifications() {
       <h2 className="text-3xl md:text-4xl lg:text-5xl mb-12">Likes</h2>
       <div className="overflow-auto w-full flex justify-center align-center">
         <Table className="text-xs md:text-xl lg:text-2xl w-full">
-          {notifications.likes && notifications.likes.length > 0 && (
+          {notifications && notifications.likes && notifications.likes.length > 0 && (
             <Table.Head className="invisible md:visible odd:bg-base-200">
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                User Handle
+                User
               </span>
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
                 Exercise
@@ -161,7 +161,7 @@ export default function Notifications() {
           )}
 
           <Table.Body className="w-full">
-            {notifications.likes && notifications.likes.length > 0 ? (
+            {notifications && notifications.likes && notifications.likes.length > 0 ? (
               notifications.likes.map((like, index) => (
                 <Table.Row
                   key={index}
@@ -201,7 +201,7 @@ export default function Notifications() {
       <h2 className="text-5xl my-12">Friend requests</h2>
       <div className="overflow-auto w-full flex justify-center align-center">
         <Table className="text-xs md:text-xl lg:text-2xl w-full">
-          {notifications.friendRequests && notifications.friendRequests.length > 0 && (
+          {notifications && notifications.friendRequests && notifications.friendRequests.length > 0 && (
             <Table.Head className="invisible md:visible odd:bg-base-200">
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">User Handle</span>
               <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">Date</span>
@@ -210,7 +210,7 @@ export default function Notifications() {
           )}
 
           <Table.Body className="w-full">
-            {notifications.friendRequests && notifications.friendRequests.length > 0 ? (
+            {notifications && notifications.friendRequests && notifications.friendRequests.length > 0 ? (
               notifications.friendRequests.map((request, index) => (
                 <Table.Row key={index} className="even:bg-base-200">
                   <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
