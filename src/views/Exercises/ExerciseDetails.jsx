@@ -69,33 +69,33 @@ const ExerciseDetails = () => {
           }}
         ></div>
         <div className="relative z-10 p-4 bg-white bg-opacity-80 rounded-md">
-          <Card.Title className="text-5xl mb-4">{exercise.title}</Card.Title>
-          <p className="text-gray-700 flex items-center mb-2">
+          <Card.Title className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4">{exercise.title}</Card.Title>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <PencilIcon className="h-6 w-6 mr-2 text-green-300" />
             <strong className="mr-2">Description:</strong> {exercise.description}
           </p>
-          <p className="text-gray-700 flex items-center mb-2">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <ChartBarIcon className="h-6 w-6 mr-2 text-purple-500" />
             <strong className="mr-2">Level:</strong> {exercise.level}
           </p>
-          <p className="text-gray-700 flex items-center mb-2">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <ClockIcon className="h-6 w-6 mr-2 text-pink-500" />
             <strong className="mr-2">Duration:</strong> {exercise.duration} minutes
           </p>
-          <p className="text-gray-700 flex items-center mb-2">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <StarIcon className="h-6 w-6 mr-2 text-yellow-500" />
             <strong className="mr-2">Rating:</strong> {exercise.rating}
           </p>
-          <p className="text-gray-700 flex items-center mb-2">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <CalendarIcon className="h-6 w-6 mr-2 text-blue-500" />
             <strong className="mr-2">Created On:</strong>{" "}
             {new Date(exercise.createdOn).toLocaleDateString()}
           </p>
-          <p className="text-gray-700 flex items-center mb-2">
-            <UserCircleIcon className="h-6 w-6 mr-2 text-white" />
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
+            <UserCircleIcon className="h-6 w-6 mr-2 text-blue-300" />
             <strong className="mr-2">Owner:</strong> {exercise.ownerHandle}
           </p>
-          <p className="text-gray-700 flex items-center mb-2">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <LockClosedIcon
               className={`h-6 w-6 mr-2 ${exercise.isPrivate ? "text-red-500" : "text-green-500"
               }`}
