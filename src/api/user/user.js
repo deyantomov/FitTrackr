@@ -224,6 +224,49 @@ export const getFriendList = async (app) => {
   }
 };
 
+export const savePKCE = async (app, codeVerifier) => {
+  const url = buildUrl(endpoints.users);
+  const { currentUser } = app;
+
+  if (currentUser) {
+    try {
+      const response = await fetch(`${url}/save_pkce_verifier?id=${currentUser.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.accessToken}`,
+        },
+        body: JSON.stringify({ codeVerifier }),
+      });
+
+      return response.json();
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+};
+
+export const retrievePKCE = async (app) => {
+  const url = buildUrl(endpoints.users);
+  const { currentUser } = app;
+  
+  if (currentUser) {
+    try {
+      const response = await fetch(`${url}/retrieve_pkce_verifier?id=${currentUser.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.accessToken}`,
+        }
+      });
+
+      return response.json();
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+};
+
 /**
  * 
  * @param {Realm.App} app 

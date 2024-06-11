@@ -1,58 +1,55 @@
 import { fitbitCfg } from "../common/constants";
-import { generateCodeChallenge } from "../common/utils";
 import api from "../api/api";
-import { toastTypes, toastMessages } from "../common/constants";
+import { toastTypes } from "../common/constants";
 
 const { storeAccessTokens } = api;
 
-let codeVerifier = null;
-
-export const redirectToAuth = async (setToast) => {
+export const redirectToAuth = (setToast) => {
   try {
-    const { code_verifier, code_challenge } = await generateCodeChallenge();
-    codeVerifier = code_verifier;
+    const authUrl = `${fitbitCfg.authUri}
+      ?response_type=token
+      &client_id=${fitbitCfg.client}
+      &scope=${fitbitCfg.scopes.join("+")}
+      &redirect_uri=${encodeURIComponent(fitbitCfg.redirectUrl)}
+      &expires_in=604800`;
 
-    const authUrl = `${fitbitCfg.authUri}?response_type=code&client_id=${fitbitCfg.client}&scope=${fitbitCfg.scopes.join(" ")}&code_challenge=${encodeURIComponent(code_challenge)}&code_challenge_method=S256&redirect_uri=${encodeURIComponent(fitbitCfg.redirectUrl)}`;
+    console.log("Redirecting to authorization URL", authUrl);
 
     return authUrl;
   } catch (error) {
-    setToast({ type: toastTypes.ERROR, message: "Can't generate a PKCE challenge" });
+    setToast({ type: toastTypes.ERROR, message: "Can't generate authorization URL" });
   }
 };
 
-export const handleRedirect = async (app, setToast, accessCode) => {
-  if (accessCode && codeVerifier) {
-    try {
-      const { clientId, redirectUri, tokenUri } = fitbitCfg;
+export const handleRedirect = async (app, setToast) => {
+  try {
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get("access_token");
+      const expiresIn = params.get("expires_in");
+      const tokenType = params.get("token_type");
 
-      const body = new URLSearchParams({
-        client_id: clientId,
-        grant_type: "authorization_code",
-        redirect_uri: redirectUri,
-        code: accessCode,
-        code_verifier: codeVerifier
-      });
-
-      const response = await fetch(tokenUri, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: body.toString()
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Tokens: ", data);
-        await storeAccessTokens(app, data);
+      if (accessToken) {
+        console.log(accessToken, expiresIn, tokenType);
+        await storeAccessToken(app, { accessToken, expiresIn, tokenType });
+        setToast({ type: toastTypes.SUCCESS, message: "Authorization successful" });
       } else {
-        setToast({ type: toastTypes.ERROR, mesage: data });
+        setToast({ type: toastTypes.ERROR, message: "Authorization failed" });
       }
-    } catch (error) {
-      setToast({ type: toastTypes.ERROR, message: "Couldn't exchange tokens" });
+    } else {
+      setToast({ type: toastTypes.ERROR, message: "No authorization token found" });
     }
-  } else {
-    setToast({ type: toastTypes.ERROR, message: "Missing authorization code or code verifier" });
+  } catch (error) {
+    setToast({ type: toastTypes.ERROR, message: "Error handling authorization redirect" });
+  }
+};
+
+const storeAccessToken = async (app, tokenData) => {
+  try {
+    // Save the tokenData to your app’s state or storage
+    await storeAccessTokens(app, tokenData);
+  } catch (error) {
+    console.error("Failed to store access token", error);
   }
 };

@@ -8,6 +8,8 @@ import {
   getProfilePic,
   setUserOnlineStatus,
   getFriendList,
+  savePKCE,
+  retrievePKCE,
   storeAccessTokens
 } from "./user/user";
 
@@ -80,6 +82,8 @@ export default {
   getFriendList,
   getExerciseById,
   completeExercise,
+  savePKCE,
+  retrievePKCE,
   storeAccessTokens,
   getAllExercisesNoPagination,
   reportABug

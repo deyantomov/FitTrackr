@@ -1,3 +1,4 @@
+import { useApp } from "../../../hooks/useApp";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { redirectToAuth } from "../../../services/fitbit.service";
@@ -7,10 +8,11 @@ import { redirectToAuth } from "../../../services/fitbit.service";
  * @returns {React.FC}
  */
 export default function ConnToFb({ setToast }) {
+  const app = useApp();
   
   const handleRedirectToAuth = async () => {
     try {
-      const url = await redirectToAuth(setToast);
+      const url = await redirectToAuth(app, setToast);
 
       setTimeout(() => {}, 0);
       window.location.href = url;
