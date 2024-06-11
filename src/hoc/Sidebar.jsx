@@ -36,13 +36,13 @@ export default function Sidebar({ children, toggleTheme, theme }) {
   };
 
   return (
-    <div className="drawer h-full z-40">
+    <div className="drawer h-full">
       <input
         id="my-drawer-2"
         type="checkbox"
         className="drawer-toggle h-full"
       />
-      <div className="drawer-content flex flex-col items-start justify-center p-0">
+      <div className="drawer-content flex flex-col items-start justify-center p-0 z-0">
         <Navbar toggleDrawer={toggleSidebar} />
         <div className="flex flex-col w-full h-full text-4xl">
           {children}

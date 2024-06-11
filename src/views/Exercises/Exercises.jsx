@@ -12,6 +12,7 @@ import {
   StarIcon,
   UserCircleIcon,
   InformationCircleIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/16/solid";
 import { ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartOutlineIcon } from "@heroicons/react/24/outline";
@@ -273,15 +274,27 @@ const Exercises = () => {
     <div className="container mx-auto p-6 relative">
       <div className="flex justify-between items-center mb-6">
         {app.currentUser && (
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="select select-bordered w-1/4 p-1 text-lg"
-          >
-            <option value="all-exercises">All</option>
-            <option value="my-exercises">Mine</option>
-            <option value="liked-exercises">Liked</option>
-          </select>
+          <div className="relative inline-block text-center z-10"> 
+            <div>
+              <button type="button" className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="options-menu" aria-haspopup="true" aria-expanded="true">
+              Exercises:
+                <PencilSquareIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+            <div className="origin-top-right absolute top-full right-1/2 transform translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"> {/* Adjusted right-0 to right-1/2 and added transform translate-x-1/2 */}
+              <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <option value="all-exercises">All</option>
+                  <option value="my-exercises">Mine</option>
+                  <option value="liked-exercises">Liked</option>
+                </select>
+              </div>
+            </div>
+          </div>
         )}
         <div className="w-3/4">
           <SearchBar onSearch={handleSearch} />
