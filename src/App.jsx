@@ -18,6 +18,7 @@ import Exercises from "./views/Exercises/Exercises";
 import FriendList from "./views/FriendList/FriendList";
 import ExerciseDetails from "./views/Exercises/ExerciseDetails";
 import BugReport from "./views/BugReport/BugReport";
+import About from "./views/About/About";
 import { ToastProvider } from "./providers/ToastProvider";
 const { appId } = atlasConfig;
 
@@ -147,6 +148,14 @@ function App() {
             <Authenticated>
               <FriendList />
             </Authenticated>
+          </Sidebar>
+        }
+      />
+      <Route
+        path="/about-us"
+        element={
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
+            <About />
           </Sidebar>
         }
       />
