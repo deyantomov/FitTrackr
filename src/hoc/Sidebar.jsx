@@ -76,12 +76,6 @@ export default function Sidebar({ children, toggleTheme, theme }) {
               icon={<GlobeAltIcon title="exercises" className="h-3/6" />}
             ></SidebarButton>
           </Link>
-          <Link to="/about">
-            <SidebarButton
-              text="About us"
-              icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
-            ></SidebarButton>
-          </Link>
           <hr className="border-t-2 border-warning my-4" />
           {app.currentUser && (
             <>
@@ -106,6 +100,12 @@ export default function Sidebar({ children, toggleTheme, theme }) {
             </>
           )}
           {app.currentUser && <hr className="border-t-2 border-warning my-4" />}
+          <Link to="/about-us">
+            <SidebarButton
+              text="About us"
+              icon={<QuestionMarkCircleIcon title="about" className="h-3/6" />}
+            ></SidebarButton>
+          </Link>
           <Link to="/report-a-bug">
             <SidebarButton
               text="Report a bug"
