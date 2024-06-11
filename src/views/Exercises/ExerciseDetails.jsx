@@ -13,8 +13,11 @@ import {
   StarIcon,
   UserCircleIcon,
   InformationCircleIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
 } from "@heroicons/react/16/solid";
 import { HeartIcon as HeartOutlineIcon, HeartIcon as HeartSolidIcon } from "@heroicons/react/24/outline";
+import ExerciseModal from "./ExercisesModal";
 import { useToast } from "../../hooks/useToast";
 import { toastTypes, toastMessages, mongoCfg } from "../../common/constants";
 
@@ -24,6 +27,8 @@ const ExerciseDetails = () => {
   const navigate = useNavigate();
   //const [exercises, setExercises] = useState("");
   const [exercise, setExercise] = useState("");
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { setToast } = useToast(); 
 
   useEffect(() => {
@@ -72,6 +77,19 @@ const ExerciseDetails = () => {
     }
   };
 
+  const openModal = (exercise) => {
+    if (!app.currentUser) {
+      navigate("/login");
+      return;
+    }
+    setSelectedExercise(exercise);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedExercise(null);
+    setIsModalOpen(false);
+  };
   //if (!exercise) {
   //return (
   //<div className="flex justify-center items-center h-screen">
@@ -144,14 +162,27 @@ const ExerciseDetails = () => {
               {exercise.likedBy ? exercise.likedBy.length : 0}
             </Button>
             <Button
-              className="btn-md btn-warning rounded"
+              className="btn-md bg-red-500 text-white rounded absolute top-0 right-0 m-4 p-2 rounded-full"
               onClick={handleGoBack}
             >
               Go Back
+              <ChevronLeftIcon className="h-5 w-5 ml-2" />
+            </Button>
+            <Button
+              className="btn-md btn-warning rounded text-center "
+              onClick={() => openModal(exercise)}
+            >
+              Start Workout
+              <ChevronRightIcon className="h-5 w-5 ml-2" />
             </Button>
           </div>
         </div>
       </Card>
+      <ExerciseModal
+        exercise={selectedExercise}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </div>
   );
 };
