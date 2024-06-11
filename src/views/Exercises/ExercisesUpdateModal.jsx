@@ -48,15 +48,15 @@ const UpdateExerciseModal = ({ exercise, isOpen, onClose, onUpdate }) => {
         <Modal.Body className="p-6">
           <div className="form-control mb-6">
             <label className="label text-lg font-semibold">Title</label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full" />
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full bg-white" />
           </div>
           <div className="form-control mb-6">
             <label className="label text-lg font-semibold">Description</label>
-            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full" />
+            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full bg-white" />
           </div>
           <div className="form-control mb-6">
             <label className="label text-lg font-semibold">Level</label>
-            <Select value={level} onChange={(e) => setLevel(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full">
+            <Select value={level} onChange={(e) => setLevel(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full bg-white">
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
               <option value="pro">Pro</option>
@@ -64,11 +64,11 @@ const UpdateExerciseModal = ({ exercise, isOpen, onClose, onUpdate }) => {
           </div>
           <div className="form-control mb-6">
             <label className="label text-lg font-semibold">Duration (minutes)</label>
-            <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full"/>
+            <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full bg-white"/>
           </div>
           <div className="form-control mb-6">
             <label className="label text-lg font-semibold">Privacy</label>
-            <Select value={isPrivate} onChange={(e) => setIsPrivate(e.target.value === "true")} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full">
+            <Select value={isPrivate} onChange={(e) => setIsPrivate(e.target.value === "true")} className="text-lg border border-gray-400 rounded-lg px-3 py-2 w-full bg-white">
               <option value="false">Public</option>
               <option value="true">Private</option>
             </Select>
