@@ -271,7 +271,7 @@ const Exercises = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 relative">
+    <div className="container mx-auto p-6 relative text-black">
       <div className="flex justify-between items-center mb-6">
         {app.currentUser && (
           <div className="relative inline-block text-center z-10"> 
@@ -281,12 +281,12 @@ const Exercises = () => {
                 <PencilSquareIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
               </button>
             </div>
-            <div className="origin-top-right absolute top-full right-1/2 transform translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"> {/* Adjusted right-0 to right-1/2 and added transform translate-x-1/2 */}
+            <div className="origin-top-right absolute top-full right-1/2 transform translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
-                  className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-100 text-gray-900 rounded-md shadow-sm focus:outline-none sm:text-sm"
                 >
                   <option value="all-exercises">All</option>
                   <option value="my-exercises">Mine</option>

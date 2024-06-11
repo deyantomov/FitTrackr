@@ -58,7 +58,7 @@ const ExerciseDetails = () => {
   //}
 
   return (
-    <div className="exercise-details w-full h-full p-12">
+    <div className="exercise-details w-full h-full p-12 text-black">
       <Card className="exercise-card bg-base-100 shadow-xl transform transition-transform duration-300 w-full md:w-3/4 lg:w-2/3 mx-auto relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center rounded opacity-75"
