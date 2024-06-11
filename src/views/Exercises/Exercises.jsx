@@ -215,6 +215,10 @@ const Exercises = () => {
   }, [app, setToast]);
 
   const openModal = (exercise) => {
+    if (!app.currentUser) {
+      navigate("/login");
+      return;
+    }
     setSelectedExercise(exercise);
     setIsModalOpen(true);
   };
