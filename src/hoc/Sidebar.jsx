@@ -36,7 +36,7 @@ export default function Sidebar({ children, toggleTheme, theme }) {
   };
 
   return (
-    <div className="drawer h-full z-50">
+    <div className="drawer h-full z-40">
       <input
         id="my-drawer-2"
         type="checkbox"
