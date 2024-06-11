@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getExerciseById } from "../../api/exercise/exercise";
+import { getExerciseById, likeExercise } from "../../api/exercise/exercise";
 import { useApp } from "../../hooks/useApp";
 import { Card, Button } from "react-daisyui";
 import {
@@ -15,12 +15,16 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/16/solid";
 import { HeartIcon as HeartOutlineIcon, HeartIcon as HeartSolidIcon } from "@heroicons/react/24/outline";
+import { useToast } from "../../hooks/useToast";
+import { toastTypes, toastMessages, mongoCfg } from "../../common/constants";
 
 const ExerciseDetails = () => {
   const { id } = useParams();
-  const [exercise, setExercise] = useState("");
   const app = useApp();
   const navigate = useNavigate();
+  //const [exercises, setExercises] = useState("");
+  const [exercise, setExercise] = useState("");
+  const { setToast } = useToast(); 
 
   useEffect(() => {
     const fetchExercise = async () => {
@@ -45,8 +49,27 @@ const ExerciseDetails = () => {
     navigate("/exercises");
   };
 
-  const handleLikeExercise = () => {
-  //TODO: Edit
+  const handleLikeExercise = async (exerciseId, ownerId) => {
+    if (!exercise) return;
+
+    try {
+      const isLiked = exercise.likedBy && exercise.likedBy.includes(app.currentUser.id);
+      await likeExercise(app, exerciseId, ownerId);
+
+      const response = await getExerciseById(app, exerciseId);
+      const updatedExercise = response.exercise || response;
+
+      setExercise(updatedExercise);
+
+      if (!isLiked) {
+        setToast({ type: toastTypes.SUCCESS, message: "Exercise liked successfully" });
+      } else {
+        setToast({ type: toastTypes.SUCCESS, message: "Exercise unliked successfully" });
+      }
+      
+    } catch (err) {
+      setToast({ type: toastTypes.ERROR, message: "Failed to like exercise" });
+    }
   };
 
   //if (!exercise) {
@@ -108,10 +131,17 @@ const ExerciseDetails = () => {
           </p>
           <div className="flex justify-between">
             <Button
-              className="btn-md btn-warning rounded"
-              onClick={() => handleLikeExercise(exercise._id)}
+              className="btn-warning flex items-center"
+              onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
             >
-              Like
+              {exercise.likedBy &&
+              app.currentUser &&
+              exercise.likedBy.includes(app.currentUser.id) ? (
+                  <HeartSolidIcon className="h-5 w-5 mr-2 text-red-500" />
+                ) : (
+                  <HeartOutlineIcon className="h-5 w-5 mr-2" />
+                )}
+              {exercise.likedBy ? exercise.likedBy.length : 0}
             </Button>
             <Button
               className="btn-md btn-warning rounded"
