@@ -121,45 +121,52 @@ export default function GoalsContent({ periodToShow }) {
 
   useEffect(() => {
     let isMounted = true;
-    console.log(isMounted);
     
-    if (isMounted) {      
-      const listenForChanges = async () => {
-        const collection = app.currentUser.mongoClient(mongoCfg.mongoClient)
-          .db(mongoCfg.db)
-          .collection(mongoCfg.collections.goals);
+    const listenForChanges = async () => {      
+      const collection = app.currentUser.mongoClient(mongoCfg.mongoClient)
+        .db(mongoCfg.db)
+        .collection(mongoCfg.collections.goals);
+        
+      const changeStream = collection.watch();
+
+      try {
+        for await (const change of changeStream) {
+          if (!isMounted) {
+            break;
+          }
+
+          setLoading(true);
           
-        const changeStream = collection.watch();
-
-        const cleanup = () => {
-          changeStream.close();
-        }
-
-        try {
-          for await (const change of changeStream) {
-            if (!change.fullDocument) {
-              continue; 
-            }
 
 
-            if (change.fullDocument.period === periodToShowRef.current) {
+          if (!change.fullDocument) {
+            continue; 
+          }
+  
+  
+          if (change.fullDocument.period === periodToShowRef.current) {
+            try {
               setUserGoals([...userGoals, change.fullDocument]);
+            } catch (err) {
+              setToast({ type: "error", message: "Couldn't set the goal" });
             }
           }
-        } catch (err) {
-          setToast({ type: toastTypes.ERROR, message: "Error listening to change stream" });
-        } finally {
-          cleanup();
+
+        
         }
-      };
-    
-      listenForChanges();
-    }
+      } catch (err) {
+        setToast({ type: toastTypes.ERROR, message: "Error listening to change stream" });
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    listenForChanges();
 
     return () => {
       isMounted = false;
     };
-  }, [app, periodToShowRef]);
+  }, [app, mongoCfg, periodToShowRef]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -221,6 +228,7 @@ export default function GoalsContent({ periodToShow }) {
       const currentGoal = filteredByPeriod[0];
 
       await removeGoal(app, currentGoal["_id"]);
+      setUserGoals(goals => goals.filter(goal => goal["_id"] !== currentGoal["_id"]));
       setToast({ type: toastTypes.SUCCESS, message: "Goal removed successfully!" });
     } catch (error) {
       setToast({ type: toastTypes.ERROR, message: "Failed to remove goal. Please try again." });
