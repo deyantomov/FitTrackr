@@ -1,16 +1,25 @@
 import GoalsCard from "../../components/Goals/GoalsCard";
-import { Card, Button, Modal, Input } from "react-daisyui";
+import { Button, Loading } from "react-daisyui";
 import { useApp } from "../../hooks/useApp";
 import api from "../../api/api";
 import { useEffect, useState, useRef } from "react";
 import CreateNewGoal from "./CreateNewGoal";
 import { mongoCfg } from "../../common/constants";
+import { useToast } from "../../hooks/useToast";
+import { toastTypes } from "../../common/constants";
+import PropTypes from "prop-types";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
 
+/**
+ * 
+ * @param {{periodToShow: string}} props 
+ * @returns {React.FC}
+ */
 export default function GoalsContent({ periodToShow }) {
-  console.log("period to show: ", periodToShow);
   const app = useApp();
+  const { setToast } = useToast();
   const [title, setTitle] = useState("");
   const [steps, setSteps] = useState(0);
   const [calories, setCalories] = useState(0);
@@ -25,18 +34,22 @@ export default function GoalsContent({ periodToShow }) {
   const [userGoals, setUserGoals] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
 
+  const [loading, setLoading] = useState(false);
+
   const periodToShowRef = useRef(periodToShow);
 
   useEffect(() => {
     periodToShowRef.current = periodToShow;
   }, [periodToShow]);
 
-  (async function getCurrentUser() {
-    const currentUser = await getUserById(app.currentUser.id);
-  })();
+  // (async function getCurrentUser() {
+  //   const currentUser = await getUserById(app.currentUser.id);
+  // })();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     let updatedTarget = { ...target };
     switch (type) {
@@ -62,18 +75,21 @@ export default function GoalsContent({ periodToShow }) {
         period,
       };
 
-      console.log("goal log: ", goal);
       try {
         await createNewGoal(app, goal);
         setSuccess("Goal created successfully!");
+        setToast({ type: toastTypes.SUCCESS, message: "Goal created successfully!" });
         resetForm();
       } catch (error) {
         setError("Failed to create goal. Please try again.");
-        console.error("Error creating new goal:", error);
+        setToast({ type: toastTypes.ERROR, message: "Failed to create goal. Please try again." });
       }
     } else {
       setError("You must be logged in to create a goal.");
+      setToast({ type: toastTypes.ERROR, message: "You must be logged in to create a goal." });
     }
+
+    setLoading(false);
   };
 
   const resetForm = () => {
@@ -88,29 +104,26 @@ export default function GoalsContent({ periodToShow }) {
   };
 
   useEffect(() => {
-    const getGoals = async () => {
-      setUserGoals(await getAllGoals(app));
+    setLoading(true);
 
-    //   console.log(
-    //     "userGoals filtered",
-    //     userGoals.filter((eachGoal) => eachGoal.period === periodToShowRef.current)
-    //   );
+    const getGoals = async () => {
+      try {
+        setUserGoals(await getAllGoals(app));
+      } catch (err) {
+        setToast({ type: toastTypes.ERROR, message: "Failed to fetch goals" });
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // const deleteGoal = async () => {
-    //   const result = await removeGoal(app, '665c4e30f7dfa1ba59a7118a');
-    //   console.log(result);
-    // }
-
     getGoals();
-
-    // deleteGoal();
-  }, [periodToShow, app]);
+  }, [periodToShow, app, setToast]);
 
   useEffect(() => {
     let isMounted = true;
+    console.log(isMounted);
     
-    if (isMounted) {
+    if (isMounted) {      
       const listenForChanges = async () => {
         const collection = app.currentUser.mongoClient(mongoCfg.mongoClient)
           .db(mongoCfg.db)
@@ -120,7 +133,7 @@ export default function GoalsContent({ periodToShow }) {
 
         const cleanup = () => {
           changeStream.close();
-        };
+        }
 
         try {
           for await (const change of changeStream) {
@@ -128,17 +141,16 @@ export default function GoalsContent({ periodToShow }) {
               continue; 
             }
 
+
             if (change.fullDocument.period === periodToShowRef.current) {
               setUserGoals([...userGoals, change.fullDocument]);
             }
           }
         } catch (err) {
-          console.error("Error listening to change stream:", err);
+          setToast({ type: toastTypes.ERROR, message: "Error listening to change stream" });
         } finally {
           cleanup();
         }
-  
-        return cleanup;
       };
     
       listenForChanges();
@@ -151,13 +163,23 @@ export default function GoalsContent({ periodToShow }) {
 
   useEffect(() => {
     const getUser = async () => {
-      setCurrentUser(await getUserById(app.currentUser.id));
+      setLoading(true);
+
+      try {
+        setCurrentUser(await getUserById(app.currentUser.id));
+      } catch (err) {
+        setToast({ type: toastTypes.ERROR, message: "Failed to fetch user" });
+      } finally {
+        setLoading(false);
+      }
+      
     };
     getUser();
-  }, [app]);
+  }, [app, setToast]);
 
   function goalSetFunction(metric) {
-    const filteredByPeriod = userGoals.filter((goal) => goal.period === periodToShowRef.current);
+    const filteredByPeriod = userGoals.length > 0 && 
+      userGoals.filter((goal) => goal.period === periodToShowRef.current);
 
     switch(metric) {
     case "steps":
@@ -168,6 +190,7 @@ export default function GoalsContent({ periodToShow }) {
       return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.calories : null;
     }
   }
+
   function goalName() {
     const result =
       userGoals.length > 0
@@ -189,11 +212,52 @@ export default function GoalsContent({ periodToShow }) {
     return result;
   }
 
+  const handleRemoveGoal = async () => {
+    setLoading(true);
+
+    try {
+      const filteredByPeriod = userGoals.length > 0 &&
+        userGoals.filter((goal) => goal.period === periodToShowRef.current);
+      const currentGoal = filteredByPeriod[0];
+
+      await removeGoal(app, currentGoal["_id"]);
+      setToast({ type: toastTypes.SUCCESS, message: "Goal removed successfully!" });
+    } catch (error) {
+      setToast({ type: toastTypes.ERROR, message: "Failed to remove goal. Please try again." });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  function hasCurrentPeriodGoals() {
+    const filteredByPeriod = userGoals.length> 0 &&
+      userGoals.filter((goal) => goal.period === periodToShowRef.current);
+
+    if (filteredByPeriod.length > 0) {
+      return filteredByPeriod[0]["_id"] ? true : false;
+    } else {
+      return false;
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center align-center items-center">
+        <Loading/>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col justify-center align-center items-center h-full">
-      <h1 className="font-thin">
-        <b>Title:</b> {goalName()}
-      </h1>
+      <div className="flex flex-row w-full h-full gap-6 items-center">
+        {hasCurrentPeriodGoals() && (
+          <TrashIcon onClick={handleRemoveGoal} style={{ maxWidth: "28px" }}  className="text-red-600" />
+        )}
+        <h1 className="font-thin">
+          <b>Title:</b> {goalName()}
+        </h1>
+      </div>
 
       <div
         className="card-container"
@@ -215,7 +279,7 @@ export default function GoalsContent({ periodToShow }) {
             metricString="steps"
           ></GoalsCard>
         )}
-        {goalSetFunction("steps") && (
+        {goalSetFunction("distance") && (
           <GoalsCard
             metricTitle="DISTANCE"
             currentProgress={currentProgressFunction("distance")}
@@ -223,7 +287,7 @@ export default function GoalsContent({ periodToShow }) {
             metricString="meters"
           ></GoalsCard>
         )}
-        {goalSetFunction("steps") && (
+        {goalSetFunction("calories") && (
           <GoalsCard
             metricTitle="CALORIES"
             currentProgress={currentProgressFunction("calories")}
@@ -256,3 +320,7 @@ export default function GoalsContent({ periodToShow }) {
     </div>
   );
 }
+
+GoalsContent.propTypes = {
+  periodToShow: PropTypes.string,
+};

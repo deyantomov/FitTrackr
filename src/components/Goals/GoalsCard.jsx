@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { TrophyIcon } from "@heroicons/react/16/solid";
@@ -56,12 +56,13 @@ export default function GoalsCard({
             </div>
           </div>
         </div>
-        <progress
+        <hr />
+        {/* <progress
           style={{ width: "100%" }}
           className="progress progress-warning w-56"
           value={progress.toFixed(2)}
           max="100"
-        ></progress>
+        ></progress> */}
 
         <div className="card-body">
           <h2
