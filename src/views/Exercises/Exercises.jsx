@@ -234,7 +234,7 @@ const Exercises = () => {
   };
 
   const openViewDetails = (exercise) => {
-    navigate(`/exercises/${exercise.id}`);
+    navigate(`/exercises/${exercise["_id"]}`);
   };
 
   const filteredExercises = exercises.filter((exercise) => {
