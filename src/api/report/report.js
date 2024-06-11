@@ -15,9 +15,7 @@ export const reportABug = async (report) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(report)
-
     });
-    
     return response.json();
   } catch (err) {
     throw new Error("Couldn't upload bug report");
