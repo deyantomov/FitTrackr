@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import { Link } from "react-router-dom";
 import {
@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 
 /**
  *
- * @param {{children: JSX.Element | Array<JSX.Element>, toggleTheme: () => void, theme: string}} props
+ * @param {{children: React.FC | Array<React.FC>, toggleTheme: () => void, theme: string}} props
  * @returns {React.FC}
  */
 export default function Sidebar({ children, toggleTheme, theme }) {
@@ -43,7 +43,6 @@ export default function Sidebar({ children, toggleTheme, theme }) {
         className="drawer-toggle h-full"
       />
       <div className="drawer-content flex flex-col items-start justify-center p-0">
-        {/* Content */}
         <Navbar toggleDrawer={toggleSidebar} />
         <div className="flex flex-col w-full h-full text-4xl">
           {children}
@@ -59,7 +58,6 @@ export default function Sidebar({ children, toggleTheme, theme }) {
         <div className="menu p-4 w-80 min-h-screen bg-base-200 text-base-content">
           <div className="flex flex-row justify-start align-start items-center text-center gap-12 my-2 mx-0 p-2">
             <Link to="/">
-              {/* <img src="logo.png" className="w-16 m-0 p-0" /> */}
               <h2 className="text-5xl font-light ms-2">FitTrackr</h2>
             </Link>
             <SwitchTheme theme={theme} toggle={toggleTheme}></SwitchTheme>
@@ -92,12 +90,6 @@ export default function Sidebar({ children, toggleTheme, theme }) {
                   icon={<PlusIcon title="create" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
-              {/* <Link to="/progress">
-                <SidebarButton
-                  text="Progress"
-                  icon={<PresentationChartLineIcon title="progress" className="h-3/6" />}
-                ></SidebarButton>
-              </Link> */}
               <Link to="/goals">
                 <SidebarButton
                   text="Goals"

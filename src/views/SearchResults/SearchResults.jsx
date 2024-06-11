@@ -208,7 +208,7 @@ export default function SearchResults() {
                   <Card.Title className="mb-4">{exercise.title}</Card.Title>
                 </div>
                 <Card.Body className="text-lg m-0 p-0 mt-4 flex flex-row justify-center align-center items-center w-full">
-                  <Link to={"/home"} className="flex flex-row">
+                  <Link to={`/exercises/${exercise["_id"]}`} className="flex flex-row">
                     <ChevronDownIcon style={{ width: "24px" }} />
                     <span>View full exercise</span>
                   </Link>

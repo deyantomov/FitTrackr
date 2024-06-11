@@ -30,23 +30,34 @@ export default function Profile() {
 
   useEffect(() => {
     const getProfile = async () => {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const profile = await getUserById(params.id);
-      setUser(profile);
+        const profile = await getUserById(params.id);
+        setUser(profile);
 
-      const profilePic = await getProfilePic(profile.profilePic);
-      setUserPic(profilePic.img);
+        const profilePic = await getProfilePic(profile.profilePic);
+        setUserPic(profilePic.img);
+      } catch (err) {
+        setToast({ type: "error", message: "Can't retrieve user data" });
+      } finally {
+        setLoading(false);
+      }
     };
 
     const getCurrentUser = async () => {
-      setCurrentUser(await getUserById(app.currentUser.id));
+      try {
+        setLoading(true);
+        setCurrentUser(await getUserById(app.currentUser.id));
+      } catch (err) {
+        setToast({ type: "error", message: "Can't retrieve user data" });
+      } finally {
+        setLoading(false);
+      }
     };
 
     getProfile();
     getCurrentUser();
-
-    setLoading(false);
   }, [app.currentUser.id, params.id]);
 
   const handleUpdate = async () => {
@@ -78,7 +89,7 @@ export default function Profile() {
       }
 
     } catch (err) {
-      return setToast({ type: "error", message: err.message });
+      return setToast({ type: "error", message: "Unauthorized" });
     } finally {
       const profile = await getUserById(params.id);
       setUser(profile);
@@ -98,10 +109,13 @@ export default function Profile() {
 
     if (file) {
       try {
+        setLoading(true);
         const img = await imageToBase64(file);
         setNewProfilePic(img);
       } catch (err) {
-        return setToast({ type: "error", message: err.message });
+        return setToast({ type: "error", message: "Failed to select profile picture" });
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -111,10 +125,10 @@ export default function Profile() {
   const handleUpdateProfilePic = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-
+    
     if (newProfilePic) {
       try {
+        setLoading(true);
         const newUserInfo = { profilePic: newProfilePic };
 
         await updateUserProfile(
@@ -128,11 +142,11 @@ export default function Profile() {
         setUserPic(newProfilePic);
         setIsOpen(false);
       } catch (err) {
-        setToast({ type: "error", message: err.message });
+        setToast({ type: "error", message: "Couldn't update profile picture" });
+      } finally {
+        setLoading(false);
       }
     }
-
-    setLoading(false);
   };
 
   if (loading) {
