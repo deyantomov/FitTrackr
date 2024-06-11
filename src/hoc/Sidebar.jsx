@@ -8,6 +8,7 @@ import {
   PlusIcon,
   TrophyIcon,
   UserGroupIcon,
+  FlagIcon,
 } from "@heroicons/react/24/outline";
 import SidebarButton from "./SidebarNavigation/SidebarButton";
 import { useApp } from "../hooks/useApp";
@@ -102,13 +103,22 @@ export default function Sidebar({ children, toggleTheme, theme }) {
                   icon={<UserGroupIcon title="friendlist" className="h-3/6" />}
                 ></SidebarButton>
               </Link>
-              <button
-                className="btn btn-warning mt-auto"
-                onClick={async () => await handleLogout()}
-              >
-                Log out
-              </button>
             </>
+          )}
+          {app.currentUser && <hr className="border-t-2 border-warning my-4" />}
+          <Link to="/report-a-bug">
+            <SidebarButton
+              text="Report a bug"
+              icon={<FlagIcon title="bugreport" className="h-3/6" />}
+            />
+          </Link>
+          {app.currentUser && (
+            <button
+              className="btn btn-warning mt-auto"
+              onClick={async () => await handleLogout()}
+            >
+              Log out
+            </button>
           )}
         </div>
       </div>
@@ -119,7 +129,7 @@ export default function Sidebar({ children, toggleTheme, theme }) {
 Sidebar.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)
+    PropTypes.arrayOf(PropTypes.element),
   ]),
   toggleTheme: PropTypes.func.isRequired,
   theme: PropTypes.string.isRequired,

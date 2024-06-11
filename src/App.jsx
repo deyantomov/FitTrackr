@@ -17,6 +17,7 @@ import NotFound from "./views/NotFound/NotFound";
 import Exercises from "./views/Exercises/Exercises";
 import FriendList from "./views/FriendList/FriendList";
 import ExerciseDetails from "./views/Exercises/ExerciseDetails";
+import BugReport from "./views/BugReport/BugReport";
 import { ToastProvider } from "./providers/ToastProvider";
 const { appId } = atlasConfig;
 
@@ -143,7 +144,17 @@ function App() {
         path="friend-list"
         element={
           <Sidebar theme={theme} toggleTheme={toggleTheme}>
-            <FriendList />
+            <Authenticated>
+              <FriendList />
+            </Authenticated>
+          </Sidebar>
+        }
+      />
+      <Route
+        path="/report-a-bug"
+        element={
+          <Sidebar theme={theme} toggleTheme={toggleTheme}>
+            <BugReport />
           </Sidebar>
         }
       />

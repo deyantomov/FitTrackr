@@ -137,12 +137,9 @@ export default function GoalsContent({ periodToShow }) {
 
           setLoading(true);
           
-
-
           if (!change.fullDocument) {
-            continue; 
+            break; 
           }
-  
   
           if (change.fullDocument.period === periodToShowRef.current) {
             try {
@@ -216,6 +213,7 @@ export default function GoalsContent({ periodToShow }) {
       Object.keys(currentUser).length > 0
         ? currentUser[metric][periodToShowRef.current]
         : 0;
+        
     return result;
   }
 
@@ -229,9 +227,9 @@ export default function GoalsContent({ periodToShow }) {
 
       await removeGoal(app, currentGoal["_id"]);
       setUserGoals(goals => goals.filter(goal => goal["_id"] !== currentGoal["_id"]));
-      setToast({ type: toastTypes.SUCCESS, message: "Goal removed successfully!" });
+      setToast({ type: toastTypes.SUCCESS, message: "Goal removed successfully" });
     } catch (error) {
-      setToast({ type: toastTypes.ERROR, message: "Failed to remove goal. Please try again." });
+      setToast({ type: toastTypes.ERROR, message: "Failed to remove goal" });
     } finally {
       setLoading(false);
     }

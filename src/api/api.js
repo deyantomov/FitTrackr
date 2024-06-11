@@ -45,6 +45,10 @@ import {
   markNotificationAsRead,
 } from "./notification/notification";
 
+import {
+  reportABug
+} from "./report/report";
+
 export default {
   createUser,
   getAllUsers,
@@ -78,4 +82,5 @@ export default {
   completeExercise,
   storeAccessTokens,
   getAllExercisesNoPagination,
+  reportABug
 };
