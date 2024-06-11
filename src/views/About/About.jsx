@@ -1,6 +1,6 @@
 import { Card, Carousel } from "react-daisyui";
 import reactSVG from "../../assets/react.svg";
-import tailwindSVG from "../../assets/tailwind.svg";
+//import tailwindSVG from "../../assets/tailwind.svg";
 
 export default function About() {
   return (
