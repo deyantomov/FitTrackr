@@ -4,4 +4,5 @@ export const endpoints = {
   goals: "/goals",
   notifications: "/notifications",
   friendList: "/friendlist",
+  reportABug: "/report_a_bug"
 };
