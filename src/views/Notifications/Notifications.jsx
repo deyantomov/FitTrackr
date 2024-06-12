@@ -142,9 +142,9 @@ export default function Notifications() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full justify-start items-center">
+    <div className="flex flex-col w-full h-full justify-start items-center p-12">
       <div className="w-full max-w-3xl">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl my-12">Likes</h2>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl mb-12">Likes</h2>
         {notifications && notifications.likes && notifications.likes.length > 0 ? (
           <ul className="space-y-4">
             {notifications.likes.map((like, index) => (
@@ -156,7 +156,7 @@ export default function Notifications() {
                   <div>
                     <span className="font-semibold">{handles[like.from]}</span>
                     <div className="text-sm text-gray-500">{new Date(like.likedOn).toLocaleDateString("en-GB")}</div>
-                    <div className="text-gray-700">{getExercise(like.postId) && getExercise(like.postId).title}</div>
+                    <div className="text-gray-700 mt-4">{getExercise(like.postId) && getExercise(like.postId).title}</div>
                   </div>
                 </div>
                 <Button
