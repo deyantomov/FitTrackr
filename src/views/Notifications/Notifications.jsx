@@ -47,9 +47,9 @@ export default function Notifications() {
             allHandles.reduce(
               (obj, handle, i) => ({
                 ...obj,
-                [i < likesHandles.length
+                [(i < likesHandles.length && user.notifications.likes[i])
                   ? user.notifications.likes[i].from
-                  : user.notifications.friendRequests[i].from]: handle,
+                  : (user.notifications.friendRequests[i] && user.notifications.friendRequests[i].from)]: handle,
               }),
               {}
             )
