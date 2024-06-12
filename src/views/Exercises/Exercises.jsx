@@ -297,7 +297,7 @@ const Exercises = () => {
 
   return (
     <div className="flex flex-col justify-center align-center items-center p-10 px-12 w-full h-full">
-      <div className="flex justify-between align-center items-center mb-6 gap-8 w-5/6 h-auto pb-8">
+      <div className="flex justify-between align-center items-center mb-6 gap-8 w-full h-auto pb-8">
         <div className="w-full">
           <SearchBar onSearch={handleSearch} />
         </div>

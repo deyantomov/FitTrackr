@@ -139,10 +139,10 @@ const ExerciseDetails = () => {
             <ClockIcon className="h-6 w-6 mr-2 text-pink-500" />
             <strong className="mr-2">Duration:</strong> {exercise.duration} minutes
           </p>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
+          {/* <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <StarIcon className="h-6 w-6 mr-2 text-yellow-500" />
             <strong className="mr-2">Rating:</strong> {exercise.rating}
-          </p>
+          </p> */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <CalendarIcon className="h-6 w-6 mr-2 text-blue-500" />
             <strong className="mr-2">Created On:</strong>{" "}
