@@ -33,9 +33,11 @@ export default function SearchResults() {
     const fetchUserData = async () => {
       setLoading(true);
       const allUsers = await getAllUsers();
-      const matchingUsers = allUsers.filter((user) =>
-        user.handle.includes(q.toLowerCase())
-      );
+      const matchingUsers = allUsers.filter((user) => {
+        if (user && user.handle) {
+          return user.handle.includes(q.toLowerCase());
+        }
+      });
 
       const usersWithProfilePic = await Promise.all(
         matchingUsers.map(async (user) => {
