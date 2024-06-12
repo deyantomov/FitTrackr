@@ -11,7 +11,15 @@ export const toastMessages = {
   unableToGetFriendList: "Unable to retrieve friend list",
   unableToGetUserData: "Unable to retrieve user data",
   successfulFriendRequest: "Friend request sent successfully",
-  unsuccessfulFriendRequest: "Failed to send friend request"
+  unsuccessfulFriendRequest: "Failed to send friend request",
+  goalTitleTooShort: "Goal title must be between 4 and 30 characters",
+  goalCreated: "Goal created successfully!",
+  goalError1: "Failed to create goal. Please try again.",
+  goalError2: "You must be logged in to create a goal.",
+  goalDeleted: "Goal removed successfully!",
+  unableToDeleteGoal: "Failed to remove goal",
+  unableToGetGoals: "Failed to fetch goals",
+  changeStreamError: "Error listening to change stream"
 };
 
 export const progressMetrics = {
@@ -75,4 +83,13 @@ export const fitbitCfg = {
   client: "23PJ8N",
   scopes: ["activity", "cardio_fitness"],
   redirectUrl: "https://fittrackr-rnylmjz.mongodbstitch.com"
+};
+
+export const GOAL_TITLE_MIN_LENGTH = 4;
+export const GOAL_TITLE_MAX_LENGTH = 30;
+
+export const periods = {
+  daily: "daily",
+  weekly: "weekly",
+  monthly: "monthly"
 };

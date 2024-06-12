@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { TrophyIcon } from "@heroicons/react/16/solid";
+import PropTypes from "prop-types";
 
+
+/**
+ * @param {{metricTitle: string, currentProgress: number, goalSet: number, metricString: string}} props
+ * @returns {React.FC}
+ */
 export default function GoalsCard({
   metricTitle,
   currentProgress,
@@ -57,12 +62,6 @@ export default function GoalsCard({
           </div>
         </div>
         <hr />
-        {/* <progress
-          style={{ width: "100%" }}
-          className="progress progress-warning w-56"
-          value={progress.toFixed(2)}
-          max="100"
-        ></progress> */}
 
         <div className="card-body">
           <h2
@@ -79,3 +78,10 @@ export default function GoalsCard({
     </>
   );
 }
+
+GoalsCard.propTypes = {
+  metricTitle: PropTypes.string,
+  currentProgress: PropTypes.number,
+  goalSet: PropTypes.number,
+  metricString: PropTypes.string,
+};

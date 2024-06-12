@@ -41,7 +41,11 @@ export default function SearchResults() {
         matchingUsers.map(async (user) => {
           const profilePic = (await getProfilePic(user.profilePic))["img"];
 
-          return { ...user, profilePic };
+          if (profilePic) {
+            return { ...user, profilePic };
+          } else {
+            return user;
+          }
         })
       );
 

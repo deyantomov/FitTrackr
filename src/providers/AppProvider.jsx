@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import * as Realm from "realm-web";
 import { AppContext } from "../context/AppContext";
 import atlasConfig from "../../atlasConfig.json";
@@ -6,6 +6,12 @@ import PropTypes from "prop-types";
 
 const { baseUrl } = atlasConfig;
 
+/**
+ * Create a new instance of the Realm Application
+ * 
+ * @param {string} id
+ * @returns {Realm.App}
+ */
 const createApp = (id) => {
   return new Realm.App({ id, baseUrl });
 };

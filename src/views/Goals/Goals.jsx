@@ -1,8 +1,9 @@
 import { useState } from "react";
 import GoalsContent from "./GoalsContent";
+import { periods } from "../../common/constants";
 
 export default function Goals() {
-  const [timePeriod, setTimePeriod] = useState("daily");
+  const [timePeriod, setTimePeriod] = useState(periods.daily);
 
   return (
     <div className="flex flex-col justify-center align-center items-center h-full p-8"style={{ textAlign: "center" }}>

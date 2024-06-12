@@ -1,5 +1,9 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
+/**
+ * @param {{onSearch: (term: string) => void}} props
+ */
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -22,13 +26,12 @@ const SearchBar = ({ onSearch }) => {
         Search
         </button>
       </div>
-      {/* <div className="mockup-browser border border-base-300">
-        <div className="mockup-browser-toolbar">
-        <div className="input border border-base-300">https://FitTrackr.com</div>
-        </div>
-    </div> */}
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  onSearch: PropTypes.func.isRequired
 };
 
 export default SearchBar;

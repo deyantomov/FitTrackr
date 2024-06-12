@@ -4,6 +4,11 @@ import { toastTypes } from "../common/constants";
 
 const { storeAccessTokens } = api;
 
+/**
+ * Creates an URL that redirects to the Fitbit OAuth2.0 page
+ * @param {() => void} setToast
+ * @returns {string | void}
+ */
 export const redirectToAuth = (setToast) => {
   try {
     const authUrl = `${fitbitCfg.authUri}
@@ -13,14 +18,17 @@ export const redirectToAuth = (setToast) => {
       &redirect_uri=${encodeURIComponent(fitbitCfg.redirectUrl)}
       &expires_in=604800`;
 
-    console.log("Redirecting to authorization URL", authUrl);
-
     return authUrl;
   } catch (error) {
     setToast({ type: toastTypes.ERROR, message: "Can't generate authorization URL" });
   }
 };
 
+/**
+ * Handles the redirect from the Fitbit OAuth2.0 page
+ * @param {Realm.App} app
+ * @param {() => void} setToast
+ */
 export const handleRedirect = async (app, setToast) => {
   try {
     const hash = window.location.hash;
@@ -32,7 +40,7 @@ export const handleRedirect = async (app, setToast) => {
 
       if (accessToken) {
         console.log(accessToken, expiresIn, tokenType);
-        await storeAccessToken(app, { accessToken, expiresIn, tokenType });
+        await storeAccessTokens(app, { accessToken, expiresIn, tokenType });
         setToast({ type: toastTypes.SUCCESS, message: "Authorization successful" });
       } else {
         setToast({ type: toastTypes.ERROR, message: "Authorization failed" });
@@ -42,14 +50,5 @@ export const handleRedirect = async (app, setToast) => {
     }
   } catch (error) {
     setToast({ type: toastTypes.ERROR, message: "Error handling authorization redirect" });
-  }
-};
-
-const storeAccessToken = async (app, tokenData) => {
-  try {
-    // Save the tokenData to your app’s state or storage
-    await storeAccessTokens(app, tokenData);
-  } catch (error) {
-    console.error("Failed to store access token", error);
   }
 };

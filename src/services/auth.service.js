@@ -39,8 +39,6 @@ export const logout = async (app) => {
       await setUserOnlineStatus(user, user.id, false);
       await user.logOut();
       await app.logOut();
-
-      // localStorage.clear();
     }
     
   } catch (err) {
@@ -92,7 +90,6 @@ export const register = async (
       return "Log in failed!";
     }
   } catch (err) {
-    // throw new Error(err.message);
     return err.message;
   }
 };

@@ -1,6 +1,12 @@
 import { Button } from "react-daisyui";
 import { ChevronDoubleRightIcon } from "@heroicons/react/16/solid";
+import PropTypes from "prop-types";
 
+/**
+ *
+ * @param {{handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void, title: string, setTitle: (title: string) => void, type: string, setType: (type: string) => void, targetNumber: number, setTargetNumber: (targetNumber: number) => void, period: string, setPeriod: (period: string) => void }} props
+ * @returns {React.FC}
+ */
 export default function CreateNewGoal({
   handleSubmit,
   title,
@@ -11,12 +17,7 @@ export default function CreateNewGoal({
   setTargetNumber,
   period,
   setPeriod,
-  setToast
 }) {
-  const onFormSubmit = async (e) => {
-    await handleSubmit(e);
-  };
-  
   return (
     <dialog id="my_modal_1" className="modal">
       <div
@@ -28,7 +29,7 @@ export default function CreateNewGoal({
           scrollbarWidth: "thin",
         }}
       >
-        <form onSubmit={e => onFormSubmit(e)}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <span>Goal title:</span>
           <label className="label mb-4 w-full">
             <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
@@ -96,3 +97,15 @@ export default function CreateNewGoal({
     </dialog>
   );
 }
+
+CreateNewGoal.propTypes = {
+  handleSubmit: PropTypes.func,
+  title: PropTypes.string,
+  setTitle: PropTypes.func,
+  type: PropTypes.string,
+  setType: PropTypes.func,
+  targetNumber: PropTypes.number,
+  setTargetNumber: PropTypes.func,
+  period: PropTypes.string,
+  setPeriod: PropTypes.func,
+};

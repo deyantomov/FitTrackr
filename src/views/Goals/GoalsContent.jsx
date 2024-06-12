@@ -6,9 +6,11 @@ import { useEffect, useState, useRef } from "react";
 import CreateNewGoal from "./CreateNewGoal";
 import { mongoCfg } from "../../common/constants";
 import { useToast } from "../../hooks/useToast";
-import { toastTypes } from "../../common/constants";
+import { toastTypes, toastMessages } from "../../common/constants";
 import PropTypes from "prop-types";
 import { TrashIcon } from "@heroicons/react/24/outline";
+
+import { progressMetrics, periods, GOAL_TITLE_MIN_LENGTH, GOAL_TITLE_MAX_LENGTH } from "../../common/constants";
 
 const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
 
@@ -24,11 +26,11 @@ export default function GoalsContent({ periodToShow }) {
   const [steps, setSteps] = useState(0);
   const [calories, setCalories] = useState(0);
   const [distance, setDistance] = useState(0);
-  const [type, setType] = useState("steps");
+  const [type, setType] = useState(progressMetrics.steps);
   const [target, setTarget] = useState({});
   const [targetNumber, setTargetNumber] = useState(0);
 
-  const [period, setPeriod] = useState("daily");
+  const [period, setPeriod] = useState(periods.daily);
   const [userGoals, setUserGoals] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
 
@@ -47,22 +49,22 @@ export default function GoalsContent({ periodToShow }) {
 
     let updatedTarget = { ...target };
     switch (type) {
-    case "steps":
+    case progressMetrics.steps:
       updatedTarget.steps = targetNumber;
       break;
-    case "distance":
+    case progressMetrics.distance:
       updatedTarget.distance = targetNumber;
       break;
-    case "calories":
+    case progressMetrics.calories:
       updatedTarget.calories = targetNumber;
       break;
     }
 
     if (app.currentUser) {
-      if (title.length < 4 || title.length > 30) {
+      if (title.length < GOAL_TITLE_MIN_LENGTH || title.length > GOAL_TITLE_MAX_LENGTH) {
         setToast({
-          message: "Goal title must be between 4 and 30 characters",
-          type: "error",
+          type: toastTypes.ERROR,
+          message: toastMessages.goalTitleTooShort
         });
 
         return setLoading(false);
@@ -77,26 +79,26 @@ export default function GoalsContent({ periodToShow }) {
 
       try {
         await createNewGoal(app, goal);
-        setToast({ type: toastTypes.SUCCESS, message: "Goal created successfully!" });
+        setToast({ type: toastTypes.SUCCESS, message: toastMessages.goalCreated });
         resetForm();
       } catch (error) {
-        setToast({ type: toastTypes.ERROR, message: "Failed to create goal. Please try again." });
+        setToast({ type: toastTypes.ERROR, message: toastMessages.goalError1 });
       } finally {
         setLoading(false);
       }
     } else {
-      setToast({ type: toastTypes.ERROR, message: "You must be logged in to create a goal." });
+      setToast({ type: toastTypes.ERROR, message: toastMessages.goalError2 });
       setLoading(false);
     }
   };
 
   const resetForm = () => {
     setTitle("");
-    setType("steps");
+    setType(progressMetrics.steps);
     setSteps(0);
     setCalories(0);
     setDistance(0);
-    setPeriod("daily");
+    setPeriod(periods.daily);
     setTarget({});
     setTargetNumber(0);
   };
@@ -108,7 +110,7 @@ export default function GoalsContent({ periodToShow }) {
       try {
         setUserGoals(await getAllGoals(app));
       } catch (err) {
-        setToast({ type: toastTypes.ERROR, message: "Failed to fetch goals" });
+        setToast({ type: toastTypes.ERROR, message: toastMessages.unableToGetGoals });
       } finally {
         setLoading(false);
       }
@@ -137,14 +139,14 @@ export default function GoalsContent({ periodToShow }) {
             try {
               setUserGoals([...userGoals, change.fullDocument]);
             } catch (err) {
-              setToast({ type: "error", message: "Couldn't set the goal" });
+              setToast({ type: toastTypes.ERROR, message: toastMessages.goalError1 });
             }
           }
 
         
         }
       } catch (err) {
-        setToast({ type: toastTypes.ERROR, message: "Error listening to change stream" });
+        setToast({ type: toastTypes.ERROR, message: toastMessages.changeStreamError });
       } finally {
         setLoading(false);
       }
@@ -160,7 +162,7 @@ export default function GoalsContent({ periodToShow }) {
       try {
         setCurrentUser(await getUserById(app.currentUser.id));
       } catch (err) {
-        setToast({ type: toastTypes.ERROR, message: "Failed to fetch user" });
+        setToast({ type: toastTypes.ERROR, message: toastMessages.unableToGetUserData });
       } finally {
         setLoading(false);
       }
@@ -174,11 +176,11 @@ export default function GoalsContent({ periodToShow }) {
       userGoals.filter((goal) => goal.period === periodToShowRef.current);
 
     switch(metric) {
-    case "steps":
+    case progressMetrics.steps:
       return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.steps : null;
-    case "distance":
+    case progressMetrics.distance:
       return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.distance : null;
-    case "calories":
+    case progressMetrics.calories:
       return filteredByPeriod.length > 0 ? filteredByPeriod[0].target.calories : null;
     }
   }
@@ -215,9 +217,9 @@ export default function GoalsContent({ periodToShow }) {
 
       await removeGoal(app, currentGoal["_id"]);
       setUserGoals(goals => goals.filter(goal => goal["_id"] !== currentGoal["_id"]));
-      setToast({ type: toastTypes.SUCCESS, message: "Goal removed successfully" });
+      setToast({ type: toastTypes.SUCCESS, message: toastMessages.goalDeleted });
     } catch (error) {
-      setToast({ type: toastTypes.ERROR, message: "Failed to remove goal" });
+      setToast({ type: toastTypes.ERROR, message: toastMessages.unableToDeleteGoal });
     } finally {
       setLoading(false);
     }
@@ -264,29 +266,29 @@ export default function GoalsContent({ periodToShow }) {
           gap: "30px",
         }}
       >
-        {goalSetFunction("steps") && (
+        {goalSetFunction(progressMetrics.steps) && (
           <GoalsCard
             key={1}
             metricTitle="STEPS"
-            currentProgress={currentProgressFunction("steps")}
-            goalSet={goalSetFunction("steps")}
-            metricString="steps"
+            currentProgress={currentProgressFunction(progressMetrics.steps)}
+            goalSet={goalSetFunction(progressMetrics.steps)}
+            metricString={progressMetrics.steps}
           ></GoalsCard>
         )}
-        {goalSetFunction("distance") && (
+        {goalSetFunction(progressMetrics.distance) && (
           <GoalsCard
             metricTitle="DISTANCE"
-            currentProgress={currentProgressFunction("distance")}
-            goalSet={goalSetFunction("distance")}
-            metricString="meters"
+            currentProgress={currentProgressFunction(progressMetrics.distance)}
+            goalSet={goalSetFunction(progressMetrics.distance)}
+            metricString={progressMetrics.distance}
           ></GoalsCard>
         )}
-        {goalSetFunction("calories") && (
+        {goalSetFunction(progressMetrics.calories) && (
           <GoalsCard
             metricTitle="CALORIES"
-            currentProgress={currentProgressFunction("calories")}
-            goalSet={goalSetFunction("calories")}
-            metricString="calories"
+            currentProgress={currentProgressFunction(progressMetrics.calories)}
+            goalSet={goalSetFunction(progressMetrics.calories)}
+            metricString={progressMetrics.calories}
           ></GoalsCard>
         )}
       </div>
