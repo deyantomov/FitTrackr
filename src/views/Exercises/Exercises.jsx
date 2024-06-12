@@ -33,7 +33,7 @@ const {
   updateExercise,
   likeExercise,
   getExerciseById,
-  completeExercise
+  completeExercise,
 } = api;
 
 const Exercises = () => {
@@ -49,7 +49,8 @@ const Exercises = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const { setToast } = useToast(); 
+  const [exerciseImg, setExerciseImg] = useState("");
+  const { setToast } = useToast();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -91,22 +92,31 @@ const Exercises = () => {
 
     try {
       // before
-      const exerciseBefore = exercises.find(exercise => exercise["_id"] === id);
-      const isLiked = exerciseBefore.likedBy && exerciseBefore.likedBy.includes(app.currentUser.id);
+      const exerciseBefore = exercises.find(
+        (exercise) => exercise["_id"] === id
+      );
+      const isLiked =
+        exerciseBefore.likedBy &&
+        exerciseBefore.likedBy.includes(app.currentUser.id);
       // after
       const result = await Promise.all(await likeExercise(app, id, owner));
       const exerciseAfter = (await getExerciseById(app, id))["exercise"];
-  
+
+      exerciseAfter.img = (await getExerciseImage(exerciseAfter.img))["img"];
+
       setExercises((prevExercises) => {
         return prevExercises.map((exercise) => {
           return exercise["_id"] === id ? exerciseAfter : exercise;
         });
       });
-  
+
       if (!isLiked) {
-        setToast({ type: toastTypes.SUCCESS, message: "Exercise liked successfully" });
+        setToast({
+          type: toastTypes.SUCCESS,
+          message: "Exercise liked successfully",
+        });
       }
-  
+
       return result;
     } catch (err) {
       setToast({ type: toastTypes.ERROR, message: "Failed to like exercise" });
@@ -121,10 +131,16 @@ const Exercises = () => {
     try {
       const result = await updateExercise(app, updatedExercise);
 
-      setToast({ type: toastTypes.SUCCESS, message: "Exercise updated successfully" });
+      setToast({
+        type: toastTypes.SUCCESS,
+        message: "Exercise updated successfully",
+      });
     } catch (err) {
       console.error(err);
-      setToast({ type: toastTypes.ERROR, message: "Failed to update exercise" });
+      setToast({
+        type: toastTypes.ERROR,
+        message: "Failed to update exercise",
+      });
     } finally {
       setLoading(false);
     }
@@ -136,9 +152,15 @@ const Exercises = () => {
     try {
       const result = await removeExercise(app, id);
 
-      setToast({ type: toastTypes.SUCCESS, message: "Exercise deleted successfully" });
+      setToast({
+        type: toastTypes.SUCCESS,
+        message: "Exercise deleted successfully",
+      });
     } catch (err) {
-      setToast({ type: toastTypes.ERROR, message: "Failed to delete exercise" });
+      setToast({
+        type: toastTypes.ERROR,
+        message: "Failed to delete exercise",
+      });
     } finally {
       setLoading(false);
     }
@@ -157,75 +179,74 @@ const Exercises = () => {
 
   //  Realtime listener for the exercises collection
   useEffect(() => {
-    let isMounted = true;
-    
-    if (isMounted) {
-      const listenForChanges = async () => {
-        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
-        const collection = mongoClient.db(mongoCfg.db).collection(mongoCfg.collections.exercises);
-        const changeStream = collection.watch();
+    const listenForChanges = async () => {
+      const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
+      const collection = mongoClient
+        .db(mongoCfg.db)
+        .collection(mongoCfg.collections.exercises);
 
-        //  Listen for changes
-        try {
-          for await (const change of changeStream) {
-            switch (change.operationType) {
-            case "insert":
-              setExercises((prevExercises) => [
-                ...prevExercises,
-                change.fullDocument,
-              ]);
+      const changeStream = collection.watch();
 
-              break;
-            case "update":
-            case "replace":
-              setExercises((prevExercises) => {
-                const updatedExercises = [...prevExercises];
-                const exerciseId = change.fullDocument["_id"].toHexString();
-                const index = updatedExercises.findIndex((exercise) => {
-                  if (exercise["_id"]) {
-                    return exercise["_id"].toString() === exerciseId;
-                  } else {
-                    return false;
-                  }
-                });
-  
-                if (index !== -1) {
-                  updatedExercises[index] = {
-                    ...change.fullDocument,
-                    _id: exerciseId,
-                    owner: change.fullDocument.owner.toHexString(),
-                    img: updatedExercises[index].img,
-                  };
+      try {
+        for await (const change of changeStream) {
+          console.log(change);
+          switch (change.operationType) {
+          case "insert":
+            setExercises((prevExercises) => [
+              ...prevExercises,
+              change.fullDocument,
+            ]);
+
+            break;
+          case "update":
+          case "replace":
+            setExercises((prevExercises) => {
+              const updatedExercises = [...prevExercises];
+              const exerciseId = change.fullDocument["_id"].toHexString();
+              const index = updatedExercises.findIndex((exercise) => {
+                if (exercise["_id"]) {
+                  return exercise["_id"].toString() === exerciseId;
+                } else {
+                  return false;
                 }
-
-                return updatedExercises;
-              });
-              break;
-            case "delete":
-              setExercises((prevExercises) => {
-                return prevExercises.filter(
-                  (exercise) => exercise["_id"] !== change.documentKey["_id"].toHexString()
-                );
               });
 
-              break;
-            default:
-              throw new Error("Unhandled change event");
-            }
+              if (index !== -1) {
+                updatedExercises[index] = {
+                  ...change.fullDocument,
+                  _id: exerciseId,
+                  owner: change.fullDocument.owner.toHexString(),
+                  img: updatedExercises[index]["img"]
+                };
+
+                setExerciseImg(prev => ({ ...prev, [exerciseId]: updatedExercises[index]["img"] }));
+              }
+
+              return updatedExercises;
+            });
+            break;
+          case "delete":
+            setExercises((prevExercises) => {
+              return prevExercises.filter(
+                (exercise) =>
+                  exercise["_id"] !== change.documentKey["_id"].toHexString()
+              );
+            });
+
+            break;
+          default:
+            throw new Error("Unhandled change event");
           }
-        } catch (err) {
-          setToast({ type: toastTypes.ERROR, message: err.message });
         }
-      };
-  
-      listenForChanges();
-    }
-    
+      } catch (err) {
+        setToast({ type: toastTypes.ERROR, message: err.message });
+      }
 
-    return () => {
-      isMounted = false;
+      return changeStream;
     };
-  }, [app, setToast]);
+
+    listenForChanges();
+  }, []);
 
   const openModal = (exercise) => {
     if (!app.currentUser) {
@@ -260,14 +281,19 @@ const Exercises = () => {
       const matchesSearchTerm =
         exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
-  
+
       const isVisibleToUser =
-        !exercise.isPrivate || (app.currentUser && exercise.owner === app.currentUser.id);
-  
+        !exercise.isPrivate ||
+        (app.currentUser && exercise.owner === app.currentUser.id);
+
       if (filter === "all-exercises") {
         return matchesSearchTerm && isVisibleToUser;
       } else if (filter === "my-exercises") {
-        return matchesSearchTerm && app.currentUser && exercise.owner === app.currentUser.id;
+        return (
+          matchesSearchTerm &&
+          app.currentUser &&
+          exercise.owner === app.currentUser.id
+        );
       } else if (filter === "liked-exercises") {
         return (
           matchesSearchTerm &&
@@ -291,15 +317,29 @@ const Exercises = () => {
     <div className="container mx-auto p-6 relative text-black">
       <div className="flex justify-between items-center mb-6">
         {app.currentUser && (
-          <div className="relative inline-block text-center z-10"> 
+          <div className="relative inline-block text-center z-10">
             <div>
-              <button type="button" className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="options-menu" aria-haspopup="true" aria-expanded="true">
-              Exercises:
-                <PencilSquareIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+              <button
+                type="button"
+                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                id="options-menu"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                Exercises:
+                <PencilSquareIcon
+                  className="-mr-1 ml-2 h-5 w-5"
+                  aria-hidden="true"
+                />
               </button>
             </div>
             <div className="origin-top-right absolute top-full right-1/2 transform translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+              <div
+                className="py-1"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
@@ -324,19 +364,22 @@ const Exercises = () => {
               key={exercise._id}
               className="w-full bg-base-100 shadow-xl rounded-lg overflow-hidden relative transition-transform duration-300 hover:shadow-2xl hover:transform hover:scale-105"
             >
+              {console.log(exercise)}
+              {console.log(exerciseImg[exercise["_id"]])}
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
                   backgroundImage: exercise.img
-                    ? `url(${exercise.img})`
+                    ? `url(${(exerciseImg && exerciseImg[exercise["_id"]]) ? exerciseImg[exercise["_id"]] : exercise.img})`
                     : "url(/add-first-exercise-2.jpg)",
                 }}
               />
               <Card.Body className="relative">
                 <div className="p-4 bg-white bg-opacity-90 rounded-lg">
                   <Card.Title className="font-bold text-2xl mb-2">
-                  Title: {exercise.title}
-                    {exercise.owner === (app.currentUser ? app.currentUser.id : null) && (
+                    Title: {exercise.title}
+                    {exercise.owner ===
+                      (app.currentUser ? app.currentUser.id : null) && (
                       <span className="ml-4 flex">
                         <PencilIcon
                           className="h-6 w-6 text-blue-500 hover:text-blue-700 transform transition-all duration-200 ease-in-out hover:scale-125"
@@ -349,11 +392,15 @@ const Exercises = () => {
                       </span>
                     )}
                   </Card.Title>
-                  <p className="text-sm text-gray-600 mb-4">Description: {exercise.description}</p>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Description: {exercise.description}
+                  </p>
                   <div className="flex justify-between items-center">
                     <Button
                       className="btn-warning flex items-center"
-                      onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}
+                      onClick={() =>
+                        handleLikeExercise(exercise["_id"], exercise.owner)
+                      }
                     >
                       {exercise.likedBy &&
                       app.currentUser &&
