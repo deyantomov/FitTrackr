@@ -1,6 +1,6 @@
 import * as Realm from "realm-web";
-import api from "../api/api"
-const { setUserOnlineStatus, getUserByEmail, createUser } = api;
+import api from "../api/api";
+const { setUserOnlineStatus, createUser } = api;
 
 /**
  * Logs in a user using the provided email and password

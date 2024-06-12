@@ -55,7 +55,6 @@ const fetchFitbitData = async (app, url, setToast) => {
   try {
     const tokenData = await getAccessTokens(app);
     const { accessToken, userId, tokenType } = tokenData;
-    console.log(tokenData);
 
     const response = await fetch(url.replace("{userId}", userId), {
       method: "GET",
