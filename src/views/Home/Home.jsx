@@ -26,15 +26,17 @@ export default function Home() {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const accessCode = query.get("code");
-
   useEffect(() => {
-    if (accessCode) {
-      handleRedirect(app, setToast, accessCode);
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get("access_token");
+      
+      if (accessToken) {
+        handleRedirect(app, setToast);
+      }
     }
-  }, [app, accessCode, setToast]);
+  }, [app, setToast]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -44,7 +46,7 @@ export default function Home() {
         if (user) {
           setUser(user);
           setProgress(progressHook);
-        } else {
+        } else {q
           setToast({ type: toastTypes.ERROR, message: toastMessages.unableToLogin });
         }
       }

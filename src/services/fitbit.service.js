@@ -11,12 +11,7 @@ const { storeAccessTokens } = api;
  */
 export const redirectToAuth = (setToast) => {
   try {
-    const authUrl = `${fitbitCfg.authUri}
-      ?response_type=token
-      &client_id=${fitbitCfg.client}
-      &scope=${fitbitCfg.scopes.join("+")}
-      &redirect_uri=${encodeURIComponent(fitbitCfg.redirectUrl)}
-      &expires_in=604800`;
+    const authUrl = `${fitbitCfg.authUri}?response_type=token&client_id=${fitbitCfg.client}&scope=${fitbitCfg.scopes.join("+")}&redirect_uri=${encodeURIComponent(fitbitCfg.redirectUrl)}&expires_in=604800`;
 
     return authUrl;
   } catch (error) {
@@ -37,9 +32,9 @@ export const handleRedirect = async (app, setToast) => {
       const accessToken = params.get("access_token");
       const expiresIn = params.get("expires_in");
       const tokenType = params.get("token_type");
+      console.log(accessToken, expiresIn, tokenType);
 
       if (accessToken) {
-        console.log(accessToken, expiresIn, tokenType);
         await storeAccessTokens(app, { accessToken, expiresIn, tokenType });
         setToast({ type: toastTypes.SUCCESS, message: "Authorization successful" });
       } else {
