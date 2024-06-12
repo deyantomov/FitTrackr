@@ -3,16 +3,8 @@ import { useEffect, useState } from "react";
 import api from "../../api/api";
 import { Card, Button, Loading } from "react-daisyui";
 import {
-  FireIcon,
-  LockClosedIcon,
-  ClockIcon,
-  ChartBarIcon,
   PencilIcon,
-  CalendarIcon,
-  StarIcon,
-  UserCircleIcon,
   InformationCircleIcon,
-  PencilSquareIcon,
 } from "@heroicons/react/16/solid";
 import { ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartOutlineIcon } from "@heroicons/react/24/outline";
@@ -91,14 +83,12 @@ const Exercises = () => {
     setLoading(true);
 
     try {
-      // before
-      const exerciseBefore = exercises.find(
-        (exercise) => exercise["_id"] === id
-      );
+
+      const exerciseBefore = exercises.find((exercise) => exercise["_id"] === id);
       const isLiked =
         exerciseBefore.likedBy &&
         exerciseBefore.likedBy.includes(app.currentUser.id);
-      // after
+
       const result = await Promise.all(await likeExercise(app, id, owner));
       const exerciseAfter = (await getExerciseById(app, id))["exercise"];
 
@@ -129,14 +119,13 @@ const Exercises = () => {
     setLoading(true);
 
     try {
-      const result = await updateExercise(app, updatedExercise);
+      await updateExercise(app, updatedExercise);
 
       setToast({
         type: toastTypes.SUCCESS,
         message: "Exercise updated successfully",
       });
     } catch (err) {
-      console.error(err);
       setToast({
         type: toastTypes.ERROR,
         message: "Failed to update exercise",
@@ -150,7 +139,7 @@ const Exercises = () => {
     setLoading(true);
 
     try {
-      const result = await removeExercise(app, id);
+      await removeExercise(app, id);
 
       setToast({
         type: toastTypes.SUCCESS,
@@ -166,17 +155,6 @@ const Exercises = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const test = async () => {
-  //     const result = await completeExercise(app, "66586bf026fc273a018efc82", "66588dd87df6d7eac8acad1f");
-
-  //     console.log(result);
-  //     return result;
-  //   };
-
-  //   test();
-  // }, []);
-
   //  Realtime listener for the exercises collection
   useEffect(() => {
     const listenForChanges = async () => {
@@ -189,7 +167,6 @@ const Exercises = () => {
 
       try {
         for await (const change of changeStream) {
-          console.log(change);
           switch (change.operationType) {
           case "insert":
             setExercises((prevExercises) => [
@@ -216,10 +193,13 @@ const Exercises = () => {
                   ...change.fullDocument,
                   _id: exerciseId,
                   owner: change.fullDocument.owner.toHexString(),
-                  img: updatedExercises[index]["img"]
+                  img: updatedExercises[index]["img"],
                 };
 
-                setExerciseImg(prev => ({ ...prev, [exerciseId]: updatedExercises[index]["img"] }));
+                setExerciseImg((prev) => ({
+                  ...prev,
+                  [exerciseId]: updatedExercises[index]["img"],
+                }));
               }
 
               return updatedExercises;
@@ -314,63 +294,46 @@ const Exercises = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 relative text-black">
-      <div className="flex justify-between items-center mb-6">
-        {app.currentUser && (
-          <div className="relative inline-block text-center z-10">
-            <div>
-              <button
-                type="button"
-                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                id="options-menu"
-                aria-haspopup="true"
-                aria-expanded="true"
-              >
-                Exercises:
-                <PencilSquareIcon
-                  className="-mr-1 ml-2 h-5 w-5"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-            <div className="origin-top-right absolute top-full right-1/2 transform translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div
-                className="py-1"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="options-menu"
-              >
-                <select
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-100 text-gray-900 rounded-md shadow-sm focus:outline-none sm:text-sm"
-                >
-                  <option value="all-exercises">All</option>
-                  <option value="my-exercises">Mine</option>
-                  <option value="liked-exercises">Liked</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="w-3/4">
+    <div className="flex flex-col justify-center align-center items-center p-8 w-full h-full">
+      <div className="flex justify-between align-center items-center mb-6 gap-8 w-5/6 h-auto pb-8">
+        <div className="w-full">
           <SearchBar onSearch={handleSearch} />
         </div>
+        {app.currentUser && (
+          <div
+            className="py-1"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="options-menu"
+          >
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-100 text-gray-900 rounded-md shadow-sm focus:outline-none sm:text-sm"
+            >
+              <option value="all-exercises">All</option>
+              <option value="my-exercises">Mine</option>
+              <option value="liked-exercises">Liked</option>
+            </select>
+          </div>
+        )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Card
               key={exercise._id}
               className="w-full bg-base-100 shadow-xl rounded-lg overflow-hidden relative transition-transform duration-300 hover:shadow-2xl hover:transform hover:scale-105"
             >
-              {console.log(exercise)}
-              {console.log(exerciseImg[exercise["_id"]])}
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
                   backgroundImage: exercise.img
-                    ? `url(${(exerciseImg && exerciseImg[exercise["_id"]]) ? exerciseImg[exercise["_id"]] : exercise.img})`
+                    ? `url(${
+                      exerciseImg && exerciseImg[exercise["_id"]]
+                        ? exerciseImg[exercise["_id"]]
+                        : exercise.img
+                    })`
                     : "url(/add-first-exercise-2.jpg)",
                 }}
               />
@@ -436,17 +399,19 @@ const Exercises = () => {
           </div>
         )}
       </div>
-      <div className="flex justify-center mt-6 gap-4">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <Button
-            key={i}
-            onClick={() => setPage(i + 1)}
-            className={`btn-warning ${page !== i + 1 && "btn-outline"}`}
-          >
-            {i + 1}
-          </Button>
-        ))}
-      </div>
+      {filter === "all-exercises" && (
+        <div className="flex justify-center mt-6 gap-4">
+          {!searchTerm && Array.from({ length: totalPages }, (_, i) => (
+            <Button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`btn-warning ${page !== i + 1 && "btn-outline"}`}
+            >
+              {i + 1}
+            </Button>
+          ))}
+        </div>
+      )}
       <ExerciseModal
         exercise={selectedExercise}
         isOpen={isModalOpen}
