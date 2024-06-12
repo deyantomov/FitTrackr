@@ -142,6 +142,8 @@ export default function Profile() {
         );
 
         setUserPic(newUserInfo.profilePic);
+        setNewProfilePic("");
+        setImageURL(null);
         setIsOpen(false);
       } catch (err) {
         console.log(err)
@@ -167,7 +169,7 @@ export default function Profile() {
           <div className="flex flex-col justify-center align-center items-center">
             <div className="relative">
               <ProfilePic
-                profilePic={userPic || null}
+                profilePic={userPic || userPic || null}
                 dimensions="96px"
                 className="flex-shrink-0 me-8"
               />
