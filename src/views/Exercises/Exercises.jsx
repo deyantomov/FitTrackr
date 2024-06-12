@@ -92,7 +92,9 @@ const Exercises = () => {
       const result = await Promise.all(await likeExercise(app, id, owner));
       const exerciseAfter = (await getExerciseById(app, id))["exercise"];
 
-      exerciseAfter.img = (await getExerciseImage(exerciseAfter.img))["img"];
+      if (exerciseAfter.img) {
+        exerciseAfter.img = (await getExerciseImage(exerciseAfter.img))["img"];
+      }
 
       setExercises((prevExercises) => {
         return prevExercises.map((exercise) => {
