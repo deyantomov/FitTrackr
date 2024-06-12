@@ -99,7 +99,7 @@ export default function Navbar({ toggleDrawer }) {
           for await (const change of changeStreamPics) {
             switch (change.operationType) {
             case "insert":
-              setProfilePic(change.fullDocument.img);
+              setProfilePic(await getProfilePic(change.fullDocument.img)["img"]);
               break;
             case "update":
             case "replace":
@@ -152,7 +152,6 @@ export default function Navbar({ toggleDrawer }) {
             case "insert":
             case "update":
             case "replace":
-              // console.log('Current user:', app.currentUser);
               if (app.currentUser) {
                 const fetchedUser = await getUserById(app.currentUser.id);
                 setUser(fetchedUser);

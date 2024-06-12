@@ -3,6 +3,8 @@
 ## 1. About the Project
 FitTrackr is a comprehensive application designed to help you track your fitness progress, create and view exercises, set goals, and socialize with friends. Leveraging the Fitbit Web API, FitTrackr seamlessly integrates with Fitbit devices to extract and display fitness data with ease.
 
+### [Hosted by MongoDB - https://fittrackr-rnylmjz.mongodbstitch.com]("https://fittrackr-rnylmjz.mongodbstitch.com") 
+
 ## 2. Key Features
 - **Ease of Use and User Interface Simplicity**: A clean, user-friendly interface designed to make tracking your fitness journey straightforward and enjoyable.
 - **Seamless Fitbit Integration**: Connect your Fitbit profile to sync data effortlessly, allowing you to monitor your fitness metrics in one place.
@@ -27,18 +29,7 @@ git clone https://github.com/deyantomov/FitTrackr.git
 cd fittrackr
 ```
 
-### Add the Atlas configuration strings
-```json
-{
-  "appId": "fittrackr-rnylmjz",
-  "appUrl": "https://services.cloud.mongodb.com/groups/665ed036590d040b2cdaa937/apps/666474754ea2916cab58563e",
-  "baseUrl": "https://services.cloud.mongodb.com",
-  "clientApiBaseUrl": "https://eu-central-1.aws.services.cloud.mongodb.com",
-  "dataApiBaseUrl": "https://eu-central-1.aws.data.mongodb-api.com",
-  "dataExplorerLink": "https://cloud.mongodb.com/links/665ed036590d040b2cdaa937/explorer/Cluster0-FitTrackr/database/collection/find",
-  "dataSourceName": "mongodb-atlas"
-}
-```
+### Add the Atlas configuration strings - Contact the repository owner/contributors to obtain this data
 
 ### Install dependencies
 ```sh
