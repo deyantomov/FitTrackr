@@ -21,7 +21,7 @@ export const updateWeeklyStreak = async (app) => {
   }
 };
 
-export const updateSteps = async (app, steps) => {
+export const updateSteps = async (app, steps, fitbit = false) => {
   const url = buildUrl(endpoints.users);
   const user = app.currentUser;
 
@@ -36,6 +36,7 @@ export const updateSteps = async (app, steps) => {
         },
         body: JSON.stringify({
           steps,
+          fitbit
         }),
       }
     );
@@ -46,7 +47,7 @@ export const updateSteps = async (app, steps) => {
   }
 };
 
-export const updateCalories = async (app, calories) => {
+export const updateCalories = async (app, calories, fitbit = false) => {
   const url = buildUrl(endpoints.users);
   const user = app.currentUser;
 
@@ -61,6 +62,7 @@ export const updateCalories = async (app, calories) => {
         },
         body: JSON.stringify({
           calories,
+          fitbit
         }),
       }
     );
@@ -71,7 +73,7 @@ export const updateCalories = async (app, calories) => {
   }
 };
 
-export const updateDistance = async (app, distance) => {
+export const updateDistance = async (app, distance, fitbit = false) => {
   const url = buildUrl(endpoints.users);
   const user = app.currentUser;
 
@@ -86,6 +88,7 @@ export const updateDistance = async (app, distance) => {
         },
         body: JSON.stringify({
           distance,
+          fitbit
         }),
       }
     );

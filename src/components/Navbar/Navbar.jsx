@@ -16,8 +16,11 @@ import {
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { mongoCfg } from "../../common/constants";
+import { useToast } from "../../hooks/useToast";
 
-const { getProfilePic, getUserById } = api;
+import { fetchStepsData, fetchDistanceData, fetchCaloriesData } from "../../services/fitbit.service";
+
+const { getProfilePic, getUserById, updateSteps, updateDistance, updateCalories } = api;
 
 /**
  * @param {{toggleDrawer: () => void}} props
@@ -25,6 +28,7 @@ const { getProfilePic, getUserById } = api;
  */
 export default function Navbar({ toggleDrawer }) {
   const app = useApp();
+  const { setToast } = useToast();
   const [profilePic, setProfilePic] = useState("");
   const [uid, setUid] = useState("");
   const [handle, setHandle] = useState("");
@@ -202,6 +206,30 @@ export default function Navbar({ toggleDrawer }) {
     );
   }
 
+  const handleSyncWithFitbit = async () => {
+    const stepsData = await fetchStepsData(app, setToast);
+    const distanceData = await fetchDistanceData(app, setToast);
+    const caloriesData = await fetchCaloriesData(app, setToast);
+
+    if (stepsData && stepsData["activities-steps"] && stepsData["activities-steps"].length > 0) {
+      const steps = Number(stepsData["activities-steps"][0]["value"]);
+
+      await updateSteps(app, steps, true);
+    }
+
+    if (distanceData && distanceData["activities-distance"] && distanceData["activities-distance"].length > 0) {
+      const distance = Number(distanceData["activities-distance"][0]["value"]) * 1000;
+
+      await updateDistance(app, distance, true);
+    }
+
+    if (caloriesData && caloriesData["activities-calories"] && caloriesData["activities-calories"].length > 0) {
+      const calories = Number(caloriesData["activities-calories"][0]["value"]);
+
+      await updateCalories(app, calories, true);
+    }
+  };
+
   return (
     <div className="grid grid-cols-3 w-full bg-base-800 p-4 justify-center align-center items-center border-b-warning border-b-2">
       <div className="flex justify-start items-center">
@@ -251,7 +279,12 @@ export default function Navbar({ toggleDrawer }) {
               <Dropdown.Menu className="w-52 mt-2 ms-10 absolute right-0 shadow-xl z-50">
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                   <h2 className="text-xl cursor-default">{handle}</h2>
-                  <Button className="btn-sm text-sm btn-warning btn-outline"><ArrowPathIcon style={{ width: "20px" }} /></Button>
+                  <Button
+                    className="btn-sm text-sm btn-warning btn-outline"
+                    onClick={handleSyncWithFitbit}
+                  >
+                    <ArrowPathIcon style={{ width: "20px" }} />
+                  </Button>
                 </Dropdown.Item>
                 <hr className="border-1 border-warning my-2" />
                 <Link to={`/profile/${uid}`} as="div">
