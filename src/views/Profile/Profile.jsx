@@ -22,6 +22,7 @@ export default function Profile() {
 
   const [newUserInfo, setNewUserInfo] = useState({});
   const [newProfilePic, setNewProfilePic] = useState("");
+  const [imageURL, setImageURL] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
@@ -112,6 +113,7 @@ export default function Profile() {
         setLoading(true);
         const img = await imageToBase64(file);
         setNewProfilePic(img);
+        setImageURL(URL.createObjectURL(file)); 
       } catch (err) {
         return setToast({ type: "error", message: "Failed to select profile picture" });
       } finally {
@@ -182,6 +184,11 @@ export default function Profile() {
                       onChange={handleSelectProfilePic}
                     />
                   </div>
+                </div>
+              )}
+              {imageURL && (
+                <div className="mt-4">
+                  <img src={imageURL} alt="Preview" className="w-32 h-32 object-cover" />
                 </div>
               )}
               {newProfilePic && (
