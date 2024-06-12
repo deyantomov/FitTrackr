@@ -29,7 +29,7 @@ export default function GoalsCard({
 
   return (
     <>
-      <div className="card w-96 glass" style={{ color: "#2effd9" }}>
+      <div className="card w-96 glass">
         <div
           className="card-stat"
           style={{
