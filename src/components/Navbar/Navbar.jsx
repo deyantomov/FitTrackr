@@ -36,6 +36,7 @@ export default function Navbar({ toggleDrawer }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [notificationCount, setNotificationCount] = useState(0);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -118,6 +119,8 @@ export default function Navbar({ toggleDrawer }) {
       } catch (err) {
         console.error("Error listening for changes:", err);
       }
+      
+      return changeStreamPics;
     };
 
     const initializeNotificationCount = async () => {
@@ -138,7 +141,7 @@ export default function Navbar({ toggleDrawer }) {
       const usersCollection = mongoClient
         .db(mongoCfg.db)
         .collection(mongoCfg.collections.users);
-
+    
       const changeStreamUsers = usersCollection.watch();
       
       try {
@@ -147,18 +150,22 @@ export default function Navbar({ toggleDrawer }) {
           case "insert":
           case "update":
           case "replace":
+            // console.log('Current user:', app.currentUser);
             if (app.currentUser) {
-              const user = await getUserById(app.currentUser.id);
-
-              if (user && user.notifications) {
-                const notificationCount = Object
-                  .values(user.notifications)
-                  .reduce((total, current) => total + current.length, 0);
-
-                setNotificationCount(notificationCount);
+              const fetchedUser = await getUserById(app.currentUser.id);
+              setUser(fetchedUser);
+    
+              if (fetchedUser && fetchedUser.notifications) {
+                setNotificationCount((_) => {
+                  const newNotificationCount = Object
+                    .values(fetchedUser.notifications)
+                    .reduce((total, current) => total + current.length, 0);
+                
+                  return newNotificationCount;
+                });
               }
             }
-
+    
             break;
           case "delete":
             setNotificationCount(prev => prev - 1);
@@ -169,13 +176,14 @@ export default function Navbar({ toggleDrawer }) {
         }
       } catch (err) {
         console.error(err);
-      }
+      } 
+      
+      return changeStreamUsers;
     };
 
     listenForPicChanges();
     listenForNotificationChanges();
-
-  }, [app]);
+  });
 
   //  close dropdown
   useEffect(() => {
