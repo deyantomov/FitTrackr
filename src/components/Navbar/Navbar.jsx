@@ -121,7 +121,7 @@ export default function Navbar({ toggleDrawer }) {
 
       const initializeNotificationCount = async () => {
         const user = await getUserById(app.currentUser.id);
-        if (user) {
+        if (user && user.notifications) {
           const notificationCount = Object.values(user.notifications).reduce(
             (total, current) => total + current.length,
             0

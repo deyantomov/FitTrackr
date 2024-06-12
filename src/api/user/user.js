@@ -115,7 +115,6 @@ export const updateUserProfile = async (
     let updateImgId;
 
     if (updatedFields.profilePic) {
-      //  update image
       const updateImgRes = await fetch(`${url}/update_profile_pic?uid=${id}`, {
         method: "POST",
         headers: {
@@ -127,9 +126,20 @@ export const updateUserProfile = async (
           img: updatedFields.profilePic,
         }),
       });
-
-      //  grab id to associate user with photo
-      updateImgId = (await updateImgRes.json())["_id"];
+    
+      // Check if the response is ok before trying to access its properties
+      if (updateImgRes.ok) {
+        const updateImgJson = await updateImgRes.json();
+      
+        // Check if updateImgJson is not null before trying to access its _id property
+        if (updateImgJson) {
+          updateImgId = updateImgJson["_id"];
+        } else {
+          throw new Error("Failed to get JSON from update profile picture response");
+        }
+      } else {
+        throw new Error("Failed to update profile picture");
+      }
     }
 
     if (

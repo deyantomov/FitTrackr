@@ -139,9 +139,10 @@ export default function Profile() {
           password
         );
 
-        setUserPic(newProfilePic);
+        setUserPic(newUserInfo.profilePic);
         setIsOpen(false);
       } catch (err) {
+        console.log(err)
         setToast({ type: "error", message: "Couldn't update profile picture" });
       } finally {
         setLoading(false);
@@ -164,7 +165,7 @@ export default function Profile() {
           <div className="flex flex-col justify-center align-center items-center">
             <div className="relative">
               <ProfilePic
-                profilePic={userPic}
+                profilePic={userPic || null}
                 dimensions="96px"
                 className="flex-shrink-0 me-8"
               />
