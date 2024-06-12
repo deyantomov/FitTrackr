@@ -279,7 +279,7 @@ export default function Navbar({ toggleDrawer }) {
               </Dropdown.Toggle>
             </div>
             {isOpen && (
-              <Dropdown.Menu className="w-52 mt-2 ms-10 absolute right-0 shadow-xl z-50">
+              <Dropdown.Menu className="w-96 mt-2 ms-10 absolute right-0 shadow-xl z-50 text-wrap">
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                   <h2 className="text-xl cursor-default">{handle}</h2>
                   <Button
