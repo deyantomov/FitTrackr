@@ -8,12 +8,12 @@ import { useEffect, useState } from "react";
 import api from "../../api/api";
 import { useCompleteProfile } from "../../hooks/useCompleteProfile";
 import Progress from "./Progress/Progress";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../../hooks/useToast";
 import { toastTypes, toastMessages, featureCards } from "../../common/constants";
-import { handleRedirect } from "../../services/fitbit.service";
+import { handleRedirect, fetchStepsData } from "../../services/fitbit.service";
 
 const { getUserById } = api;
 
@@ -37,6 +37,16 @@ export default function Home() {
       }
     }
   }, [app, setToast]);
+
+  useEffect(() => {
+    const getSteps = async () => {
+      const result = await fetchStepsData(app, setToast);
+
+      console.log(result);
+    }
+
+    getSteps();
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {

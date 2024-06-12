@@ -290,3 +290,20 @@ export const storeAccessTokens = async (app, tokens) => {
     return response.json();
   } 
 };
+
+export const getAccessTokens = async (app) => {
+  const url = buildUrl(endpoints.users);
+  const { currentUser } = app;
+
+  if (currentUser) {
+    const response = await fetch(`${url}/get_fitbit_data?id=${currentUser.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.accessToken}`,
+      }
+    });
+
+    return response.json();
+  } 
+}

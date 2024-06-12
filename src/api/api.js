@@ -10,7 +10,8 @@ import {
   getFriendList,
   savePKCE,
   retrievePKCE,
-  storeAccessTokens
+  storeAccessTokens,
+  getAccessTokens
 } from "./user/user";
 
 import {
@@ -85,6 +86,7 @@ export default {
   savePKCE,
   retrievePKCE,
   storeAccessTokens,
+  getAccessTokens,
   getAllExercisesNoPagination,
   reportABug
 };
