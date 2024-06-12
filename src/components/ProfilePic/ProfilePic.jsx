@@ -8,9 +8,13 @@ import PropTypes from "prop-types";
 export default function ProfilePic({ profilePic, dimensions, className }) {
   return (
     <div className={`rounded-full flex flex-row justify-center items-center avatar ${className}`} style={{ width: dimensions, height: dimensions }}>
-      {profilePic && <img src={profilePic} alt="pic" className='object-cover rounded-full w-full h-full' />}
+      {
+        profilePic ? 
+          (<img src={profilePic} alt="pic" className='object-cover rounded-full w-full h-full' />) :
+          (<img src="/default.jpg" alt="pic" className='object-cover rounded-full w-full h-full' />)
+      }
     </div>
-  )
+  );
 }
 
 ProfilePic.propTypes = {

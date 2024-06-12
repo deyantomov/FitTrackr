@@ -53,6 +53,8 @@ const Exercises = () => {
 
   useEffect(() => {
     const fetchExercises = async () => {
+      setLoading(true);
+
       try {
         const response = await getAllExercises(page);
 
@@ -85,6 +87,8 @@ const Exercises = () => {
   };
 
   const handleLikeExercise = async (id, owner) => {
+    setLoading(true);
+
     try {
       // before
       const exerciseBefore = exercises.find(exercise => exercise["_id"] === id);
@@ -106,28 +110,37 @@ const Exercises = () => {
       return result;
     } catch (err) {
       setToast({ type: toastTypes.ERROR, message: "Failed to like exercise" });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUpdateExercise = async (updatedExercise) => {
+    setLoading(true);
+
     try {
       const result = await updateExercise(app, updatedExercise);
-      console.log(result);
+
       setToast({ type: toastTypes.SUCCESS, message: "Exercise updated successfully" });
     } catch (err) {
       console.error(err);
       setToast({ type: toastTypes.ERROR, message: "Failed to update exercise" });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleRemoveExercise = async (id) => {
+    setLoading(true);
+
     try {
       const result = await removeExercise(app, id);
-      console.log(result);
+
       setToast({ type: toastTypes.SUCCESS, message: "Exercise deleted successfully" });
     } catch (err) {
-      console.error(err);
       setToast({ type: toastTypes.ERROR, message: "Failed to delete exercise" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -376,7 +389,7 @@ const Exercises = () => {
           </div>
         )}
       </div>
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-6 gap-4">
         {Array.from({ length: totalPages }, (_, i) => (
           <Button
             key={i}
