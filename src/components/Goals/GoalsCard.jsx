@@ -72,7 +72,7 @@ export default function GoalsCard({
             {metricTitle.toUpperCase()}
           </h2>
           <p style={{ textAlign: "center" }}>
-            {currentProgress}/{goalSet} {metricString}
+            {currentProgress || 0}/{goalSet} {metricString}
           </p>
         </div>
       </div>

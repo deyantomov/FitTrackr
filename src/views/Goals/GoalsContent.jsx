@@ -29,8 +29,6 @@ export default function GoalsContent({ periodToShow }) {
   const [targetNumber, setTargetNumber] = useState(0);
 
   const [period, setPeriod] = useState("daily");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [userGoals, setUserGoals] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
 
@@ -41,10 +39,6 @@ export default function GoalsContent({ periodToShow }) {
   useEffect(() => {
     periodToShowRef.current = periodToShow;
   }, [periodToShow]);
-
-  // (async function getCurrentUser() {
-  //   const currentUser = await getUserById(app.currentUser.id);
-  // })();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,10 +58,16 @@ export default function GoalsContent({ periodToShow }) {
       break;
     }
 
-    setError("");
-    setSuccess("");
-
     if (app.currentUser) {
+      if (title.length < 4 || title.length > 30) {
+        setToast({
+          message: "Goal title must be between 4 and 30 characters",
+          type: "error",
+        });
+
+        return setLoading(false);
+      }
+      
       const goal = {
         title,
         type,
@@ -77,19 +77,17 @@ export default function GoalsContent({ periodToShow }) {
 
       try {
         await createNewGoal(app, goal);
-        setSuccess("Goal created successfully!");
         setToast({ type: toastTypes.SUCCESS, message: "Goal created successfully!" });
         resetForm();
       } catch (error) {
-        setError("Failed to create goal. Please try again.");
         setToast({ type: toastTypes.ERROR, message: "Failed to create goal. Please try again." });
+      } finally {
+        setLoading(false);
       }
     } else {
-      setError("You must be logged in to create a goal.");
       setToast({ type: toastTypes.ERROR, message: "You must be logged in to create a goal." });
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const resetForm = () => {
@@ -119,9 +117,7 @@ export default function GoalsContent({ periodToShow }) {
     getGoals();
   }, [periodToShow, app, setToast]);
 
-  useEffect(() => {
-    let isMounted = true;
-    
+  useEffect(() => {    
     const listenForChanges = async () => {      
       const collection = app.currentUser.mongoClient(mongoCfg.mongoClient)
         .db(mongoCfg.db)
@@ -131,10 +127,6 @@ export default function GoalsContent({ periodToShow }) {
 
       try {
         for await (const change of changeStream) {
-          if (!isMounted) {
-            break;
-          }
-
           setLoading(true);
           
           if (!change.fullDocument) {
@@ -159,10 +151,6 @@ export default function GoalsContent({ periodToShow }) {
     };
   
     listenForChanges();
-
-    return () => {
-      isMounted = false;
-    };
   }, [app, mongoCfg, periodToShowRef]);
 
   useEffect(() => {
@@ -211,7 +199,7 @@ export default function GoalsContent({ periodToShow }) {
   function currentProgressFunction(metric) {
     const result =
       Object.keys(currentUser).length > 0
-        ? currentUser[metric][periodToShowRef.current]
+        ? currentUser[metric] && (currentUser[metric][periodToShowRef.current])
         : 0;
         
     return result;
@@ -320,8 +308,7 @@ export default function GoalsContent({ periodToShow }) {
         setTargetNumber={setTargetNumber}
         period={period}
         setPeriod={setPeriod}
-        error={error}
-        success={success}
+        setToast={setToast}
       ></CreateNewGoal>
     </div>
   );

@@ -207,13 +207,13 @@ export const likeExercise = async (app, exerciseId, owner) => {
   }
 };
 
-export const completeExercise = async (app, exerciseId, owner) => {
+export const completeExercise = async (app, exerciseId, id) => {
   const url = buildUrl(endpoints.exercises);
 
   const { currentUser } = app;
 
   if (currentUser) {
-    const response = await fetch(`${url}/completeExercise?id=${exerciseId}&uid=${owner}`, {
+    const response = await fetch(`${url}/completeExercise?id=${exerciseId}&uid=${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

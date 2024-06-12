@@ -42,7 +42,9 @@ const ExerciseModal = ({ exercise, isOpen, onClose }) => {
 
   const handleCompleteExercise = async () => {
     try {
-      await completeExercise(app, exercise._id, exercise.owner);
+      const result = await completeExercise(app, exercise._id, app.currentUser.id);
+
+      console.log(result);
       const completionTime = new Date();
       setExerciseState((prev) => ({
         ...prev,

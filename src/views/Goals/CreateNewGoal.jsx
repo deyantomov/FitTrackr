@@ -1,14 +1,5 @@
-import GoalsCard from "../../components/Goals/GoalsCard";
-import { Card, Button, Modal, Input } from "react-daisyui";
-import { useApp } from "../../hooks/useApp";
-import api from "../../api/api";
-import { useEffect, useState } from "react";
-import {
-  ChevronDoubleRightIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/16/solid";
-
-const { createNewGoal, getAllGoals, getUserById, removeGoal } = api;
+import { Button } from "react-daisyui";
+import { ChevronDoubleRightIcon } from "@heroicons/react/16/solid";
 
 export default function CreateNewGoal({
   handleSubmit,
@@ -20,9 +11,12 @@ export default function CreateNewGoal({
   setTargetNumber,
   period,
   setPeriod,
-  error,
-  success,
+  setToast
 }) {
+  const onFormSubmit = async (e) => {
+    await handleSubmit(e);
+  };
+  
   return (
     <dialog id="my_modal_1" className="modal">
       <div
@@ -34,7 +28,7 @@ export default function CreateNewGoal({
           scrollbarWidth: "thin",
         }}
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={e => onFormSubmit(e)}>
           <span>Goal title:</span>
           <label className="label mb-4 w-full">
             <ChevronDoubleRightIcon className="h-5 w-5 mr-2" />
@@ -91,8 +85,6 @@ export default function CreateNewGoal({
           >
             Set Goal
           </button>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
           <form
             method="dialog"
             style={{ display: "flex", justifyContent: "center" }}
