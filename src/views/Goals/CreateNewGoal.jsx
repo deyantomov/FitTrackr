@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 /**
  *
- * @param {{handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void, title: string, setTitle: (title: string) => void, type: string, setType: (type: string) => void, targetNumber: string, setTargetNumber: (targetNumber: string) => void, period: string, setPeriod: (period: string) => void }} props
+ * @param {{handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void, title: string, setTitle: (title: string) => void, type: string, setType: (type: string) => void, targetNumber: number, setTargetNumber: (targetNumber: number) => void, period: string, setPeriod: (period: string) => void }} props
  * @returns {React.FC}
  */
 export default function CreateNewGoal({
@@ -104,7 +104,7 @@ CreateNewGoal.propTypes = {
   setTitle: PropTypes.func,
   type: PropTypes.string,
   setType: PropTypes.func,
-  targetNumber: PropTypes.string,
+  targetNumber: PropTypes.number,
   setTargetNumber: PropTypes.func,
   period: PropTypes.string,
   setPeriod: PropTypes.func,
