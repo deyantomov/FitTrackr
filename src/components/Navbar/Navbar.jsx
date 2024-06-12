@@ -75,113 +75,106 @@ export default function Navbar({ toggleDrawer }) {
 
   //  Real-time listener for profile pics and notifications
   useEffect(() => {
-    let isMounted = true;
+    const listenForPicChanges = async () => {
+      const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
+      const picCollection = mongoClient
+        .db(mongoCfg.db)
+        .collection(mongoCfg.collections.profile_pics);
 
-    if (isMounted) {
-      const listenForPicChanges = async () => {
-        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
-        const picCollection = mongoClient
-          .db(mongoCfg.db)
-          .collection(mongoCfg.collections.profile_pics);
-
-        const pipeline = [
-          {
-            $match: {
-              "fullDocument.userId": app.currentUser.id,
-              operationType: { $in: ["insert", "update", "replace", "delete"] }
-            }
+      const pipeline = [
+        {
+          $match: {
+            "fullDocument.userId": app.currentUser.id,
+            operationType: { $in: ["insert", "update", "replace", "delete"] }
           }
-        ];
-    
-        const changeStreamPics = picCollection.watch(pipeline);
+        }
+      ];
+  
+      const changeStreamPics = picCollection.watch(pipeline);
 
-        try {
-          for await (const change of changeStreamPics) {
-            switch (change.operationType) {
-            case "insert":
-              setProfilePic(change.fullDocument.img);
-              break;
-            case "update":
-            case "replace":
-              if (app.currentUser) {
-                const user = await getUserById(app.currentUser.id);
-                if (user && user.profilePic) {
-                  const pic = await getProfilePic(user.profilePic);
-                  setProfilePic(pic.img);
-                }
+      try {
+        for await (const change of changeStreamPics) {
+          switch (change.operationType) {
+          case "insert":
+            setProfilePic(change.fullDocument.img);
+            break;
+          case "update":
+          case "replace":
+            if (app.currentUser) {
+              const user = await getUserById(app.currentUser.id);
+              if (user && user.profilePic) {
+                const pic = await getProfilePic(user.profilePic);
+                setProfilePic(pic.img);
               }
-              break;
-            case "delete":
-              setProfilePic(null);
-              break;
-            default:
-              throw new Error("Unhandled change event:", change);
             }
+            break;
+          case "delete":
+            setProfilePic(null);
+            break;
+          default:
+            throw new Error("Unhandled change event:", change);
           }
-        } catch (err) {
-          console.error("Error listening for changes:", err);
         }
-      };
-
-      const initializeNotificationCount = async () => {
-        const user = await getUserById(app.currentUser.id);
-        if (user && user.notifications) {
-          const notificationCount = Object.values(user.notifications).reduce(
-            (total, current) => total + current.length,
-            0
-          );
-          setNotificationCount(notificationCount);
-        }
-      };
-
-      initializeNotificationCount();
-
-      const listenForNotificationChanges = async () => {
-        const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
-        const usersCollection = mongoClient
-          .db(mongoCfg.db)
-          .collection(mongoCfg.collections.users);
-
-        const changeStreamUsers = usersCollection.watch();
-        
-        try {
-          for await (const change of changeStreamUsers) {
-            switch (change.operationType) {
-            case "insert":
-            case "update":
-            case "replace":
-              if (app.currentUser) {
-                const user = await getUserById(app.currentUser.id);
-
-                if (user && user.notifications) {
-                  const notificationCount = Object
-                    .values(user.notifications)
-                    .reduce((total, current) => total + current.length, 0);
-
-                  setNotificationCount(notificationCount);
-                }
-              }
-
-              break;
-            case "delete":
-              setNotificationCount(prev => prev - 1);
-              break;
-            default:
-              throw new Error("Unhandled change event:", change);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
-
-      listenForPicChanges();
-      listenForNotificationChanges();
-    }
-
-    return () => {
-      isMounted = false; // set the flag to false on cleanup
+      } catch (err) {
+        console.error("Error listening for changes:", err);
+      }
     };
+
+    const initializeNotificationCount = async () => {
+      const user = await getUserById(app.currentUser.id);
+      if (user && user.notifications) {
+        const notificationCount = Object.values(user.notifications).reduce(
+          (total, current) => total + current.length,
+          0
+        );
+        setNotificationCount(notificationCount);
+      }
+    };
+
+    initializeNotificationCount();
+
+    const listenForNotificationChanges = async () => {
+      const mongoClient = app.currentUser.mongoClient(mongoCfg.mongoClient);
+      const usersCollection = mongoClient
+        .db(mongoCfg.db)
+        .collection(mongoCfg.collections.users);
+
+      const changeStreamUsers = usersCollection.watch();
+      
+      try {
+        for await (const change of changeStreamUsers) {
+          switch (change.operationType) {
+          case "insert":
+          case "update":
+          case "replace":
+            if (app.currentUser) {
+              const user = await getUserById(app.currentUser.id);
+
+              if (user && user.notifications) {
+                const notificationCount = Object
+                  .values(user.notifications)
+                  .reduce((total, current) => total + current.length, 0);
+
+                setNotificationCount(notificationCount);
+              }
+            }
+
+            break;
+          case "delete":
+            setNotificationCount(prev => prev - 1);
+            break;
+          default:
+            throw new Error("Unhandled change event:", change);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    listenForPicChanges();
+    listenForNotificationChanges();
+
   }, [app]);
 
   //  close dropdown

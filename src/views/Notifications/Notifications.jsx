@@ -37,9 +37,7 @@ export default function Notifications() {
           ) : [];
 
           const friendRequestsHandles = user.notifications && user.notifications.friendRequests && user.notifications.friendRequests.length > 0 ? await Promise.all(
-            user.notifications.friendRequests.map((request) => 
-              handleGetUser(request.from)
-            )
+            user.notifications.friendRequests.map((request) => handleGetUser(request.from))
           ) : [];
 
           const allHandles = [...likesHandles, ...friendRequestsHandles];
