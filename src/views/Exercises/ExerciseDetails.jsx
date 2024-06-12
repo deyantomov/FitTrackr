@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getExerciseById, likeExercise } from "../../api/exercise/exercise";
+import { getExerciseById, likeExercise, getExerciseImage } from "../../api/exercise/exercise";
 import { useApp } from "../../hooks/useApp";
 import { Card, Button } from "react-daisyui";
 import {
@@ -38,15 +38,23 @@ const ExerciseDetails = () => {
         navigate("/login");
         return;
       }
+
       try {
         const response = await getExerciseById(app, id);
         const exerciseData = response.exercise || response;
+
+        if (exerciseData.img) {
+          const imgData = await getExerciseImage(exerciseData.img);
+          exerciseData.img = imgData["img"];
+        }
+
         console.log("Exercise Data:", exerciseData);
         setExercise(exerciseData);
       } catch (error) {
         console.error("Failed to fetch exercise:", error);
       }
     };
+
     fetchExercise();
   }, [app, id, navigate]);
 
