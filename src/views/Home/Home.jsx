@@ -137,7 +137,9 @@ export default function Home() {
                   <p className="text-8xl lg:text-9xl text-white mb-8 font-light">
                     FitTrackr
                   </p>
-                  <AuthButtons></AuthButtons>
+                  <div className="flex flex-row justify-center align-center w-1/6 bg-white/20 rounded-lg shadow-xl pt-1 pb-2">
+                    <AuthButtons />
+                  </div>
                 </div>
               </div>
             </div>

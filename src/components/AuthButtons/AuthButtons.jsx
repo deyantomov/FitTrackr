@@ -18,7 +18,7 @@ export default function AuthButtons() {
   const handleLogout = async () => {
     await logout(app);
     setIsLoggedIn(false);
-  }
+  };
   
   return (
     <div className="flex flex-row gap-3 p-0 align-center items-center">
@@ -42,5 +42,5 @@ export default function AuthButtons() {
         </>
       )}
     </div>
-  )
+  );
 }
