@@ -2,9 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getExerciseById, likeExercise, getExerciseImage } from "../../api/exercise/exercise";
 import { useApp } from "../../hooks/useApp";
-import { Card, Button } from "react-daisyui";
+import { Card, Button, Loading } from "react-daisyui";
 import {
-  FireIcon,
   LockClosedIcon,
   ClockIcon,
   ChartBarIcon,
@@ -12,7 +11,6 @@ import {
   CalendarIcon,
   StarIcon,
   UserCircleIcon,
-  InformationCircleIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/16/solid";
@@ -25,7 +23,7 @@ const ExerciseDetails = () => {
   const { id } = useParams();
   const app = useApp();
   const navigate = useNavigate();
-  //const [exercises, setExercises] = useState("");
+  const [loading, setLoading] = useState(false);
   const [exercise, setExercise] = useState("");
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,8 +31,9 @@ const ExerciseDetails = () => {
 
   useEffect(() => {
     const fetchExercise = async () => {
+      setLoading(true);
+
       if (!app.currentUser || !app.currentUser.id) {
-        console.error("User is not authenticated or does not have an id");
         navigate("/login");
         return;
       }
@@ -47,11 +46,11 @@ const ExerciseDetails = () => {
           const imgData = await getExerciseImage(exerciseData.img);
           exerciseData.img = imgData["img"];
         }
-
-        console.log("Exercise Data:", exerciseData);
         setExercise(exerciseData);
       } catch (error) {
-        console.error("Failed to fetch exercise:", error);
+        setToast({ type: toastTypes.ERROR, message: "Failed to fetch exercise:" });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -63,7 +62,11 @@ const ExerciseDetails = () => {
   };
 
   const handleLikeExercise = async (exerciseId, ownerId) => {
-    if (!exercise) return;
+    if (!exercise) {
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const isLiked = exercise.likedBy && exercise.likedBy.includes(app.currentUser.id);
@@ -71,6 +74,8 @@ const ExerciseDetails = () => {
 
       const response = await getExerciseById(app, exerciseId);
       const updatedExercise = response.exercise || response;
+
+      updatedExercise.img = (await getExerciseImage(updatedExercise.img))["img"];
 
       setExercise(updatedExercise);
 
@@ -82,6 +87,8 @@ const ExerciseDetails = () => {
       
     } catch (err) {
       setToast({ type: toastTypes.ERROR, message: "Failed to like exercise" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,17 +105,18 @@ const ExerciseDetails = () => {
     setSelectedExercise(null);
     setIsModalOpen(false);
   };
-  //if (!exercise) {
-  //return (
-  //<div className="flex justify-center items-center h-screen">
-  //<Loading />
-  //</div>
-  //);
-  //}
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
-    <div className="exercise-details w-full h-full p-12 text-black">
-      <Card className="exercise-card bg-base-100 shadow-xl transform transition-transform duration-300 w-full md:w-3/4 lg:w-2/3 mx-auto relative overflow-hidden">
+    <div className="flex justify-center align-center items-center exercise-details w-full h-full p-12 text-black">
+      <Card className="exercise-card bg-base-100 shadow-xl transform transition-transform duration-300 w-full md:w-3/4 lg:w-2/3 mx-auto relative overflow-hidden p-8">
         <div
           className="absolute inset-0 bg-cover bg-center rounded opacity-75"
           style={{
@@ -118,7 +126,7 @@ const ExerciseDetails = () => {
           }}
         ></div>
         <div className="relative z-10 p-4 bg-white bg-opacity-80 rounded-md">
-          <Card.Title className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4">{exercise.title}</Card.Title>
+          <Card.Title className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-8">{exercise.title}</Card.Title>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl flex items-center mb-2">
             <PencilIcon className="h-6 w-6 mr-2 text-green-300" />
             <strong className="mr-2">Description:</strong> {exercise.description}
@@ -155,7 +163,7 @@ const ExerciseDetails = () => {
               </span>
             </strong>
           </p>
-          <div className="flex justify-between">
+          <div className="flex justify-between mt-8">
             <Button
               className="btn-warning flex items-center"
               onClick={() => handleLikeExercise(exercise["_id"], exercise.owner)}

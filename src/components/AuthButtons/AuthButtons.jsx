@@ -25,7 +25,7 @@ export default function AuthButtons() {
       {isLoggedIn ? (
         <div className="flex flex-row gap-6 align-center items-center p-0">
           <button
-            className="btn btn-warning"
+            className="btn btn-ghost"
             onClick={async () => await handleLogout()}
           >
             Log out
@@ -34,10 +34,10 @@ export default function AuthButtons() {
       ) : (
         <>
           <Link to="/login">
-            <button className="btn btn-warning text-gray-800">Sign in</button>
+            <button className="btn btn-ghost text-gray-800">Sign in</button>
           </Link>
           <Link to="/signup">
-            <button className="btn btn-outline btn-warning">Sign up</button>
+            <button className="btn btn-ghost btn-warning">Sign up</button>
           </Link>
         </>
       )}

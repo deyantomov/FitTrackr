@@ -294,7 +294,7 @@ const Exercises = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center align-center items-center p-8 w-full h-full">
+    <div className="flex flex-col justify-center align-center items-center p-10 px-12 w-full h-full">
       <div className="flex justify-between align-center items-center mb-6 gap-8 w-5/6 h-auto pb-8">
         <div className="w-full">
           <SearchBar onSearch={handleSearch} />
@@ -400,7 +400,7 @@ const Exercises = () => {
         )}
       </div>
       {filter === "all-exercises" && (
-        <div className="flex justify-center mt-6 gap-4">
+        <div className="flex justify-center mt-8 gap-4">
           {!searchTerm && Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}

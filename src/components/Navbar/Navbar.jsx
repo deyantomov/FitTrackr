@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Dropdown, Input, Indicator, Badge, Button } from "react-daisyui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import "./Navbar.css";
 import {
   UserCircleIcon,
   BellIcon,
@@ -234,7 +235,7 @@ export default function Navbar({ toggleDrawer }) {
   };
 
   return (
-    <div className="grid grid-cols-3 w-full bg-base-800 p-4 justify-center align-center items-center border-b-warning border-b-2">
+    <div className="grid grid-cols-3 w-full bg-base-800 p-4 justify-center align-center items-center border-b-warning border-b-2 navbar-bg">
       <div className="flex justify-start items-center">
         <label
           htmlFor="my-drawer-2"
