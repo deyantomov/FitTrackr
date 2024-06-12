@@ -42,14 +42,19 @@ export default function Notifications() {
 
           const allHandles = [...likesHandles, ...friendRequestsHandles];
 
+          let likesIndex = 0;
+          let friendRequestsIndex = 0;
+  
           setHandles(
             allHandles.reduce(
-              (obj, handle, i) => ({
-                ...obj,
-                [(i < likesHandles.length && user.notifications.likes[i])
-                  ? user.notifications.likes[i].from
-                  : (user.notifications.friendRequests[i] && user.notifications.friendRequests[i].from)]: handle,
-              }),
+              (obj, handle, i) => {
+                if (i < likesHandles.length) {
+                  obj[user.notifications.likes[likesIndex++].from] = handle;
+                } else {
+                  obj[user.notifications.friendRequests[friendRequestsIndex++].from] = handle;
+                }
+                return obj;
+              },
               {}
             )
           );
