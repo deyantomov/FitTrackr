@@ -2,9 +2,10 @@ import { useApp } from "../../hooks/useApp";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../api/api";
-import { Loading, Table, Button } from "react-daisyui";
+import { Loading, Button } from "react-daisyui";
 import { useToast } from "../../hooks/useToast";
 import { toastTypes, toastMessages } from "../../common/constants";
+import { HandRaisedIcon, HandThumbUpIcon } from "@heroicons/react/16/solid";
 
 const {
   getExercisesByUserId,
@@ -138,104 +139,69 @@ export default function Notifications() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full justify-start align-center items-center py-12">
-      <h2 className="text-3xl md:text-4xl lg:text-5xl mb-12">Likes</h2>
-      <div className="overflow-auto w-full flex justify-center align-center">
-        <Table className="text-xs md:text-xl lg:text-2xl w-full">
-          {notifications && notifications.likes && notifications.likes.length > 0 && (
-            <Table.Head className="invisible md:visible odd:bg-base-200">
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                User
-              </span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                Exercise
-              </span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                Date
-              </span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                Action
-              </span>
-            </Table.Head>
-          )}
-
-          <Table.Body className="w-full">
-            {notifications && notifications.likes && notifications.likes.length > 0 ? (
-              notifications.likes.map((like, index) => (
-                <Table.Row
-                  key={index}
-                  className="even:bg-base-200 w-full text-center"
+    <div className="flex flex-col w-full h-full justify-start items-center">
+      <div className="w-full max-w-3xl">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl my-12">Likes</h2>
+        {notifications && notifications.likes && notifications.likes.length > 0 ? (
+          <ul className="space-y-4">
+            {notifications.likes.map((like, index) => (
+              <li key={index} className="border p-4 rounded-lg bg-gray-100 flex items-center justify-between transition-transform duration-200 ease-in-out transform hover:-translate-y-1">
+                <div className="flex items-center">
+                  <div className="mr-4">
+                    <HandThumbUpIcon className="text-blue-500 h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="font-semibold">{handles[like.from]}</span>
+                    <div className="text-sm text-gray-500">{new Date(like.likedOn).toLocaleDateString("en-GB")}</div>
+                    <div className="text-gray-700">{getExercise(like.postId) && getExercise(like.postId).title}</div>
+                  </div>
+                </div>
+                <Button
+                  className="mt-4 btn-ghost text-xs md:text-base"
+                  onClick={() => handleRemoveLikeNotification(like.postId, like.from)}
                 >
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
-                    {handles[like.from]}
-                  </span>
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
-                    {exercises && exercises.length > 0 && getExercise(notifications.likes[index].postId) && getExercise(notifications.likes[index].postId)["title"]}
-                  </span>
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
-                    {new Date(
-                      notifications.likes[index].likedOn
-                    ).toLocaleDateString("en-GB")}
-                  </span>
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-4 xl:px-8 xl:py-6 text-center">
-                    <Button
-                      className="btn-ghost text-xs md:text-xl"
-                      onClick={() =>
-                        handleRemoveLikeNotification(like.postId, like.from)
-                      }
-                    >
-                      Mark as read
-                    </Button>
-                  </span>
-                </Table.Row>
-              ))
-            ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-base-200 p-6 py-12">
-                Nothing to show here :\
-              </div>
-            )}
-          </Table.Body>
-        </Table>
+                  Mark as read
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex w-full text-center justify-center items-center bg-gray-100 p-6 py-12">
+            Nothing to show here :\
+          </div>
+        )}
       </div>
-      <h2 className="text-5xl my-12">Friend requests</h2>
-      <div className="overflow-auto w-full flex justify-center align-center">
-        <Table className="text-xs md:text-xl lg:text-2xl w-full">
-          {notifications && notifications.friendRequests && notifications.friendRequests.length > 0 && (
-            <Table.Head className="invisible md:visible odd:bg-base-200">
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">User Handle</span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">Date</span>
-              <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">Action</span>
-            </Table.Head>
-          )}
-
-          <Table.Body className="w-full">
-            {notifications && notifications.friendRequests && notifications.friendRequests.length > 0 ? (
-              notifications.friendRequests.map((request, index) => (
-                <Table.Row key={index} className="even:bg-base-200">
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                    {handles[request.from]}
-                  </span>
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                    {new Date(request.sentOn).toLocaleDateString("en-US")}
-                  </span>
-                  <span className="px-0 py-3 sm:px-0 sm:py-1 md:px-4 md:py-2 lg:px-6 lg:py-3 xl:px-8 xl:py-4">
-                    <Button
-                      className="btn-ghost"
-                      onClick={() => handleRemoveRequestNotification(request.from)}
-                    >
-                      Accept
-                    </Button>
-                  </span>
-                </Table.Row>
-              ))
-            ) : (
-              <div className="flex w-full text-center justify-center align-center items-center bg-base-200 p-6 py-12">
-                Nothing to show here :\
-              </div>
-            )}
-          </Table.Body>
-        </Table>
+      <div className="w-full max-w-3xl mt-8">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl my-12">Friend requests</h2>
+        {notifications && notifications.friendRequests && notifications.friendRequests.length > 0 ? (
+          <ul className="space-y-4">
+            {notifications.friendRequests.map((request, index) => (
+              <li key={index} className="border p-4 rounded-lg bg-gray-100 flex items-center justify-between transition-transform duration-200 ease-in-out transform hover:-translate-y-1">
+                <div className="flex items-center">
+                  <div className="mr-4">
+                    <HandRaisedIcon className="text-green-500 h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="font-semibold">{handles[request.from]}</span>
+                    <div className="text-sm text-gray-500">{new Date(request.sentOn).toLocaleDateString("en-GB")}</div>
+                  </div>
+                </div>
+                <Button
+                  className="btn-ghost"
+                  onClick={() => handleRemoveRequestNotification(request.from)}
+                >
+                  Accept
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex w-full text-center justify-center items-center bg-gray-100 p-6 py-12">
+            Nothing to show here :\
+          </div>
+        )}
       </div>
     </div>
   );
+
 }
