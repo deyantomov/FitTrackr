@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 
 /**
- * @param {{metricTitle: string, currentProgress: number, goalSet: number, metricString: string}} props
+ * @param {{metricTitle: string, currentProgress: number, goalSet: string, metricString: string}} props
  * @returns {React.FC}
  */
 export default function GoalsCard({
@@ -82,6 +82,6 @@ export default function GoalsCard({
 GoalsCard.propTypes = {
   metricTitle: PropTypes.string,
   currentProgress: PropTypes.number,
-  goalSet: PropTypes.number,
+  goalSet: PropTypes.string,
   metricString: PropTypes.string,
 };

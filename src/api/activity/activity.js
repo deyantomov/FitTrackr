@@ -53,7 +53,7 @@ export const updateCalories = async (app, calories, fitbit = false) => {
 
   if (user) {
     const caloriesResponse = await fetch(
-      `${url}/update_calories?uid=${app.currentUser.id}`,
+      `${url}/update_calories?uid=${user.id}`,
       {
         method: "POST",
         headers: {

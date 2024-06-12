@@ -48,7 +48,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
     try {
       switch (trackParam) {
       case progressMetrics.steps:
-        await updateSteps(app, Number(inputValue));
+        await updateSteps(app, Number(inputValue), false);
         setInputValue("");
         setTriggerFetch(!triggerFetch);
 
@@ -56,7 +56,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
 
         break;
       case progressMetrics.distance:
-        await updateDistance(app, Number(inputValue));
+        await updateDistance(app, Number(inputValue), false);
         setInputValue("");
         setTriggerFetch(!triggerFetch);
 
@@ -64,7 +64,7 @@ export default function ProgressCard({ trackParam, imgName, title }) {
 
         break;
       case progressMetrics.calories:
-        await updateCalories(app, Number(inputValue));
+        await updateCalories(app, Number(inputValue), false);
         setInputValue("");
         setTriggerFetch(!triggerFetch);
 
