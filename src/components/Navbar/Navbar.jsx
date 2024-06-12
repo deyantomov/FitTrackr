@@ -5,13 +5,14 @@ import { useApp } from "../../hooks/useApp";
 import { useEffect, useState, useRef } from "react";
 import api from "../../api/api";
 import { Link } from "react-router-dom";
-import { Dropdown, Input, Indicator, Badge } from "react-daisyui";
+import { Dropdown, Input, Indicator, Badge, Button } from "react-daisyui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import {
   UserCircleIcon,
   BellIcon,
   UserGroupIcon,
+  ArrowPathIcon
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { mongoCfg } from "../../common/constants";
@@ -250,6 +251,7 @@ export default function Navbar({ toggleDrawer }) {
               <Dropdown.Menu className="w-52 mt-2 ms-10 absolute right-0 shadow-xl z-50">
                 <Dropdown.Item className="hover:bg-base-100 cursor-default my-1">
                   <h2 className="text-xl cursor-default">{handle}</h2>
+                  <Button className="btn-sm text-sm btn-warning btn-outline"><ArrowPathIcon style={{ width: "20px" }} /></Button>
                 </Dropdown.Item>
                 <hr className="border-1 border-warning my-2" />
                 <Link to={`/profile/${uid}`} as="div">

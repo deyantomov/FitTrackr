@@ -84,3 +84,14 @@ export const fetchStepsData = async (app, setToast) => {
   const url = "https://api.fitbit.com/1/user/{userId}/activities/steps/date/today/1d.json";
   return await fetchFitbitData(app, url, setToast);
 };
+
+// Function to fetch user's steps data
+export const fetchDistanceData = async (app, setToast) => {
+  const url = "https://api.fitbit.com/1/user/{userId}/activities/distance/date/today/1d.json";
+  return await fetchFitbitData(app, url, setToast);
+};
+
+export const fetchCaloriesData = async (app, setToast) => {
+  const url = "https://api.fitbit.com/1/user/{userId}/activities/calories/date/today/1d.json";
+  return await fetchFitbitData(app, url, setToast);
+}

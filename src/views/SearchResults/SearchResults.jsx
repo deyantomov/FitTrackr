@@ -106,17 +106,16 @@ export default function SearchResults() {
   const handleSendFriendRequest = async (to) => {
     try {
       if (app.currentUser) {
-        setLoading(true);
-
         const response = await sendFriendRequest(app, to);
-  
-        setLoading(false);
+
         setToast({ type: toastTypes.SUCCESS, message: toastMessages.successfulFriendRequest });
 
         return response;
       }
     } catch (err) {
       setToast({ type: toastTypes.ERROR, message: toastMessages.unsuccessfulFriendRequest });
+    } finally {
+      window.location.reload();
     }
   };
 
@@ -139,7 +138,7 @@ export default function SearchResults() {
                 <div className="flex flex-row gap-4 items-center">
                   <div className="flex flex-row justify-start align-start gap-4 w-full">
                     <ProfilePic
-                      profilePic={user.profilePic}
+                      profilePic={user.profilePic ? user.profilePic : null}
                       dimensions="96px"
                       className="ms-4"
                     />
@@ -149,12 +148,12 @@ export default function SearchResults() {
                     {app.currentUser && app.currentUser.id !== user.uid && (
                       <Button
                         className={`me-4 btn-warning ${
-                          currentUserData && (currentUserData.friendlist &&
-                          (currentUserData.friendList.some(
-                            (friend) => friend.uid === user.uid
-                          )) ||
-                          currentUserData.notifications && currentUserData.notifications.friendRequests &&
-                          (currentUserData.notifications.friendRequests.some(
+                          currentUserData && 
+                        ((currentUserData.friendList &&
+                          currentUserData.friendList.some((friend) => friend.uid === user.uid)) ||
+                        (currentUserData.notifications &&
+                          currentUserData.notifications.friendRequests &&
+                          currentUserData.notifications.friendRequests.some(
                             (request) => request.from === user.uid
                           )))
                             ? "btn-disabled"
@@ -162,28 +161,30 @@ export default function SearchResults() {
                         }`}
                         onClick={() => {
                           if (
-                            currentUserData && currentUserData.friendlist &&
-                            !currentUserData.friendList.some(
-                              (friend) => friend.uid === user.uid
-                            ) &&
-                            !currentUserData.notifications.friendRequests.some(
+                            currentUserData &&
+                          (!(currentUserData.friendList &&
+                            currentUserData.friendList.some((friend) => friend.uid === user.uid)) &&
+                          !(currentUserData.notifications &&
+                            currentUserData.notifications.friendRequests &&
+                            currentUserData.notifications.friendRequests.some(
                               (request) => request.from === user.uid
-                            )
+                            )))
                           ) {
                             handleSendFriendRequest(user.uid);
                           }
                         }}
                         disabled={
-                          currentUserData && currentUserData.friendlist &&
-                          (currentUserData.friendList.some(
-                            (friend) => friend.uid === user.uid
-                          ) ||
-                            currentUserData.notifications.friendRequests.some(
-                              (request) => request.from === user.uid
-                            ))
+                          currentUserData && 
+                        ((currentUserData.friendList &&
+                          currentUserData.friendList.some((friend) => friend.uid === user.uid)) ||
+                        (currentUserData.notifications &&
+                          currentUserData.notifications.friendRequests &&
+                          currentUserData.notifications.friendRequests.some(
+                            (request) => request.from === user.uid
+                          )))
                         }
                       >
-                        Add friend
+                      Add friend
                       </Button>
                     )}
                   </div>

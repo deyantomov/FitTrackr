@@ -13,7 +13,7 @@ import { Loading } from "react-daisyui";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../../hooks/useToast";
 import { toastTypes, toastMessages, featureCards } from "../../common/constants";
-import { handleRedirect, fetchStepsData } from "../../services/fitbit.service";
+import { handleRedirect, fetchStepsData, fetchDistanceData, fetchCaloriesData } from "../../services/fitbit.service";
 
 const { getUserById } = api;
 
@@ -39,16 +39,6 @@ export default function Home() {
   }, [app, setToast]);
 
   useEffect(() => {
-    const getSteps = async () => {
-      const result = await fetchStepsData(app, setToast);
-
-      console.log(result);
-    }
-
-    getSteps();
-  }, [])
-
-  useEffect(() => {
     const getUser = async () => {
       if (app.currentUser && app.currentUser.id) {
         const user = await getUserById(app.currentUser.id);
@@ -56,7 +46,7 @@ export default function Home() {
         if (user) {
           setUser(user);
           setProgress(progressHook);
-        } else {q
+        } else {
           setToast({ type: toastTypes.ERROR, message: toastMessages.unableToLogin });
         }
       }

@@ -1,4 +1,4 @@
-import pkceChallenge from "pkce-challenge";
+import { fetchStepsData, fetchDistanceData, fetchCaloriesData } from "../services/fitbit.service";
 
 /**
  * @typedef {Object} PKCEChallenge
@@ -26,16 +26,8 @@ export const imageToBase64 = (file) => {
 //  https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
 export const checkEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
-/**
- * @returns {Promise<PKCEChallenge>}
- */
-export const generateCodeChallenge = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      const challenge = pkceChallenge();
-      resolve(challenge);
-    } catch (error) {
-      reject(error);
-    }
-  });
+export const updateDataWithFitbit = async (app, setToast, setProgress, progressHook) => {
+  const resultSteps = await fetchStepsData(app, setToast);
+  const resultDistance = await fetchDistanceData(app, setToast);
+  const resultCalories = await fetchCaloriesData(app, setToast);
 };
