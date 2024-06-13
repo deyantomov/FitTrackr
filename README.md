@@ -29,7 +29,18 @@ git clone https://github.com/deyantomov/FitTrackr.git
 cd fittrackr
 ```
 
-### Add the Atlas configuration strings - Contact the repository owner/contributors to obtain this data
+### Add the Atlas configuration strings in the root folder of the project, in a file named "atlasConfig.json"
+```json
+{
+  "appId": "fittrackr-rnylmjz",
+  "appUrl": "https://services.cloud.mongodb.com/groups/665ed036590d040b2cdaa937/apps/666474754ea2916cab58563e",
+  "baseUrl": "https://services.cloud.mongodb.com",
+  "clientApiBaseUrl": "https://eu-central-1.aws.services.cloud.mongodb.com",
+  "dataApiBaseUrl": "https://eu-central-1.aws.data.mongodb-api.com",
+  "dataExplorerLink": "https://cloud.mongodb.com/links/665ed036590d040b2cdaa937/explorer/Cluster0-FitTrackr/database/collection/find",
+  "dataSourceName": "mongodb-atlas"
+}
+```
 
 ### Install dependencies
 ```sh
