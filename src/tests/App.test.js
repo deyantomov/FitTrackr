@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
 import App from "../App";
+import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const headings = {
@@ -14,7 +14,7 @@ const titles = [
 ]
 
 describe("Renderer", () => {
-  test("Renders the landing page", () => {
+  test("should render the landing page", () => {
     render(
       <Router>
         <App />
@@ -91,7 +91,7 @@ describe("Features", () => {
     });
   });
 
-  test("At least three images should be displayed on the landing page", () => {
+  test("at least three images should be displayed on the landing page", () => {
     render(
       <Router>
         <App />
