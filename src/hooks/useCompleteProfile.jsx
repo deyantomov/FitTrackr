@@ -11,8 +11,10 @@ export function useCompleteProfile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getUserById(app.currentUser.id);
-      setCurrentUser(user);
+      if (app.currentUser) {
+        const user = await getUserById(app.currentUser.id);
+        setCurrentUser(user);
+      }
     }
 
     fetchUser();
