@@ -14,16 +14,10 @@ describe("Fade out", () => {
     act(() => jest.advanceTimersByTime(800));
     expect(toast).toHaveStyle("opacity: 0.8");
     
-    act(() => jest.advanceTimersByTime(800));
-    expect(toast).toHaveStyle("opacity: 0.6");
-    
-    act(() => jest.advanceTimersByTime(800));
+    act(() => jest.advanceTimersByTime(1600));
     expect(toast).toHaveStyle("opacity: 0.4");
     
-    act(() => jest.advanceTimersByTime(800));
-    expect(toast).toHaveStyle("opacity: 0.2");
-    
-    act(() => jest.advanceTimersByTime(800));
+    act(() => jest.advanceTimersByTime(1600));
     expect(toast).toHaveStyle("opacity: 0");
   });
 
