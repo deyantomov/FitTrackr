@@ -16,6 +16,7 @@ FitTrackr is a comprehensive application designed to help you track your fitness
 - **Frontend**: React, Tailwind CSS + Daisy UI, HeroIcons, Realm Web SDK
 - **Backend**: Realm, MongoDB Atlas
 - **Database**: MongoDB
+- **Unit Tests**: Jest
 
 ## 4. Installation
 
@@ -29,18 +30,7 @@ git clone https://github.com/deyantomov/FitTrackr.git
 cd fittrackr
 ```
 
-### Add the Atlas configuration strings in the root folder of the project, in a file named "atlasConfig.json"
-```json
-{
-  "appId": "fittrackr-rnylmjz",
-  "appUrl": "https://services.cloud.mongodb.com/groups/665ed036590d040b2cdaa937/apps/666474754ea2916cab58563e",
-  "baseUrl": "https://services.cloud.mongodb.com",
-  "clientApiBaseUrl": "https://eu-central-1.aws.services.cloud.mongodb.com",
-  "dataApiBaseUrl": "https://eu-central-1.aws.data.mongodb-api.com",
-  "dataExplorerLink": "https://cloud.mongodb.com/links/665ed036590d040b2cdaa937/explorer/Cluster0-FitTrackr/database/collection/find",
-  "dataSourceName": "mongodb-atlas"
-}
-```
+### Add the Atlas configuration strings in the root folder of the project, in a file named "atlasConfig.json" - Contact repository owners or contributors to obtain Atlas connection string.
 
 ### Install dependencies
 ```sh
@@ -59,4 +49,16 @@ npm run dev | npm run lan
 ### Build the project
 ```sh
 npm run build
+```
+
+## 7. Test
+
+### Test the project (default)
+```sh
+npm test | npm run test
+```
+
+### Test the project (coverage)
+```sh
+npm run coverage
 ```
