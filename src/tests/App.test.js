@@ -52,45 +52,21 @@ describe("Headings", () => {
 });
 
 describe("Features", () => {
-  test("should display the first feature card's title", () => {
+  test("should display the feature cards' titles", () => {
     render(
       <Router>
         <App />
       </Router>
     );
 
-    const allMatchingElements = screen.getAllByText(titles[0]);
-    allMatchingElements.forEach(element => {
-      expect(element).toBeInTheDocument();
+    titles.forEach(title => {
+      const allMatchingElements = screen.getAllByText(title);
+      allMatchingElements.forEach(element => {
+        expect(element).toBeInTheDocument();
+      });
     });
   });
   
-  test("should display the second feature card's title", () => {
-    render(
-      <Router>
-        <App />
-      </Router>
-    );
-
-    const allMatchingElements = screen.getAllByText(titles[1]);
-    allMatchingElements.forEach(element => {
-      expect(element).toBeInTheDocument();
-    });
-  });
-  
-  test("should display the third feature card's title", () => {
-    render(
-      <Router>
-        <App />
-      </Router>
-    );
-
-    const allMatchingElements = screen.getAllByText(titles[2]);
-    allMatchingElements.forEach(element => {
-      expect(element).toBeInTheDocument();
-    });
-  });
-
   test("at least three images should be displayed on the landing page", () => {
     render(
       <Router>
