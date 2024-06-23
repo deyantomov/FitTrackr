@@ -18,7 +18,6 @@ jest.mock('../../api/api', () => ({
 }));
 
 describe('Authenticated', () => {
-  
   test('redirects to login if user is not authenticated', async () => {
     const mockNavigate = jest.fn();
     const TestChildComponent = () => <div>Test Child</div>;
