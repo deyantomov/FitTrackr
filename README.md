@@ -1,9 +1,12 @@
 # FitTrackr
 
+[![fittrackr-landing-page.png](https://i.postimg.cc/LXqLK4SZ/fittrackr-landing-page.png)](https://postimg.cc/BL0X20Xq)
+
 ## 1. About the Project
 FitTrackr is a comprehensive application designed to help you track your fitness progress, create and view exercises, set goals, and socialize with friends. Leveraging the Fitbit Web API, FitTrackr seamlessly integrates with Fitbit devices to extract and display fitness data with ease.
 
-### [Hosted by MongoDB - https://fittrackr-rnylmjz.mongodbstitch.com]("https://fittrackr-rnylmjz.mongodbstitch.com") 
+### [Hosted by MongoDB - https://fittrackr-rnylmjz.mongodbstitch.com]("https://fittrackr-rnylmjz.mongodbstitch.com")
+⚠️ **Currently down for maintanence**
 
 ## 2. Key Features
 - **Ease of Use and User Interface Simplicity**: A clean, user-friendly interface designed to make tracking your fitness journey straightforward and enjoyable.
@@ -62,3 +65,13 @@ npm test | npm run test
 ```sh
 npm run coverage
 ```
+
+## 8. Screenshots
+
+[![fittrackr-landing-page-dark.png](https://i.postimg.cc/63DR9s6b/fittrackr-landing-page-dark.png)](https://postimg.cc/FdV1ZBL0)
+
+[![fittrackr-exercises.png](https://i.postimg.cc/259hKbsD/fittrackr-exercises.png)](https://postimg.cc/R3fW3FCs)
+
+[![fittrackr-edit-exercise.png](https://i.postimg.cc/Z5Z8Bh81/fittrackr-edit-exercise.png)](https://postimg.cc/mtXzJJ6w)
+
+[![fittrackr-exercise-details.png](https://i.postimg.cc/7LZS9MQ9/fittrackr-exercise-details.png)](https://postimg.cc/fV13TXsS)
